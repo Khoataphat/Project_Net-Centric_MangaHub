@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MangaHub | Digital Curator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-container": "#cacfff",
+                      "secondary-fixed": "#cde6f4",
+                      "inverse-on-surface": "#f0f1f2",
+                      "on-error": "#ffffff",
+                      "surface-container-high": "#e7e8e9",
+                      "primary": "#24389c",
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#bac3ff",
+                      "primary-container": "#3f51b5",
+                      "outline": "#757684",
+                      "on-primary-fixed": "#00105c",
+                      "secondary": "#4a626d",
+                      "tertiary-fixed-dim": "#ffb784",
+                      "surface-variant": "#e1e3e4",
+                      "surface-dim": "#d9dadb",
+                      "on-tertiary-fixed-variant": "#713700",
+                      "on-secondary-fixed-variant": "#334a55",
+                      "tertiary-fixed": "#ffdcc6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed": "#dee0ff",
+                      "on-primary-fixed-variant": "#293ca0",
+                      "on-surface": "#191c1d",
+                      "inverse-primary": "#bac3ff",
+                      "on-secondary-fixed": "#051e28",
+                      "surface-container": "#edeeef",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed": "#301400",
+                      "error": "#ba1a1a",
+                      "surface-container-highest": "#e1e3e4",
+                      "background": "#f8f9fa",
+                      "surface-container-low": "#f3f4f5",
+                      "surface": "#f8f9fa",
+                      "on-secondary-container": "#506873",
+                      "inverse-surface": "#2e3132",
+                      "tertiary-container": "#8f4700",
+                      "surface-tint": "#4355b9",
+                      "error-container": "#ffdad6",
+                      "secondary-container": "#cde6f4",
+                      "on-background": "#191c1d",
+                      "secondary-fixed-dim": "#b1cad7",
+                      "outline-variant": "#c5c5d4",
+                      "on-tertiary-container": "#ffc7a2",
+                      "on-surface-variant": "#454652",
+                      "surface-bright": "#f8f9fa",
+                      "on-error-container": "#93000a",
+                      "tertiary": "#6c3400"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "fontFamily": {
+                      "headline": ["Manrope"],
+                      "body": ["Inter"],
+                      "label": ["Inter"],
+                      "mono": ["JetBrains Mono"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .manga-card-shadow { shadow: 0 20px 40px rgba(25, 28, 29, 0.04); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f8f9fa] dark:bg-slate-900">
+<div class="flex justify-between items-center px-6 py-4 max-w-[1600px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold tracking-tight text-[#24389c] dark:text-[#3f51b5] font-headline">MangaHub</span>
+<!-- Search Bar -->
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="bg-surface-container-highest border-none rounded-md pl-10 pr-4 py-2 w-64 text-body-md focus:ring-1 focus:ring-outline/20" placeholder="Search archive..." type="text"/>
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-[#24389c] dark:text-[#3f51b5] font-bold border-b-2 border-[#24389c] font-headline text-lg" href="#">Library</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-[#24389c] font-headline text-lg transition-colors" href="#">Discover</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-[#24389c] font-headline text-lg transition-colors" href="#">Collections</a>
+</nav>
+<div class="flex items-center gap-4">
+<!-- Network Status Indicator -->
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container-low rounded-full">
+<div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+<span class="text-[10px] font-semibold text-secondary uppercase tracking-wider">Connected</span>
+</div>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="settings">settings</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant/30">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-on-surface">Admin User</p>
+<p class="text-[10px] text-secondary">Pro Account</p>
+</div>
+<img alt="Profile" class="w-8 h-8 rounded-full bg-primary-fixed" data-alt="close-up profile photo of a modern professional with a clean minimalist aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS-U736aZxvilGp1dfZHs0Rsj61xC1b7355wR8JhdHx0yYRKWZwvCZXcnCQBgsK3unEp71jw1HPi7VKQSysUaVd1UnJ0qxYxRuYprUXsXhZQtlAugoM6j1yKYI1A-OctO6oJntM1FDHq0DQ-eYh_cnuWWICMuxI1nnOU5ahJNioZMEIcS1FBi2owD1qA7pv9xMufBx_eMOzwiCd5n4MugqCKUELMBe5cIOLTjLxM2B9BowBlh5U5y8_pmY-oBuFw2d2hpaRfVO1N4"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Sidebar Navigation (Desktop) -->
+<aside class="fixed left-0 top-0 h-screen flex flex-col pt-24 bg-[#f8f9fa]/80 backdrop-blur-xl w-64 hidden xl:flex">
+<div class="px-6 mb-8">
+<h2 class="text-xl font-bold text-[#24389c] font-headline">The Ethereal Archive</h2>
+<p class="text-xs text-secondary font-medium">Digital Curator</p>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="bg-[#24389c] text-white rounded-lg mx-4 px-4 py-3 flex items-center gap-3 ease-in-out duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="book_2">book_2</span>
+<span class="font-semibold font-body">Library</span>
+</a>
+<a class="text-slate-600 hover:bg-[#f3f4f5] mx-4 px-4 py-3 rounded-lg flex items-center gap-3 ease-in-out duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-semibold font-body">Discover</span>
+</a>
+<a class="text-slate-600 hover:bg-[#f3f4f5] mx-4 px-4 py-3 rounded-lg flex items-center gap-3 ease-in-out duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome_motion">auto_awesome_motion</span>
+<span class="font-semibold font-body">Collections</span>
+</a>
+<a class="text-slate-600 hover:bg-[#f3f4f5] mx-4 px-4 py-3 rounded-lg flex items-center gap-3 ease-in-out duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-semibold font-body">Settings</span>
+</a>
+</nav>
+<div class="mt-auto p-6">
+<div class="bg-primary-container p-4 rounded-xl text-on-primary-container">
+<p class="text-xs font-bold mb-1">Storage Usage</p>
+<div class="w-full bg-white/20 h-1.5 rounded-full mb-2">
+<div class="bg-white h-full w-[65%] rounded-full"></div>
+</div>
+<p class="text-[10px]">12.4 GB of 20 GB used</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="pt-24 pb-12 xl:pl-72 pr-6 xl:pr-96 min-h-screen">
+<div class="max-w-7xl mx-auto">
+<header class="flex justify-between items-end mb-10 pl-2">
+<div>
+<h1 class="text-[3.5rem] font-extrabold font-headline leading-tight tracking-tight text-on-surface">Library</h1>
+<p class="text-secondary font-medium -mt-2">Managing 1,248 titles across 12 collections</p>
+</div>
+<button class="bg-gradient-to-r from-primary to-primary-container text-white px-6 py-2.5 rounded-xl font-semibold flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                    New Entry
+                </button>
+</header>
+<!-- 4-Column Bento Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Manga Card 1 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Chainsaw Man" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="stylized manga illustration cover with vibrant orange and black tones featuring a cinematic action pose" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADkaW0s421PvDKja0l8Q49FW04NGV5Op25D6GMuIEHwhZzEs5IRG8sThAtT4cNhyRa1dzjTSxGa1GQiA2UrxUQ7t0Fdpm6Ru7-FzuyV_J3pHx6flvP6JhnUb65M_qTCEOr16F-yAEW5SXYpNvqj8rb5kbvTd3kBkV2DcDTOxsnNL-XrmsIPKqvFoKXM8M-w4WI2kRku-diXcxAp3uevgsNBw1CO2N1puICdkuxN6KIKBUSlqe5_tvvDMwD5mTFr3KmDeKVXe58jbM"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-primary uppercase">Ongoing</div>
+</div>
+<div class="px-1">
+<h3 class="text-lg font-bold font-headline text-on-surface leading-tight mb-1 group-hover:text-primary transition-colors">Chainsaw Man</h3>
+<p class="text-xs text-secondary font-medium">Action, Horror, Supernatural</p>
+<p class="text-[10px] text-outline mt-2 uppercase tracking-tighter">Chapter 145 • Updated 2h ago</p>
+</div>
+</div>
+<!-- Manga Card 2 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Jujutsu Kaisen" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="dramatic anime style cover art with deep purples and blues showing a character with mystical energy effects" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_Uni5wkrs9cbGD9loKrkTwR2K7jcfvGqgW1p5IIAtxVJRY5YCtWjJXn1M1rgeQvwv--jORdQLblthLmJ7D_cUgP_bxj2KefIO_Foti7BZFkPNheEuoGbCJxg2nzxmEdm7KFB1EKdJy6sX6yFh7m06OU3FNMYGAHF4J_NofoyrKb6NoOEFPVy3O8d82U6d7p1cwUJsKbRUoT93_q6OeoCgRwRQKoTY-FY3ViQyDQGJGaFdXjIDTL_O6vlvEwCt7qb1AjlizFw1vQ8"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-primary uppercase">Ongoing</div>
+</div>
+<div class="px-1">
+<h3 class="text-lg font-bold font-headline text-on-surface leading-tight mb-1 group-hover:text-primary transition-colors">Jujutsu Kaisen</h3>
+<p class="text-xs text-secondary font-medium">Action, Fantasy, School</p>
+<p class="text-[10px] text-outline mt-2 uppercase tracking-tighter">Chapter 241 • Updated 1d ago</p>
+</div>
+</div>
+<!-- Manga Card 3 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Sakamoto Days" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="detailed manga character illustration with clean lines and pastel color palette in a modern urban setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKLEgfba1AxcyCz1siQnMPx2DbQ9XLGGnpQTHS_Rg8yeVtpLFF4tzLDrwRrYx8BHIIZFYE3_4htGid10vqVTLJBcoNGktzZOtDQtrTIX5hwUZiE_PW-qOboJMnCHSYufgWHwHjrrlqHFix8TFu7o2zPvfdUwqYe2GKMn-VqxHkKonsejxsnsKAkpRagYf-XJIXrZ5VLox40kr03-NO8psgG_4rs2x5OF3TQH8yLWu8S_hdxRM_kceVsi3eZl_ya8drAC_KhbiMIDo"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-primary uppercase">Ongoing</div>
+</div>
+<div class="px-1">
+<h3 class="text-lg font-bold font-headline text-on-surface leading-tight mb-1 group-hover:text-primary transition-colors">Sakamoto Days</h3>
+<p class="text-xs text-secondary font-medium">Action, Comedy</p>
+<p class="text-[10px] text-outline mt-2 uppercase tracking-tighter">Chapter 142 • Updated 4h ago</p>
+</div>
+</div>
+<!-- Manga Card 4 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Blue Lock" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="dynamic sports manga cover with intense blue lighting and high contrast shadow work" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhEFCsX4tgO_wymln2ZOmWy9_M6cUbgyVtUbtGPSUxIR9Nr8Zz7I0BqI7IhtZ_hEe6oprOZFAZWAzs5Srm4hwR3wasIiEiaiG5-FNccrhusIv6PbiKw1kyxJe7iVozPb9nHPvleVXCSqKjmblffUnttjLXhIQbZDBqd6_dVr8RuYdC5jlzlESlH0avaXlmOLWukiLiSM3N5VarqgEmZBqceB642ns-LGEzIJxHnGmxcDQhXGX6RSe0Nlyc5k63sG4AvXh81uXVKAQ"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-primary uppercase">Ongoing</div>
+</div>
+<div class="px-1">
+<h3 class="text-lg font-bold font-headline text-on-surface leading-tight mb-1 group-hover:text-primary transition-colors">Blue Lock</h3>
+<p class="text-xs text-secondary font-medium">Sports, Thriller</p>
+<p class="text-[10px] text-outline mt-2 uppercase tracking-tighter">Chapter 239 • Updated 12h ago</p>
+</div>
+</div>
+<!-- Manga Card 5 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Frieren" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="ethereal fantasy landscape manga cover with soft morning light and sprawling ancient ruins" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRchSJNNpT2XS5LveW1CZD7WrX2qeMoxtBCVIijOr-K_X63FfG_jAR9rIFU2fZmAzV2aDndRDlniilml0tiP62MJTaA-JPXPmgrZ09fGpqcklXzdDUIW9nl5KBzLphbhBHugAL3T3fo2V_gr7oq39qob7QbgnkqkaPekMBbBgJpj-AGEDHW2JzMkBQ4xe7gQfIEJb3iUanSj-_o-7D_cmoK0fQc4_24F2v1mGj41Muk99TjkuG8Fz2hf6KxXTaqBrRf0m8NfHVX3Y"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-outline uppercase">Completed</div>
+</div>
+<div class="px-1">
+<h3 class="text-lg font-bold font-headline text-on-surface leading-tight mb-1 group-hover:text-primary transition-colors">Frieren</h3>
+<p class="text-xs text-secondary font-medium">Adventure, Fantasy</p>
+<p class="text-[10px] text-outline mt-2 uppercase tracking-tighter">12 Volumes • Finalized</p>
+</div>
+</div>
+<!-- Manga Card 6 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Monster" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="dark noir style manga cover with cinematic shadows and a tense mystery atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkg_4Vtn7ODniO2cW-uRs1VCFK1pNZ33v1WrBf9zRueUllL1Lkm8s8ypKJN38BQe7RkfqzKKOEhCUQ5It7yK72x-gLNE4G7Jcw8XJcD5PJz3GWYRLzqhLcgPxwBb_4nWLrdq1opf9k0UQ6nKbvvLUG6bC9RWC5qHwx-O4rGS-KCgvdegKyi-3G5sj5wZ5ANEro1zK5CbDOn6IoTqYRXSZg6LDQx_G1dR1vicN-p7mq2EFyA2P8ubmkxb0xL_vsPg4kvyYbApZ7IVc"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-outline uppercase">Completed</div>
+</div>
+<div class="px-1">
+<h3 class="text-lg font-bold font-headline text-on-surface leading-tight mb-1 group-hover:text-primary transition-colors">Monster</h3>
+<p class="text-xs text-secondary font-medium">Mystery, Thriller</p>
+<p class="text-[10px] text-outline mt-2 uppercase tracking-tighter">18 Volumes • Classic</p>
+</div>
+</div>
+<!-- Manga Card 7 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-surface-container-low">
+<img alt="One Piece" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="vibrant epic adventure manga cover with tropical colors and a sense of vast ocean exploration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZM7y7VJidF-JXhtTSP4NuFEWSYgtNFUEa9t2fln8Vab8D4wAF_gLsLhY7nXZeXHuAu9xezDIRpm1_t4LdB6_il9Vln_K1Ns_xypvSwWF84Mz-eH4Q2SVXKsBu9HixA19-paybDabuln9mVSqMLd-LabP-Ae-SogowCptE_BVIDOTOYu4279tagLvrPuH1QMvne4XPZ8lCrUGEzBAVeQieaWVgk8cHng-ZmwJGkqzW5PCFpoT7BK6BH1apwiHF9Mz_SohMlG_3HXo"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-primary uppercase">Ongoing</div>
+</div>
+<div class="px-1">
+<h3 class="text-lg font-bold font-headline text-on-surface leading-tight mb-1 group-hover:text-primary transition-colors">One Piece</h3>
+<p class="text-xs text-secondary font-medium">Action, Adventure</p>
+<p class="text-[10px] text-outline mt-2 uppercase tracking-tighter">Chapter 1098 • Updated 5h ago</p>
+</div>
+</div>
+<!-- Manga Card 8 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Vinland Saga" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="gritty historical manga cover with muted earth tones and detailed viking era character design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDO6-k5wYkiuPoPaz1OECorPgjpVgevsi-sx7c_O7uYv0LK17WkqZstkDIP5bPWTgp384rz-_rPYe1dfp8VstwosdREjWJte18TC9318TSo7zDaxesUyoOTRfxNivD4J52_ra2QjpJQWt7BxyhU-Itl148ovNa94d9sX6vlKBrAuDBWZkBNTN9kkAnx9gU5_rznfDoalkGiGeyAmxOtANchMUpYiaaK__Rd-ZhPmyW9nDM91IifGPyl4ujH9hU3b1VHy_p1zdqXFFc"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-primary uppercase">Ongoing</div>
+</div>
+<div class="px-1">
+<h3 class="text-lg font-bold font-headline text-on-surface leading-tight mb-1 group-hover:text-primary transition-colors">Vinland Saga</h3>
+<p class="text-xs text-secondary font-medium">Action, Drama, History</p>
+<p class="text-[10px] text-outline mt-2 uppercase tracking-tighter">Chapter 207 • Updated 3d ago</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Right Sidebar (Live System Logs) -->
+<aside class="fixed right-0 top-0 h-screen w-80 bg-inverse-surface hidden xl:flex flex-col pt-24">
+<div class="px-6 pb-4 border-b border-white/10 mb-4">
+<div class="flex items-center justify-between">
+<h2 class="text-sm font-bold text-white uppercase tracking-widest font-headline">Live System Logs</h2>
+<div class="flex gap-1.5">
+<div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-amber-500/50"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-emerald-500/50"></div>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-6 font-mono text-[11px] leading-relaxed text-emerald-400/80">
+<p class="text-slate-500">Initializing archive kernel v4.2.0...</p>
+<p class="mb-1"><span class="text-emerald-500">INFO:</span> Handshake established with CDN_NODE_12</p>
+<p class="mb-1"><span class="text-blue-400">GET</span> /api/v1/manga - 200 OK</p>
+<p class="mb-1"><span class="text-emerald-500">USER_AUTH_SUCCESS:</span> ID_8829</p>
+<p class="mb-1"><span class="text-slate-500">[14:22:01]</span> Syncing metadata for 'Chainsaw Man'</p>
+<p class="mb-1"><span class="text-blue-400">POST</span> /api/v1/sync/progress - 204 No Content</p>
+<p class="mb-1"><span class="text-amber-400">WARN:</span> Image cache miss for ID_9912. Re-fetching...</p>
+<p class="mb-1"><span class="text-blue-400">GET</span> /api/v1/covers/hero_01.webp - 200 OK</p>
+<p class="mb-1"><span class="text-emerald-500">INFO:</span> Background crawler active (worker: 4)</p>
+<p class="mb-1"><span class="text-slate-500">[14:22:45]</span> Heartbeat pulse... OK</p>
+<p class="mb-1"><span class="text-blue-400">GET</span> /api/v1/notifications - 304 Not Modified</p>
+<p class="mb-1"><span class="text-emerald-500">INFO:</span> Session prolonged +3600s</p>
+<p class="mb-1"><span class="text-blue-400">GET</span> /api/v1/manga/recent - 200 OK</p>
+<p class="mb-1"><span class="text-slate-500">[14:23:12]</span> Database query optimization complete</p>
+<p class="animate-pulse">_</p>
+</div>
+<div class="p-6 mt-auto bg-black/20 border-t border-white/5">
+<div class="flex items-center justify-between mb-4">
+<span class="text-[10px] text-slate-400 font-bold uppercase">Archive Health</span>
+<span class="text-[10px] text-emerald-400">99.9%</span>
+</div>
+<div class="space-y-3">
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-[9px] text-slate-500 uppercase font-bold">
+<span>CPU Load</span>
+<span>12%</span>
+</div>
+<div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+<div class="bg-emerald-500/50 h-full w-[12%]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-[9px] text-slate-500 uppercase font-bold">
+<span>Memory</span>
+<span>2.4GB</span>
+</div>
+<div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+<div class="bg-blue-500/50 h-full w-[45%]"></div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</body></html>

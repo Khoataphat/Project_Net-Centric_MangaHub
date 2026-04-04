@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MangaHub - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#334a55",
+                        "surface-dim": "#d9dadb",
+                        "on-tertiary-fixed-variant": "#713700",
+                        "surface-variant": "#e1e3e4",
+                        "tertiary-fixed-dim": "#ffb784",
+                        "secondary": "#4a626d",
+                        "primary-container": "#3f51b5",
+                        "outline": "#757684",
+                        "on-primary-fixed": "#00105c",
+                        "primary-fixed-dim": "#bac3ff",
+                        "on-primary": "#ffffff",
+                        "primary": "#24389c",
+                        "surface-container-high": "#e7e8e9",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#cde6f4",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary-container": "#cacfff",
+                        "tertiary": "#6c3400",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f8f9fa",
+                        "on-tertiary-container": "#ffc7a2",
+                        "on-surface-variant": "#454652",
+                        "outline-variant": "#c5c5d4",
+                        "secondary-fixed-dim": "#b1cad7",
+                        "secondary-container": "#cde6f4",
+                        "on-background": "#191c1d",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#4355b9",
+                        "tertiary-container": "#8f4700",
+                        "on-secondary-container": "#506873",
+                        "inverse-surface": "#2e3132",
+                        "surface-container-low": "#f3f4f5",
+                        "surface": "#f8f9fa",
+                        "surface-container-highest": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#301400",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#edeeef",
+                        "on-secondary-fixed": "#051e28",
+                        "inverse-primary": "#bac3ff",
+                        "on-surface": "#191c1d",
+                        "primary-fixed": "#dee0ff",
+                        "on-primary-fixed-variant": "#293ca0",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdcc6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .editorial-title {
+            font-family: 'Manrope', sans-serif;
+            letter-spacing: -0.02em;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-surface min-h-screen flex items-center justify-center p-6">
+<div class="max-w-[420px] w-full flex flex-col gap-8">
+<!-- Logo Anchor -->
+<div class="flex justify-center mb-2">
+<h1 class="editorial-title text-3xl font-extrabold text-primary">MangaHub</h1>
+</div>
+<!-- Main Login Card -->
+<div class="bg-surface-container-lowest rounded-xl p-10 shadow-[0_20px_40px_rgba(25,28,29,0.04)] ring-1 ring-outline-variant/10">
+<div class="mb-8">
+<h2 class="editorial-title text-2xl font-bold text-on-background mb-2">Welcome Back</h2>
+<p class="text-secondary body-md">Enter your credentials to access the archive.</p>
+</div>
+<form class="space-y-6">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="block text-label-md font-semibold text-on-surface-variant uppercase tracking-wider ml-1">Email Address</label>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-5 py-4 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="curator@mangahub.com" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center px-1">
+<label class="block text-label-md font-semibold text-on-surface-variant uppercase tracking-wider">Password</label>
+<a class="text-xs text-primary font-semibold hover:underline" href="#">Forgot?</a>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-5 py-4 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<!-- Login Button -->
+<button class="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold py-4 rounded-xl shadow-lg hover:opacity-90 active:scale-[0.98] transition-all editorial-title text-lg" type="submit">
+                    Login
+                </button>
+</form>
+<div class="mt-8 pt-8 border-t border-outline-variant/10 text-center">
+<p class="text-secondary text-sm">
+                    Don't have an account? 
+                    <a class="text-primary font-bold ml-1" href="#">Request Access</a>
+</p>
+</div>
+</div>
+<!-- Network Debug Section (Accordion Style) -->
+<details class="group bg-surface-container-low rounded-xl overflow-hidden ring-1 ring-outline-variant/10 transition-all duration-300">
+<summary class="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-surface-container transition-colors list-none">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-sm">terminal</span>
+<span class="text-sm font-semibold text-on-surface-variant font-headline">Network Debug</span>
+</div>
+<span class="material-symbols-outlined text-secondary group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="px-6 pb-6 pt-2">
+<div class="space-y-4">
+<!-- Request Payload -->
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-primary-container/20 text-primary uppercase">Post</span>
+<code class="text-[11px] text-secondary">/v1/auth/jwt/login</code>
+</div>
+<div class="bg-on-background rounded-lg p-4 font-mono text-[11px] text-surface-container-low overflow-x-auto leading-relaxed">
+<pre>{
+  "grant_type": "password",
+  "client_id": "mangahub-curator-ui",
+  "scope": "library:read library:write",
+  "identity": "curator@mangahub.com",
+  "credential": "****************"
+}</pre>
+</div>
+</div>
+<!-- Response Payload -->
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 uppercase">200 OK</span>
+<code class="text-[11px] text-secondary">Time: 124ms</code>
+</div>
+<div class="bg-on-background rounded-lg p-4 font-mono text-[11px] text-surface-container-low overflow-x-auto leading-relaxed">
+<pre>{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "8f4700_tertiary_container_8a...",
+  "user": {
+    "id": "USR-9921",
+    "role": "CURATOR",
+    "status": "ACTIVE"
+  }
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</details>
+<!-- Aesthetic Footer -->
+<div class="flex items-center justify-center gap-6 opacity-30 grayscale hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-xl">shield</span>
+<span class="material-symbols-outlined text-xl">verified_user</span>
+<span class="material-symbols-outlined text-xl">encrypted</span>
+</div>
+</div>
+</body></html>
