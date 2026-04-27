@@ -19,3 +19,12 @@ type LoginRequest struct {
 type TokenResponse struct {
 	Token string `json:"token"`
 }
+
+//Struct Manga
+type Manga struct {
+	ID          int    `json:"id"`
+	Title       string `json:"title"`
+	Author      string `json:"author"`
+	Description string `json:"description"`
+	Thumbnail   string `json:"thumbnail"`
+}

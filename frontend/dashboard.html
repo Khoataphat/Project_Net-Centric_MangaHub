@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MangaHub - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 min-h-screen flex flex-col">
+    <header class="bg-white border-b p-4 flex justify-between items-center shadow-sm">
+        <h1 class="text-xl font-bold text-blue-600">MangaHub Dashboard</h1>
+        <div id="userInfo" class="text-sm font-medium"></div>
+    </header>
+
+    <main class="flex-grow p-6">
+        <div class="mb-6">
+            <input type="text" id="searchInput" placeholder="Tìm kiếm truyện..."
+                class="w-full max-w-md p-2 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+
+        <div id="mangaGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-green-400 p-4 h-48 overflow-y-auto font-mono text-xs border-t-4 border-blue-600">
+        <div class="flex items-center gap-2 mb-2 border-b border-slate-700 pb-1">
+            <span class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px]">NETWORK LOG</span>
+            <span class="text-slate-500 italic">Listening for packets...</span>
+        </div>
+        <div id="terminalContent">
+            [SYS] Terminal initialized. Waiting for CLI Bridge...
+        </div>
+    </footer>
+
+    <script>
+        const terminalContent = document.getElementById('terminalContent');
+
+        // Hàm giả lập log cho CLI Bridge (Bản chất mạng)
+        function addLog(method, endpoint, status) {
+            const time = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<span class="text-slate-500">[${time}]</span> <span class="text-blue-400">${method}</span> <span class="text-yellow-400">${endpoint}</span> <span class="text-green-500">${status}</span>`;
+            terminalContent.appendChild(logEntry);
+            terminalContent.parentElement.scrollTop = terminalContent.parentElement.scrollHeight;
+        }
+
+        async function fetchMangas(query = '') {
+            addLog('GET', `/api/mangas?q=${query}`, 'PENDING');
+            try {
+                const res = await fetch(`http://localhost:8080/api/mangas?q=${query}`);
+                const data = await res.json();
+                addLog('GET', `/api/mangas`, '200 OK');
+                displayMangas(data);
+            } catch (err) {
+                addLog('ERROR', `/api/mangas`, 'FAILED');
+            }
+        }
+
+        function displayMangas(mangas) {
+            const grid = document.getElementById('mangaGrid');
+            grid.innerHTML = mangas?.map(m => `
+                <div class="bg-white rounded-lg shadow hover:shadow-md transition p-3">
+                    <img src="${m.thumbnail || 'https://via.placeholder.com/150'}" class="w-full h-48 object-cover rounded mb-2">
+                    <h3 class="font-bold text-sm truncate">${m.title}</h3>
+                    <p class="text-xs text-gray-500">${m.author}</p>
+                </div>
+            `).join('') || '<p>Không tìm thấy truyện</p>';
+        }
+
+        //Tính năng Debounce
+        let searchTimeout = null;
+        const searchInput = document.getElementById('searchInput');
+
+        searchInput.addEventListener('input', (e) => {
+            // 1. Hủy lệnh gọi API cũ nếu người dùng vẫn đang tiếp tục gõ
+            clearTimeout(searchTimeout);
+
+            // 2. Thiết lập một lệnh gọi API mới, nhưng hẹn giờ 500ms sau mới chạy
+            searchTimeout = setTimeout(() => {
+                const keyword = e.target.value.trim();
+                fetchMangas(keyword);
+            }, 500);
+        });
+
+        // Khởi tạo
+        fetchMangas();
+    </script>
+</body>
+
+</html>
