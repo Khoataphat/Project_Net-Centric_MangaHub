@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package manga;
+
+// Đường dẫn output cho Go
+option go_package = "mangahub/proto";
+
+// Định nghĩa dịch vụ Manga
+service MangaService {
+    // API lấy thông tin chi tiết Manga theo ID
+    rpc GetMangaDetail (MangaRequest) returns (MangaResponse);
+}
+
+message MangaRequest {
+    int32 id = 1;
+}
+
+message MangaResponse {
+    int32 id = 1;
+    string title = 2;
+    string author = 3;
+    string description = 4;
+}

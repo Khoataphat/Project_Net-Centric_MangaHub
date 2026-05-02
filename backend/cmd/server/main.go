@@ -2,6 +2,7 @@ package main
 
 import (
 	"mangahub/internal/database"
+	"mangahub/internal/protocols/grpc"
 	"mangahub/internal/protocols/http"
 	"mangahub/internal/protocols/tcp"
 
@@ -24,7 +25,10 @@ func main() {
 	// 5. Khởi tạo TCP Server (Chạy song song)
 	go tcp.StartTCPServer(":9090")
 
-	// 6. Chạy server HTTP
+	// 6. Khởi tạo gRPC Server
+	go grpc.StartGRPCServer(":50051")
+
+	// 7. Chạy server HTTP
 	r.Run(":8080")
 }
 
