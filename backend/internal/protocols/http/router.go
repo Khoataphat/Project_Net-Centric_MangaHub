@@ -8,5 +8,6 @@ func SetupRouter(r *gin.Engine) {
 		api.POST("/register", RegisterHandler)
 		api.POST("/login", LoginHandler)
 		api.GET("/mangas", GetMangas)
+		api.GET("/ws-tcp-bridge", TCPBridgeHandler)
 	}
 }
