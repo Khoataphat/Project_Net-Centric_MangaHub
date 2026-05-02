@@ -3,6 +3,7 @@ package main
 import (
 	"mangahub/internal/database"
 	"mangahub/internal/protocols/http"
+	"mangahub/internal/protocols/tcp"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +21,10 @@ func main() {
 	// 4. Gọi Router đã tách
 	http.SetupRouter(r)
 
-	// 5. Chạy server
+	// 5. Khởi tạo TCP Server (Chạy song song)
+	go tcp.StartTCPServer(":9090")
+
+	// 6. Chạy server HTTP
 	r.Run(":8080")
 }
 
