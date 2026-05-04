@@ -6,6 +6,46 @@
     <title>MangaHub - Đọc truyện</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<div id="chatBox" class="h-64 overflow-y-auto bg-slate-800 text-white p-4 rounded mb-2">
+    </div>
+
+<div class="flex">
+    <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." class="flex-grow p-2 rounded-l border outline-none">
+    <button id="sendBtn" class="bg-blue-600 text-white px-4 rounded-r">Gửi</button>
+</div>
+
+<script>
+    // 1. Kết nối tới WebSocket Server (Lưu ý dùng ws:// thay vì http://)
+    const socket = new WebSocket('ws://localhost:8080/api/ws/chat');
+    
+    const chatBox = document.getElementById('chatBox');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // 2. Lắng nghe sự kiện khi có tin nhắn từ Server gửi về
+    socket.onmessage = function(event) {
+        const msg = event.data;
+        const msgElement = document.createElement('div');
+        msgElement.className = "mb-2 text-sm";
+        msgElement.innerHTML = `<span class="font-bold text-blue-400">User:</span> ${msg}`;
+        chatBox.appendChild(msgElement);
+        chatBox.scrollTop = chatBox.scrollHeight; // Cuộn xuống cuối
+    };
+
+    // 3. Gửi tin nhắn lên Server
+    sendBtn.onclick = function() {
+        const text = chatInput.value.trim();
+        if (text) {
+            socket.send(text); // Đẩy gói tin qua đường hầm WebSocket
+            chatInput.value = '';
+        }
+    };
+
+    // (Tuỳ chọn): Nhấn Enter để gửi
+    chatInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') sendBtn.click();
+    });
+</script>
 
 <body class="bg-slate-900 text-white min-h-screen flex flex-col">
     <header class="bg-slate-800 border-b border-slate-700 p-4 flex justify-between items-center shadow-sm">
