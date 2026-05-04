@@ -1,8 +1,12 @@
 package http
 
-import "github.com/gin-gonic/gin"
+import (
+	"mangahub/internal/protocols/websocket"
 
-func SetupRouter(r *gin.Engine) {
+	"github.com/gin-gonic/gin"
+)
+
+func SetupRouter(r *gin.Engine, chatHub *websocket.Hub) {
 	api := r.Group("/api")
 	{
 		api.POST("/register", RegisterHandler)
@@ -10,5 +14,8 @@ func SetupRouter(r *gin.Engine) {
 		api.GET("/mangas", GetMangas)
 		api.GET("/ws-tcp-bridge", TCPBridgeHandler)
 		api.GET("/admin/scan-manga", ScanMangaHandler)
+		api.GET("/ws/chat", func(c *gin.Context) {
+			websocket.ServeWS(chatHub, c)
+		})
 	}
 }
