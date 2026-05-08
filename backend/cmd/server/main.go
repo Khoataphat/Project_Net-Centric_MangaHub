@@ -5,6 +5,7 @@ import (
 	"mangahub/internal/protocols/grpc"
 	"mangahub/internal/protocols/http"
 	"mangahub/internal/protocols/tcp"
+	"mangahub/internal/protocols/websocket"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,16 +20,20 @@ func main() {
 	// 3. Sử dụng Middleware (CORS...)
 	r.Use(CORSMiddleware())
 
-	// 4. Gọi Router đã tách
-	http.SetupRouter(r)
+	// 4. Khởi tạo Hub cho WebSocket
+	chatHub := websocket.NewHub()
+	go chatHub.Run() // Chạy Hub ở một Goroutine riêng
 
-	// 5. Khởi tạo TCP Server (Chạy song song)
+	// 5. Gọi Router đã tách
+	http.SetupRouter(r, chatHub)
+
+	// 6. Khởi tạo TCP Server (Chạy song song)
 	go tcp.StartTCPServer(":9090")
 
-	// 6. Khởi tạo gRPC Server
+	// 7. Khởi tạo gRPC Server
 	go grpc.StartGRPCServer(":50051")
 
-	// 7. Chạy server HTTP
+	// 8. Chạy server HTTP
 	r.Run(":8080")
 }
 
