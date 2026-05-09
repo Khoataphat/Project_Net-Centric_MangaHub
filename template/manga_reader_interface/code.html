@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Ethereal Archive | MangaHub Reader</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#ffdcc6",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-tint": "#4355b9",
+                        "inverse-surface": "#2e3132",
+                        "secondary": "#4a626d",
+                        "surface-variant": "#e1e3e4",
+                        "secondary-container": "#cde6f4",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#293ca0",
+                        "tertiary-container": "#8f4700",
+                        "surface-container-highest": "#e1e3e4",
+                        "secondary-fixed": "#cde6f4",
+                        "surface-dim": "#d9dadb",
+                        "primary-container": "#3f51b5",
+                        "on-primary-fixed": "#00105c",
+                        "on-surface": "#191c1d",
+                        "surface-container-high": "#e7e8e9",
+                        "on-tertiary-fixed-variant": "#713700",
+                        "on-primary-container": "#cacfff",
+                        "background": "#f8f9fa",
+                        "outline-variant": "#c5c5d4",
+                        "surface-container": "#edeeef",
+                        "secondary-fixed-dim": "#b1cad7",
+                        "on-secondary-fixed": "#051e28",
+                        "primary-fixed": "#dee0ff",
+                        "primary": "#24389c",
+                        "on-tertiary-fixed": "#301400",
+                        "tertiary-fixed-dim": "#ffb784",
+                        "on-secondary-fixed-variant": "#334a55",
+                        "on-surface-variant": "#454652",
+                        "surface": "#f8f9fa",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#ffc7a2",
+                        "inverse-primary": "#bac3ff",
+                        "on-background": "#191c1d",
+                        "on-secondary-container": "#506873",
+                        "tertiary": "#6c3400",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-bright": "#f8f9fa",
+                        "primary-fixed-dim": "#bac3ff",
+                        "outline": "#757684"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #f8f9fa; color: #191c1d; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        .manga-shadow { shadow: 0 20px 40px rgba(25, 28, 29, 0.04); }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e1e3e4; border-radius: 10px; }
+    </style>
+</head>
+<body class="flex h-screen w-screen overflow-hidden">
+<!-- Top Navigation Bar (Shared Component Logic Applied) -->
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl rounded-full px-6 py-3 bg-[#f8f9fa]/80 backdrop-blur-3xl shadow-[0_20px_40px_rgba(25,28,29,0.04)] flex justify-between items-center z-[100]">
+<div class="flex items-center gap-6">
+<span class="text-xl font-bold tracking-tighter text-[#191c1d]">The Ethereal Archive</span>
+<div class="hidden md:flex items-center gap-2 text-sm font-medium text-[#4a626d]">
+<span>Home</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span>One Piece</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-[#24389c] font-bold">Chapter 10</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#4a626d] hover:text-[#24389c] transition-colors"><span class="material-symbols-outlined">search</span></button>
+<button class="text-[#4a626d] hover:text-[#24389c] transition-colors"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 mt-24 mb-48 flex flex-col items-center overflow-y-auto custom-scrollbar px-8">
+<!-- Manga Display Area -->
+<div class="w-full max-w-3xl flex flex-col gap-8 pb-12">
+<!-- Asymmetric Header -->
+<div class="pl-4 md:pl-12 border-l-4 border-primary">
+<h1 class="font-headline text-display-lg text-[2.5rem] font-bold tracking-tight text-on-surface">Chapter 10: The King of the Pirates</h1>
+<p class="font-label text-secondary text-sm">Published Oct 24 • Vol 1 • Eiichiro Oda</p>
+</div>
+<!-- Current Page View -->
+<div class="relative group">
+<div class="rounded-xl overflow-hidden shadow-[0_20px_40px_rgba(25,28,29,0.04)] bg-surface-container-lowest">
+<img alt="Manga Page" class="w-full h-auto" data-alt="detailed black and white manga illustration of a high-seas adventure scene with dynamic motion lines and epic scale, paper texture style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDU68ALJ8Md89Ob3v0gZCvQFc7Bd5vqv0CkdKXD2K79kcwnbNSqcdNXR6bSMY-2jI9x_O6MNTDZtjnpYLp3GDt_su5UFrIGBebr7eHQfWws1GVSjRg7gF76KHzJ9aYC1KXQdDzzw0asUgq-Z6yFPRHBroqG2ggUrIEFfN0WhVWjHWbTHIoHblsNDC89kdvgBe7RC9dBnSyETUIO3SzUtMYOc5uF4XoEmfeNuky3ksLqMnNBV0S9phpamnrrdVbfyxfAa7B5IhaMSFg"/>
+</div>
+<!-- Pagination Overlays (Floating Subtle) -->
+<div class="absolute inset-y-0 left-0 w-24 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded-full text-primary shadow-lg scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">arrow_back_ios</span>
+</button>
+</div>
+<div class="absolute inset-y-0 right-0 w-24 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded-full text-primary shadow-lg scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">arrow_forward_ios</span>
+</button>
+</div>
+</div>
+<!-- Centered Navigation Controls -->
+<div class="flex items-center justify-center gap-6 mt-4">
+<button class="flex items-center gap-2 px-6 py-2 bg-surface-container-high text-primary font-medium rounded-full hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-[18px]">west</span>
+<span>Prev</span>
+</button>
+<span class="text-sm font-label text-secondary">Page 24 of 42</span>
+<button class="flex items-center gap-2 px-6 py-2 bg-primary text-white font-medium rounded-full hover:opacity-90 transition-opacity">
+<span>Next</span>
+<span class="material-symbols-outlined text-[18px]">east</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Right Sidebar: Reader Chat (SideNavBar Identity) -->
+<aside class="fixed right-0 top-0 h-screen w-80 bg-[#f3f4f5] border-l border-[#c5c5d4]/15 flex flex-col z-[80]">
+<div class="p-6 pt-24">
+<h2 class="font-headline font-bold text-lg text-on-surface">Reader Chat</h2>
+<p class="text-xs text-secondary mb-6">Active: 1.2k readers</p>
+</div>
+<div class="flex-1 overflow-y-auto px-6 space-y-4 custom-scrollbar">
+<!-- Message: Other -->
+<div class="flex flex-col gap-1 items-start max-w-[85%]">
+<span class="text-[10px] text-secondary font-medium ml-2">Nakama_99</span>
+<div class="bg-surface-container-highest text-on-surface p-3 rounded-2xl rounded-tl-none text-sm leading-relaxed">
+                    The art in this chapter is actually insane. Look at the shading on the ship!
+                </div>
+</div>
+<!-- Message: User -->
+<div class="flex flex-col gap-1 items-end ml-auto max-w-[85%]">
+<span class="text-[10px] text-secondary font-medium mr-2">You</span>
+<div class="bg-primary text-white p-3 rounded-2xl rounded-tr-none text-sm leading-relaxed">
+                    Luffy never misses. That entry was legendary.
+                </div>
+</div>
+<!-- Message: Other -->
+<div class="flex flex-col gap-1 items-start max-w-[85%]">
+<span class="text-[10px] text-secondary font-medium ml-2">MangaGeek</span>
+<div class="bg-surface-container-highest text-on-surface p-3 rounded-2xl rounded-tl-none text-sm leading-relaxed">
+                    Anyone else getting chills? 🌊
+                </div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low border-t border-outline-variant/10">
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-xl py-3 px-4 text-sm focus:ring-1 focus:ring-primary/20 placeholder:text-secondary/50" placeholder="Share your thoughts..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 text-primary p-2">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Bottom Fixed Panel: Developer Console (BottomNavBar Identity) -->
+<footer class="fixed bottom-0 w-full h-48 bg-white border-t border-[#c5c5d4]/15 shadow-2xl z-[110] flex overflow-hidden">
+<!-- Sidebar Tabs for Console -->
+<div class="w-48 bg-surface-container-low p-2 flex flex-col gap-1">
+<button class="flex items-center gap-3 px-3 py-2 bg-[#dee0ff] text-[#24389c] rounded-lg text-[10px] font-medium">
+<span class="material-symbols-outlined text-[16px]">terminal</span>
+                TCP Sync
+            </button>
+<button class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container-high rounded-lg text-[10px] font-medium transition-colors">
+<span class="material-symbols-outlined text-[16px]">lan</span>
+                UDP Notify
+            </button>
+<button class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container-high rounded-lg text-[10px] font-medium transition-colors">
+<span class="material-symbols-outlined text-[16px]">chat_bubble</span>
+                WS Chat
+            </button>
+</div>
+<!-- Terminal View -->
+<div class="flex-1 bg-on-surface p-4 font-mono text-[11px] leading-relaxed overflow-y-auto custom-scrollbar">
+<div class="flex gap-2 text-green-400 opacity-80">
+<span class="shrink-0">[14:22:01]</span>
+<span>[WS] WebSocket connection established. protocol: secure-v3</span>
+</div>
+<div class="flex gap-2 text-[#dee0ff]">
+<span class="shrink-0">[14:22:05]</span>
+<span>[TCP] Sending sync packet: user_id: 1, chapter: 11</span>
+</div>
+<div class="flex gap-2 text-blue-400 opacity-80">
+<span class="shrink-0">[14:22:12]</span>
+<span>[INFO] Prefetching assets for Chapter 11... 45%</span>
+</div>
+<div class="flex gap-2 text-yellow-400 opacity-60">
+<span class="shrink-0">[14:22:15]</span>
+<span>[UDP] Latency heartbeat: 24ms</span>
+</div>
+<div class="flex gap-2 text-white animate-pulse">
+<span>_</span>
+</div>
+</div>
+</footer>
+<!-- Toast Notification Overlay -->
+<div class="fixed top-24 left-1/2 -translate-x-1/2 z-[200]">
+<div class="bg-primary-container text-on-primary-container px-6 py-3 rounded-full flex items-center gap-3 shadow-xl border border-primary/20 backdrop-blur-md">
+<span class="material-symbols-outlined text-primary-fixed text-[20px]" style="font-variation-settings: 'FILL' 1;">new_releases</span>
+<span class="font-label font-bold text-sm">New chapter released!</span>
+<button class="ml-2 hover:opacity-70">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+</body></html>

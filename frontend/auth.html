@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MangaHub - Login</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#24389c",
+                        "primary-container": "#3f51b5",
+                        "secondary": "#4a626d",
+                        "on-primary": "#ffffff",
+                        "on-background": "#191c1d",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c5c5d4"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .editorial-title { font-family: 'Manrope', sans-serif; letter-spacing: -0.02em; }
+    </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6">
+    <div class="max-w-[420px] w-full flex flex-col gap-8">
+        <div class="flex justify-center mb-2">
+            <h1 class="editorial-title text-3xl font-extrabold text-primary">MangaHub</h1>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-xl p-10 shadow-[0_20px_40px_rgba(0,0,0,0.05)] ring-1 ring-outline-variant/10">
+            <div class="mb-8">
+                <h2 class="editorial-title text-2xl font-bold text-on-background mb-2">Welcome Back</h2>
+                <p class="text-secondary text-sm">Nhập thông tin để truy cập hệ thống đồng bộ.</p>
+            </div>
+
+            <form id="loginForm" class="space-y-6">
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1">Tên đăng nhập</label>
+                    <input id="username" required
+                        class="w-full bg-slate-100 border-none rounded-xl px-5 py-4 text-on-surface focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+                        placeholder="khoa_admin" type="text" />
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center px-1">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest">Mật khẩu</label>
+                        <a class="text-xs text-primary font-semibold hover:underline" href="#">Quên mật khẩu?</a>
+                    </div>
+                    <input id="password" required
+                        class="w-full bg-slate-100 border-none rounded-xl px-5 py-4 text-on-surface focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+                        placeholder="••••••••" type="password" />
+                </div>
+
+                <div id="message" class="hidden text-sm text-center font-medium py-2 rounded-lg"></div>
+
+                <button class="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold py-4 rounded-xl shadow-lg hover:opacity-90 active:scale-[0.98] transition-all editorial-title text-lg"
+                    type="submit">
+                    Đăng nhập
+                </button>
+            </form>
+
+            <div class="mt-8 pt-8 border-t border-slate-100 text-center">
+                <p class="text-slate-500 text-sm">
+                    Chưa có tài khoản?
+                    <a class="text-primary font-bold ml-1" href="#">Yêu cầu cấp quyền</a>
+                </p>
+            </div>
+        </div>
+
+        <details class="group bg-white/50 rounded-xl overflow-hidden ring-1 ring-slate-200 transition-all duration-300">
+            <summary class="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-slate-50 list-none">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-slate-400 text-sm">terminal</span>
+                    <span class="text-sm font-semibold text-slate-600 font-headline">Network Debug</span>
+                </div>
+                <span class="material-symbols-outlined text-slate-400 group-open:rotate-180 transition-transform">expand_more</span>
+            </summary>
+            <div class="px-6 pb-6 pt-2 text-[11px] font-mono bg-slate-900 text-slate-300 p-4 rounded-b-xl">
+                <p class="text-blue-400">// API Endpoint: http://localhost:8080/api/login</p>
+                <p class="text-emerald-400">// Protocol: HTTP/1.1 (JSON)</p>
+            </div>
+        </details>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const messageDiv = document.getElementById('message');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Hiển thị trạng thái đang xử lý
+            messageDiv.classList.remove('hidden', 'bg-red-50', 'text-red-600', 'bg-green-50', 'text-green-600');
+            messageDiv.classList.add('block', 'bg-blue-50', 'text-blue-600');
+            messageDiv.innerText = 'Đang xác thực...';
+
+            try {
+                const response = await fetch('http://localhost:8080/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Lưu JWT vào Local Storage
+                    localStorage.setItem('token', data.token);
+                    
+                    messageDiv.classList.replace('text-blue-600', 'text-green-600');
+                    messageDiv.classList.replace('bg-blue-50', 'bg-green-50');
+                    messageDiv.innerText = 'Đăng nhập thành công! Đang chuyển hướng...';
+
+                    // Chuyển hướng sang dashboard.html sau 1 giây
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else {
+                    messageDiv.classList.replace('text-blue-600', 'text-red-600');
+                    messageDiv.classList.replace('bg-blue-50', 'bg-red-50');
+                    messageDiv.innerText = data.error || 'Tên đăng nhập hoặc mật khẩu sai';
+                }
+            } catch (err) {
+                messageDiv.classList.replace('text-blue-600', 'text-red-600');
+                messageDiv.classList.replace('bg-blue-50', 'bg-red-50');
+                messageDiv.innerText = 'Lỗi: Không thể kết nối tới Server Go (Backend)';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MangaHub - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 min-h-screen flex flex-col">
+    <header class="bg-white border-b p-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-6">
+            <h1 class="text-xl font-bold text-blue-600">MangaHub Dashboard</h1>
+            <nav class="flex gap-4">
+                <a href="dashboard.html" class="text-sm font-semibold text-blue-600 border-b-2 border-blue-600">Trang chủ</a>
+                <a href="admin.html" class="text-sm font-semibold text-slate-500 hover:text-blue-600 transition">Admin Panel</a>
+            </nav>
+        </div>
+        <div class="flex items-center gap-4">
+            <div id="userInfo" class="text-sm font-medium text-slate-600"></div>
+            <button onclick="logout()" class="bg-red-50 text-red-600 px-4 py-1.5 rounded-lg text-sm font-bold hover:bg-red-100 transition">Đăng xuất</button>
+        </div>
+    </header>
+
+    <main class="flex-grow p-6">
+        <div class="mb-6">
+            <input type="text" id="searchInput" placeholder="Tìm kiếm truyện..."
+                class="w-full max-w-md p-2 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+
+        <div id="mangaGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+    </main>
+
+    <footer class="bg-slate-900 text-green-400 p-4 h-48 overflow-y-auto font-mono text-xs border-t-4 border-blue-600">
+        <div class="flex items-center gap-2 mb-2 border-b border-slate-700 pb-1">
+            <span class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px]">BACKEND LOG</span>
+            <span class="text-slate-500 italic">Streaming from Go server...</span>
+        </div>
+        <div id="terminalContent">[SYS] Terminal initialized. Waiting for backend logs...</div>
+    </footer>
+
+    <div id="notification-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-4 pointer-events-none"></div>
+
+    <script src="notification.js"></script>
+    <script>
+        const terminalContent = document.getElementById('terminalContent');
+        const terminalScroller = terminalContent.parentElement;
+
+        function appendTerminalLine(message, tone = 'text-green-400') {
+            const line = document.createElement('div');
+            line.className = tone;
+            line.textContent = message;
+            terminalContent.appendChild(line);
+            terminalScroller.scrollTop = terminalScroller.scrollHeight;
+        }
+
+        function connectBackendLogs() {
+            const socket = new WebSocket('ws://localhost:8080/api/ws-logs');
+
+            socket.onopen = () => {
+                appendTerminalLine('[SYS] Connected to backend log stream.', 'text-cyan-400');
+            };
+
+            socket.onmessage = (event) => {
+                const lines = event.data.split(/\r?\n/).filter(Boolean);
+                lines.forEach(line => appendTerminalLine(line));
+            };
+
+            socket.onclose = () => {
+                appendTerminalLine('[SYS] Log stream disconnected. Retrying in 2s...', 'text-yellow-400');
+                setTimeout(connectBackendLogs, 2000);
+            };
+
+            socket.onerror = () => {
+                appendTerminalLine('[SYS] Cannot connect to /api/ws-logs.', 'text-red-400');
+            };
+        }
+
+        async function fetchMangas(query = '') {
+            try {
+                const res = await fetch(`http://localhost:8080/api/mangas?q=${query}`);
+                const data = await res.json();
+                displayMangas(data);
+            } catch (err) {
+                appendTerminalLine(`[UI] Fetch mangas failed: ${err.message}`, 'text-red-400');
+            }
+        }
+
+        function displayMangas(mangas) {
+            const grid = document.getElementById('mangaGrid');
+            grid.innerHTML = mangas?.map(m => `
+                <div onclick="window.location.href='reading.html?id=${m.id}'" class="bg-white rounded-lg shadow hover:shadow-md transition p-3 cursor-pointer group">
+                    <div class="overflow-hidden rounded mb-2">
+                        <img src="${m.thumbnail || 'https://via.placeholder.com/150'}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
+                    </div>
+                    <h3 class="font-bold text-sm truncate group-hover:text-blue-600 transition">${m.title}</h3>
+                    <p class="text-xs text-gray-500">${m.author}</p>
+                </div>
+            `).join('') || '<p>Không tìm thấy truyện</p>';
+        }
+
+        let searchTimeout = null;
+        const searchInput = document.getElementById('searchInput');
+
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                fetchMangas(e.target.value.trim());
+            }, 500);
+        });
+
+        connectBackendLogs();
+        fetchMangas();
+    </script>
+</body>
+
+</html>

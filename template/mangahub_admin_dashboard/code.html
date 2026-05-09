@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#4a626d",
+                    "on-primary-fixed-variant": "#293ca0",
+                    "surface-variant": "#e1e3e4",
+                    "on-surface-variant": "#454652",
+                    "on-primary-fixed": "#00105c",
+                    "error-container": "#ffdad6",
+                    "on-background": "#191c1d",
+                    "on-tertiary-fixed": "#301400",
+                    "primary-container": "#3f51b5",
+                    "on-primary": "#ffffff",
+                    "primary": "#24389c",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#8f4700",
+                    "background": "#f8f9fa",
+                    "surface-tint": "#4355b9",
+                    "primary-fixed": "#dee0ff",
+                    "surface-container-low": "#f3f4f5",
+                    "on-tertiary-container": "#ffc7a2",
+                    "on-secondary-fixed-variant": "#334a55",
+                    "outline-variant": "#c5c5d4",
+                    "primary-fixed-dim": "#bac3ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "secondary-container": "#cde6f4",
+                    "surface-container-high": "#e7e8e9",
+                    "surface-container": "#edeeef",
+                    "secondary-fixed-dim": "#b1cad7",
+                    "on-primary-container": "#cacfff",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#757684",
+                    "surface-dim": "#d9dadb",
+                    "inverse-surface": "#2e3132",
+                    "surface-container-highest": "#e1e3e4",
+                    "tertiary-fixed-dim": "#ffb784",
+                    "secondary-fixed": "#cde6f4",
+                    "on-secondary-container": "#506873",
+                    "on-surface": "#191c1d",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-tertiary-fixed-variant": "#713700",
+                    "tertiary-fixed": "#ffdcc6",
+                    "on-secondary-fixed": "#051e28",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f8f9fa",
+                    "surface": "#f8f9fa",
+                    "inverse-primary": "#bac3ff",
+                    "tertiary": "#6c3400"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+        }
+        .manga-grid {
+            display: grid;
+            grid-template-columns: 256px 1fr;
+        }
+        .glass-nav {
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f8f9fa] dark:bg-slate-950/80 shadow-[0_20px_40px_rgba(25,28,29,0.04)] backdrop-blur-xl flex justify-between items-center px-8 h-16 w-full">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold tracking-tighter text-[#191c1d] dark:text-[#f8f9fa] font-manrope">MangaHub Admin</span>
+<div class="hidden md:flex ml-10 items-center bg-surface-container-highest rounded-full px-4 py-1.5 gap-3">
+<span class="material-symbols-outlined text-secondary text-lg">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-64 font-body" placeholder="Search infrastructure..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="material-symbols-outlined text-secondary hover:bg-[#f3f4f5] p-2 rounded-full transition-colors active:scale-95 duration-200">notifications</button>
+<button class="material-symbols-outlined text-secondary hover:bg-[#f3f4f5] p-2 rounded-full transition-colors active:scale-95 duration-200">settings</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant/30">
+<img alt="Administrator profile" data-alt="Professional portrait of a male system administrator in a modern office setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVjNzDkr3jEYwPg_uPJ9C08czIITI786o9z-cgVQXPwQ_kGiqKWoWQpCw5gN7oTHMr6MCuaKcqBm8uQS76pCNBeLWc5muGzyTLVX6zKKhTa_vYU9-5D2ifd5v_l_cIj8wOJI01vt0KWeRJasmdR_SJDKr4YWex0ick-mD_oAC89Xcl33jBcA-tah-ddoJHrPRK5XaeLYw2IwSC_6kostr86g9cO4M8bIIjwOmQHldbZ5Y-p5i2wrnb6iME2lW8TlaAhx28nqPifq4"/>
+</div>
+</div>
+</header>
+<div class="flex pt-16">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-[#f8f9fa] dark:bg-slate-950 flex flex-col pt-20 pb-8 px-4 gap-2 font-manrope text-sm font-medium z-40">
+<div class="px-4 mb-6">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary">hub</span>
+</div>
+<div>
+<p class="text-lg font-bold text-[#191c1d] leading-none">Core Engine</p>
+<p class="text-[10px] text-secondary tracking-widest uppercase mt-1">v4.2.0-stable</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-[#3F51B5] dark:text-[#dee0ff] font-bold bg-[#f3f4f5] dark:bg-slate-900 rounded-lg transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#4a626d] dark:text-slate-400 hover:text-[#3F51B5] hover:bg-[#f3f4f5] dark:hover:bg-slate-900 rounded-lg transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">library_books</span>
+<span>Manga Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#4a626d] dark:text-slate-400 hover:text-[#3F51B5] hover:bg-[#f3f4f5] dark:hover:bg-slate-900 rounded-lg transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">terminal</span>
+<span>Protocol Control</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#4a626d] dark:text-slate-400 hover:text-[#3F51B5] hover:bg-[#f3f4f5] dark:hover:bg-slate-900 rounded-lg transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span>Network Map</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#4a626d] dark:text-slate-400 hover:text-[#3F51B5] hover:bg-[#f3f4f5] dark:hover:bg-slate-900 rounded-lg transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span>User Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#4a626d] dark:text-slate-400 hover:text-[#3F51B5] hover:bg-[#f3f4f5] dark:hover:bg-slate-900 rounded-lg transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>System Logs</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 space-y-1">
+<button class="w-full mb-4 bg-primary text-on-primary py-3 rounded-lg font-bold text-xs tracking-wider uppercase active:scale-95 transition-transform">Broadcast UDP Update</button>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">menu_book</span>
+<span>Documentation</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 w-full p-8 space-y-8 bg-surface">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<h1 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface">Node Overview</h1>
+<p class="text-secondary font-body mt-1">Real-time status of MangaHub global delivery network.</p>
+</div>
+<div class="flex gap-3">
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold flex items-center gap-1.5">
+<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        SYSTEM OPERATIONAL
+                    </span>
+</div>
+</div>
+<!-- Stat Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-[#E3F2FD] shadow-sm hover:shadow-md transition-shadow">
+<p class="text-xs font-bold text-secondary tracking-widest uppercase font-label">Total Users</p>
+<div class="flex items-center justify-between mt-4">
+<h3 class="text-2xl font-extrabold font-headline">15,200</h3>
+<span class="material-symbols-outlined text-primary-container bg-primary-fixed p-2 rounded-lg">group</span>
+</div>
+<p class="text-[10px] text-green-600 font-bold mt-2">+12% from last week</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-[#E3F2FD] shadow-sm hover:shadow-md transition-shadow">
+<p class="text-xs font-bold text-secondary tracking-widest uppercase font-label">Active TCP Connections</p>
+<div class="flex items-center justify-between mt-4">
+<h3 class="text-2xl font-extrabold font-headline">1,240</h3>
+<span class="material-symbols-outlined text-primary-container bg-primary-fixed p-2 rounded-lg">lan</span>
+</div>
+<p class="text-[10px] text-secondary font-bold mt-2">Peak: 1,850 connections</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-[#E3F2FD] shadow-sm hover:shadow-md transition-shadow">
+<p class="text-xs font-bold text-secondary tracking-widest uppercase font-label">WebSocket Clients</p>
+<div class="flex items-center justify-between mt-4">
+<h3 class="text-2xl font-extrabold font-headline">850</h3>
+<span class="material-symbols-outlined text-primary-container bg-primary-fixed p-2 rounded-lg">swap_calls</span>
+</div>
+<p class="text-[10px] text-green-600 font-bold mt-2">Stability: 99.9%</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-[#E3F2FD] shadow-sm hover:shadow-md transition-shadow">
+<p class="text-xs font-bold text-secondary tracking-widest uppercase font-label">Server Latency</p>
+<div class="flex items-center justify-between mt-4">
+<h3 class="text-2xl font-extrabold font-headline">24ms</h3>
+<span class="material-symbols-outlined text-primary-container bg-primary-fixed p-2 rounded-lg">speed</span>
+</div>
+<p class="text-[10px] text-secondary font-bold mt-2">Region: Asia-Pacific</p>
+</div>
+</div>
+<!-- Manga Management Table -->
+<section class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 flex justify-between items-center bg-surface-container-low">
+<h2 class="text-lg font-bold font-headline">Manga Content Inventory</h2>
+<button class="text-xs font-bold text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">filter_list</span> Filter
+                    </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left font-body">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant/10">
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Title</th>
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Chapters</th>
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Last Updated</th>
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-14 rounded bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Abstract manga cover art with vibrant blue and neon lines on dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDOjtYhIHQ4foMy1EjeCavgM24zB661XmbMXmdookl4at449f40HmPg_LV77kYqIIIm9mY_aWD9-Ak5aCIeAmnj5yb3RCrSBY0Ct-ENiV1hBOiNtrccLd0OL1gb19jBSwhosmsvuEYgXBlutKQ7YyZfss9xAZbDZIg03A37W4M8P0p8O3Q3z6-bE-muEGXnpGKK1iUvZ-OMQSsiAlKYvG_hB_ZKOl1dXP2bcO_zL_kilxGt-0AKyV2lout76LWKtf-5Vrxqe1b6ak"/>
+</div>
+<span class="font-semibold text-on-surface">Stellar Odyssey</span>
+</div>
+</td>
+<td class="px-6 py-4"><span class="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[10px] font-bold">PUBLISHED</span></td>
+<td class="px-6 py-4 text-sm text-secondary">245 Chapters</td>
+<td class="px-6 py-4 text-sm text-secondary">2 hours ago</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="px-3 py-1 border border-primary-container text-primary-container rounded-lg text-xs font-bold hover:bg-primary-fixed transition-colors">Edit</button>
+<button class="px-3 py-1 text-error text-xs font-bold hover:underline">Delete</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-14 rounded bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="High contrast manga style illustration of a cyber city at night with blue highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe5ELCHfA8itZc7H4gf_VPoow9nTNU7CEype7TomrxqEZeTY73DJbLzh-OQuhAlaDKHjT2qhzDZXwXAsBSICqf4j90L71cMcsOVHZmFwPzpnrblf4XO5FpU9uyaPUGt4TfuxeWYjABmdKStkDOVU6zPRHXmTcG0oU-1GiT2xhVmkpKOLBheCGvTL60VShAmRJhK1ExCHzQ9oldYkvNurWwLNGC-gx5MXynuWT2YC5kV-LRXrxS7OcnEqSyyup6eFTgn1QTM2WNXDw"/>
+</div>
+<span class="font-semibold text-on-surface">Neon Horizon</span>
+</div>
+</td>
+<td class="px-6 py-4"><span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold">DRAFT</span></td>
+<td class="px-6 py-4 text-sm text-secondary">12 Chapters</td>
+<td class="px-6 py-4 text-sm text-secondary">Yesterday</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="px-3 py-1 border border-primary-container text-primary-container rounded-lg text-xs font-bold hover:bg-primary-fixed transition-colors">Edit</button>
+<button class="px-3 py-1 text-error text-xs font-bold hover:underline">Delete</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-14 rounded bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Soft watercolor manga art featuring cherry blossoms and a distant mountain peak in blue tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfSJJeP7b7tILQp_-vhCuKxR-W1wAW-YaH8qppVASaj1k6chfow72QcDF9OdgTfWWHeqtHKUl2qLalI9WZYlgGQ82p23Jh9q_eyjLiaXHuEwnBONTnOB1kbnDjn142-xvjLvTPxQdATWDeeoBn3rpUg82sgi8ow0wMpklN3y_6j669wkGJMlaWQIdAuLT7k8w3xrbfYo2B6GzRa1uUqwtV1N2BKY_HMIgtv3qWW88YRY3YkpA2SErp-QDQJ04eglXU04-5Zg8PwK4"/>
+</div>
+<span class="font-semibold text-on-surface">Silent Petals</span>
+</div>
+</td>
+<td class="px-6 py-4"><span class="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[10px] font-bold">PUBLISHED</span></td>
+<td class="px-6 py-4 text-sm text-secondary">189 Chapters</td>
+<td class="px-6 py-4 text-sm text-secondary">3 days ago</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="px-3 py-1 border border-primary-container text-primary-container rounded-lg text-xs font-bold hover:bg-primary-fixed transition-colors">Edit</button>
+<button class="px-3 py-1 text-error text-xs font-bold hover:underline">Delete</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-outline-variant/10 flex justify-center">
+<button class="text-xs font-bold text-primary-container hover:bg-primary-fixed px-4 py-2 rounded-lg transition-colors">View All Content</button>
+</div>
+</section>
+<!-- Bottom Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Protocol Control Center -->
+<section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-lg font-bold font-headline">Protocol Control Center</h2>
+<span class="material-symbols-outlined text-primary">terminal</span>
+</div>
+<div class="flex flex-col gap-4">
+<button class="w-fit px-6 py-3 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-lg font-bold text-sm flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg">broadcast_on_home</span>
+                            Broadcast UDP Update
+                        </button>
+<div class="bg-on-background rounded-lg p-4 font-mono text-xs text-green-400 h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20">
+<p class="mb-1 opacity-70">[SYSTEM] Initializing protocol broadcast cluster...</p>
+<p class="mb-1">[UDP] Binding socket to interface eth0:0.0.0.0:8080</p>
+<p class="mb-1">[UDP] Discovery sequence initiated on 255.255.255.255</p>
+<p class="mb-1 text-green-300 font-bold">[UDP] Sending datagram to 192.168.1.255:9999</p>
+<p class="mb-1 opacity-70">[ACK] Waiting for synchronization packets...</p>
+<p class="mb-1">[UDP] Sending datagram to 192.168.1.255:9999</p>
+<p class="mb-1">[UDP] Sending datagram to 192.168.1.255:9999</p>
+<p class="mb-1 text-blue-400">[INFO] Cluster synced with 4 active nodes.</p>
+<p class="mb-1 text-green-300 font-bold">[UDP] Sending datagram to 192.168.1.255:9999</p>
+</div>
+</div>
+</section>
+<!-- Active Connections Map -->
+<section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-lg font-bold font-headline">Active Connections</h2>
+<span class="material-symbols-outlined text-primary">hub</span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
+<span class="text-sm font-semibold font-body">192.168.1.15</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[10px] font-bold text-secondary tracking-widest px-2 py-0.5 bg-surface-container-high rounded uppercase">gRPC</span>
+<span class="text-[10px] text-secondary opacity-0 group-hover:opacity-100 transition-opacity">Just now</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
+<span class="text-sm font-semibold font-body">172.16.0.42</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[10px] font-bold text-secondary tracking-widest px-2 py-0.5 bg-surface-container-high rounded uppercase">TCP</span>
+<span class="text-[10px] text-secondary opacity-0 group-hover:opacity-100 transition-opacity">12s ago</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
+<span class="text-sm font-semibold font-body">10.0.4.128</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[10px] font-bold text-secondary tracking-widest px-2 py-0.5 bg-surface-container-high rounded uppercase">WebSocket</span>
+<span class="text-[10px] text-secondary opacity-0 group-hover:opacity-100 transition-opacity">44s ago</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-amber-400"></span>
+<span class="text-sm font-semibold font-body">192.168.1.102</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[10px] font-bold text-secondary tracking-widest px-2 py-0.5 bg-surface-container-high rounded uppercase">HTTP/3</span>
+<span class="text-[10px] text-secondary opacity-0 group-hover:opacity-100 transition-opacity">2m ago</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
+<span class="text-sm font-semibold font-body">8.8.8.8</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[10px] font-bold text-secondary tracking-widest px-2 py-0.5 bg-surface-container-high rounded uppercase">UDP</span>
+<span class="text-[10px] text-secondary opacity-0 group-hover:opacity-100 transition-opacity">4m ago</span>
+</div>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant/10">
+<div class="w-full h-32 rounded-lg bg-surface-container-low overflow-hidden relative">
+<div class="absolute inset-0 flex items-center justify-center opacity-40">
+<span class="material-symbols-outlined text-4xl">public</span>
+</div>
+<!-- Mock Network Data Map Location -->
+<div class="h-full w-full bg-[#f0f4f8] flex items-end p-2">
+<div class="w-full h-1/2 flex items-end gap-1">
+<div class="flex-1 bg-primary/20 h-[40%] rounded-t"></div>
+<div class="flex-1 bg-primary/20 h-[60%] rounded-t"></div>
+<div class="flex-1 bg-primary/40 h-[80%] rounded-t"></div>
+<div class="flex-1 bg-primary/20 h-[50%] rounded-t"></div>
+<div class="flex-1 bg-primary-container h-[95%] rounded-t"></div>
+<div class="flex-1 bg-primary/30 h-[45%] rounded-t"></div>
+<div class="flex-1 bg-primary/20 h-[30%] rounded-t"></div>
+</div>
+</div>
+</div>
+<p class="text-[10px] text-center text-secondary mt-2 font-bold tracking-widest uppercase">Traffic Load Distribution</p>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

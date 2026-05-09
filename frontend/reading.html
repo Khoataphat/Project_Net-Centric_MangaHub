@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MangaHub - Đọc truyện</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-900 text-white min-h-screen flex flex-col">
+    <header class="bg-slate-800 border-b border-slate-700 p-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-4">
+            <a href="dashboard.html" class="text-blue-400 hover:text-blue-300 font-bold">← Trở về</a>
+            <h1 class="text-xl font-bold">Đang đọc: <span id="mangaTitle" class="text-blue-400">Loading...</span></h1>
+        </div>
+        <div class="text-sm">Chương hiện tại: <span id="currentChapterDisplay" class="font-bold text-green-400">1</span>
+        </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row flex-grow overflow-hidden">
+        <!-- Main Content -->
+        <main class="flex-grow flex flex-col items-center p-6 gap-6 overflow-y-auto">
+            <div class="bg-slate-800 p-8 rounded-lg shadow-2xl w-full max-w-2xl text-center border border-slate-700">
+                <h2 class="text-3xl font-bold mb-8">Nội dung chương <span id="chapterNumberText">1</span></h2>
+                <div id="mangaContent" class="flex flex-col items-center gap-4 py-8">
+                    <div class="w-full aspect-[2/3] bg-slate-700 rounded flex items-center justify-center text-slate-500 animate-pulse">
+                        Đang tải nội dung...
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-4 mb-8">
+                <button id="btnPrev" class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded font-bold transition">← Chương trước</button>
+                <button id="btnNext" class="px-6 py-2 bg-blue-600 hover:bg-blue-500 rounded font-bold transition">Chương tiếp →</button>
+            </div>
+        </main>
+
+        <!-- Sidebar / Chat -->
+        <aside class="w-full md:w-80 bg-slate-800 border-l border-slate-700 flex flex-col">
+            <div class="p-4 border-b border-slate-700 font-bold text-blue-400 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">forum</span>
+                Phòng chat cộng đồng
+            </div>
+            <div id="chatBox" class="flex-grow overflow-y-auto p-4 space-y-3"></div>
+            <div class="p-4 border-t border-slate-700 bg-slate-900/50">
+                <div class="flex gap-2">
+                    <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." 
+                        class="flex-grow bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 transition">
+                    <button id="sendBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-sm font-bold transition">Gửi</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="bg-black text-green-400 p-4 h-40 overflow-y-auto font-mono text-xs border-t-4 border-blue-600">
+        <div class="flex items-center gap-2 mb-2 border-b border-slate-800 pb-1 sticky top-0 bg-black">
+            <span class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px]">TCP STREAM</span>
+            <span class="text-slate-500 italic" id="connStatus">Đang chờ kết nối...</span>
+        </div>
+        <div id="terminalContent" class="space-y-1"></div>
+    </footer>
+
+    <script>
+        // 1. Auth check
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'auth.html';
+        }
+
+        // 2. Load Manga Data
+        const urlParams = new URLSearchParams(window.location.search);
+        const mangaId = urlParams.get('id');
+
+        async function loadMangaInfo() {
+            if (!mangaId) {
+                document.getElementById('mangaTitle').innerText = 'Không tìm thấy ID';
+                return;
+            }
+
+            try {
+                const res = await fetch(`http://localhost:8080/api/mangas/${mangaId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const manga = await res.json();
+                    document.getElementById('mangaTitle').innerText = manga.title;
+                    document.title = `Đang đọc: ${manga.title} - MangaHub`;
+                    
+                    // Giả lập load ảnh
+                    const mangaContent = document.getElementById('mangaContent');
+                    mangaContent.innerHTML = `
+                        <img src="${manga.thumbnail}" class="w-full max-w-md rounded shadow-lg">
+                        <p class="text-slate-400 mt-4 italic">${manga.description}</p>
+                    `;
+                } else {
+                    document.getElementById('mangaTitle').innerText = 'Lỗi tải dữ liệu';
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('mangaTitle').innerText = 'Lỗi kết nối';
+            }
+        }
+
+        loadMangaInfo();
+
+        // 3. Chat logic (WebSocket)
+        const socket = new WebSocket('ws://localhost:8080/api/ws/chat');
+        const chatBox = document.getElementById('chatBox');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        socket.onmessage = function(event) {
+            const msg = event.data;
+            const msgElement = document.createElement('div');
+            msgElement.className = "p-2 bg-slate-700/50 rounded-lg text-sm border border-slate-600/50";
+            msgElement.innerHTML = `<span class="font-bold text-blue-400 block mb-1">User:</span> <span class="text-slate-200">${msg}</span>`;
+            chatBox.appendChild(msgElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+
+        sendBtn.onclick = function() {
+            const text = chatInput.value.trim();
+            if (text) {
+                socket.send(text);
+                chatInput.value = '';
+            }
+        };
+
+        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendBtn.click(); });
+    </script>
+    <script src="sync.js"></script>
+</body>
+
+</html>
