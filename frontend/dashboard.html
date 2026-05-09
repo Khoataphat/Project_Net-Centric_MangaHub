@@ -28,24 +28,20 @@
                 class="w-full max-w-md p-2 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none">
         </div>
 
-        <div id="mangaGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        </div>
+        <div id="mangaGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
     </main>
 
     <footer class="bg-slate-900 text-green-400 p-4 h-48 overflow-y-auto font-mono text-xs border-t-4 border-blue-600">
         <div class="flex items-center gap-2 mb-2 border-b border-slate-700 pb-1">
-            <span class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px]">NETWORK LOG</span>
-            <span class="text-slate-500 italic">Listening for packets...</span>
+            <span class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px]">BACKEND LOG</span>
+            <span class="text-slate-500 italic">Streaming from Go server...</span>
         </div>
-        <div id="terminalContent">
-            [SYS] Terminal initialized. Waiting for CLI Bridge...
-        </div>
+        <div id="terminalContent">[SYS] Terminal initialized. Waiting for backend logs...</div>
     </footer>
 
-    <!-- Toast Notification Container [AC2] -->
     <div id="notification-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-4 pointer-events-none"></div>
 
-        // Kiểm tra Token ngay lập tức
+    <script>
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.href = 'auth.html';
@@ -55,30 +51,51 @@
             localStorage.removeItem('token');
             window.location.href = 'auth.html';
         }
-        const terminalContent = document.getElementById('terminalContent');
 
-        // Hàm giả lập log cho CLI Bridge (Bản chất mạng)
-        function addLog(method, endpoint, status) {
-            const time = new Date().toLocaleTimeString();
-            const logEntry = document.createElement('div');
-            logEntry.innerHTML = `<span class="text-slate-500">[${time}]</span> <span class="text-blue-400">${method}</span> <span class="text-yellow-400">${endpoint}</span> <span class="text-green-500">${status}</span>`;
-            terminalContent.appendChild(logEntry);
-            terminalContent.parentElement.scrollTop = terminalContent.parentElement.scrollHeight;
+        const terminalContent = document.getElementById('terminalContent');
+        const terminalScroller = terminalContent.parentElement;
+
+        function appendTerminalLine(message, tone = 'text-green-400') {
+            const line = document.createElement('div');
+            line.className = tone;
+            line.textContent = message;
+            terminalContent.appendChild(line);
+            terminalScroller.scrollTop = terminalScroller.scrollHeight;
+        }
+
+        function connectBackendLogs() {
+            const socket = new WebSocket('ws://localhost:8080/api/ws-logs');
+
+            socket.onopen = () => {
+                appendTerminalLine('[SYS] Connected to backend log stream.', 'text-cyan-400');
+            };
+
+            socket.onmessage = (event) => {
+                const lines = event.data.split(/\r?\n/).filter(Boolean);
+                lines.forEach(line => appendTerminalLine(line));
+            };
+
+            socket.onclose = () => {
+                appendTerminalLine('[SYS] Log stream disconnected. Retrying in 2s...', 'text-yellow-400');
+                setTimeout(connectBackendLogs, 2000);
+            };
+
+            socket.onerror = () => {
+                appendTerminalLine('[SYS] Cannot connect to /api/ws-logs.', 'text-red-400');
+            };
         }
 
         async function fetchMangas(query = '') {
-            addLog('GET', `/api/mangas?q=${query}`, 'PENDING');
             try {
-                const res = await fetch(`http://localhost:8080/api/mangas?q=${query}`, {
+                const res = await fetch(`http://localhost:8080/api/mangas?q=${encodeURIComponent(query)}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 const data = await res.json();
-                addLog('GET', `/api/mangas`, '200 OK');
                 displayMangas(data);
             } catch (err) {
-                addLog('ERROR', `/api/mangas`, 'FAILED');
+                appendTerminalLine(`[UI] Fetch mangas failed: ${err.message}`, 'text-red-400');
             }
         }
 
@@ -95,22 +112,17 @@
             `).join('') || '<p>Không tìm thấy truyện</p>';
         }
 
-        //Tính năng Debounce
         let searchTimeout = null;
         const searchInput = document.getElementById('searchInput');
 
         searchInput.addEventListener('input', (e) => {
-            // 1. Hủy lệnh gọi API cũ nếu người dùng vẫn đang tiếp tục gõ
             clearTimeout(searchTimeout);
-
-            // 2. Thiết lập một lệnh gọi API mới, nhưng hẹn giờ 500ms sau mới chạy
             searchTimeout = setTimeout(() => {
-                const keyword = e.target.value.trim();
-                fetchMangas(keyword);
+                fetchMangas(e.target.value.trim());
             }, 500);
         });
 
-        // Khởi tạo
+        connectBackendLogs();
         fetchMangas();
     </script>
 </body>
