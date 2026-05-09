@@ -23,6 +23,11 @@ func NewHub() *Hub {
 	}
 }
 
+// Broadcast gửi tin nhắn tới tất cả client đang kết nối (AC3)
+func (h *Hub) Broadcast(message []byte) {
+	h.broadcast <- message
+}
+
 func (h *Hub) Run() {
 	for {
 		select {
