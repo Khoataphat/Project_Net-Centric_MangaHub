@@ -1,5 +1,7 @@
 package websocket
 
+import "log"
+
 type Hub struct {
 	// Danh sách các client đang kết nối
 	clients map[*Client]bool
@@ -29,6 +31,14 @@ func (h *Hub) Broadcast(message []byte) {
 }
 
 func (h *Hub) Run() {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("[Hub] Recovered from panic: %v", r)
+			// Khởi động lại Hub nếu cần, hoặc log lỗi nghiêm trọng
+			go h.Run()
+		}
+	}()
+
 	for {
 		select {
 		case client := <-h.register:

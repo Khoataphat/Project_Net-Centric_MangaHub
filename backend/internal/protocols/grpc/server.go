@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
 
@@ -34,19 +35,32 @@ func (s *MangaServer) GetMangaDetail(ctx context.Context, req *proto.MangaReques
 	}, nil
 }
 
-func StartGRPCServer(port string) {
-	lis, err := net.Listen("tcp", port)
+// StartGRPCServer khởi chạy gRPC Server và hỗ trợ đóng an toàn (AC1, Defensive Rules)
+func StartGRPCServer(ctx context.Context, addr string) error {
+	lis, err := net.Listen("tcp", addr)
 	if err != nil {
-		log.Fatalf("[gRPC] Không thể mở cổng lắng nghe: %v", err)
+		return fmt.Errorf("[gRPC] Không thể mở cổng lắng nghe tại %s: %v", addr, err)
 	}
 
 	s := grpc.NewServer()
-
 	proto.RegisterMangaServiceServer(s, &MangaServer{})
 
-	log.Printf("[gRPC] Server đang chạy tại port %s", port)
+	log.Printf("[gRPC] Server đang chạy tại %s", addr)
+
+	// Goroutine lắng nghe tín hiệu dừng từ Context
+	go func() {
+		<-ctx.Done()
+		log.Println("[gRPC] Đang dừng gRPC Server...")
+		s.GracefulStop()
+	}()
 
 	if err := s.Serve(lis); err != nil {
-		log.Fatalf("[gRPC] Lỗi khi chạy server: %v", err)
+		select {
+		case <-ctx.Done():
+			return nil // Thoát bình thường khi Shutdown
+		default:
+			return fmt.Errorf("[gRPC] Lỗi khi chạy server: %v", err)
+		}
 	}
+	return nil
 }

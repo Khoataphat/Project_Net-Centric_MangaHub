@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"mangahub/internal/database"
 	"mangahub/internal/protocols/grpc"
 	"mangahub/internal/protocols/http"
@@ -9,18 +10,44 @@ import (
 	"mangahub/internal/protocols/websocket"
 	"mangahub/internal/protocols/bridge"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+	"fmt"
+	net_http "net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
+
 func main() {
+	// 0. Load Configuration from Environment
+	host := getEnv("HOST", "0.0.0.0")
+	httpPort := getEnv("HTTP_PORT", "8080")
+	tcpPort := getEnv("TCP_PORT", "9090")
+	udpPort := getEnv("UDP_PORT", "9999")
+	bridgePort := getEnv("BRIDGE_PORT", "8888")
+	grpcPort := getEnv("GRPC_PORT", "50051")
+	dbPath := getEnv("DB_PATH", "./data/mangahub.db")
+
+	log.Printf("Starting MangaHub Backend on %s", host)
+
 	// 1. Khởi tạo Database
-	database.InitDB("./data/mangahub.db")
+	database.InitDB(dbPath)
 
-	// 2. Khởi tạo Gin
+	// 2. Setup Context cho Graceful Shutdown
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	// 3. Khởi tạo Gin
 	r := gin.Default()
-
-	// 3. Sử dụng Middleware (CORS...)
 	r.Use(CORSMiddleware())
 
 	// 4. Khởi tạo Hub cho WebSocket
@@ -30,28 +57,67 @@ func main() {
 	// 5. Gọi Router đã tách
 	http.SetupRouter(r, chatHub)
 
-	// 6. Khởi tạo TCP Server (Chạy song song)
-	go tcp.StartTCPServer(":9090")
+	// 6. Khởi tạo TCP Server (AC1, AC4)
+	go func() {
+		if err := tcp.StartTCPServer(ctx, fmt.Sprintf("%s:%s", host, tcpPort)); err != nil {
+			log.Printf("[TCP Error] %v", err)
+		}
+	}()
 
-	// 7. Khởi tạo gRPC Server
-	go grpc.StartGRPCServer(":50051")
+	// 7. Khởi tạo gRPC Server (AC1, AC4)
+	go func() {
+		if err := grpc.StartGRPCServer(ctx, fmt.Sprintf("%s:%s", host, grpcPort)); err != nil {
+			log.Printf("[gRPC Error] %v", err)
+		}
+	}()
 
 	// 8. Khởi tạo UDP Notifier Server (AC1)
-	if err := udp.InitUDPServer(9999); err != nil {
-		log.Printf("[UDP] Cảnh báo: %v", err)
+	udpPortInt := 9999
+	fmt.Sscanf(udpPort, "%d", &udpPortInt)
+	if err := udp.InitUDPServer(udpPortInt); err != nil {
+		log.Printf("[UDP Warning] %v", err)
 	}
 
-	// 9. Khởi tạo Bridge Service (Kết nối UDP Server -> WebSocket Hub)
-	udpBridge := bridge.NewUDPBridge(8888, chatHub)
+	// 9. Khởi tạo Bridge Service
+	bridgePortInt := 8888
+	fmt.Sscanf(bridgePort, "%d", &bridgePortInt)
+	udpBridge := bridge.NewUDPBridge(bridgePortInt, chatHub)
 	if err := udpBridge.Start(); err != nil {
-		log.Printf("[Bridge] Cảnh báo: %v", err)
+		log.Printf("[Bridge Warning] %v", err)
 	} else {
 		// Đăng ký Bridge với UDP Server
-		udp.AddBridge("127.0.0.1:8888")
+		bridgeAddr := fmt.Sprintf("127.0.0.1:%d", bridgePortInt)
+		udp.AddBridge(bridgeAddr)
 	}
 
-	// 10. Chạy server HTTP
-	r.Run(":8080")
+	// 10. Chạy server HTTP với cơ chế Graceful Shutdown (AC4)
+	srv := &net_http.Server{
+		Addr:    fmt.Sprintf("%s:%s", host, httpPort),
+		Handler: r,
+	}
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != net_http.ErrServerClosed {
+			log.Fatalf("[HTTP Error] listen: %s\n", err)
+		}
+	}()
+
+	log.Printf("[HTTP] Server đang chạy tại %s:%s", host, httpPort)
+
+	// Chờ tín hiệu dừng
+	<-ctx.Done()
+
+	// Đóng các resource
+	log.Println("Shutting down MangaHub Backend...")
+
+	// HTTP Shutdown với timeout 5s
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		log.Fatal("Server forced to shutdown: ", err)
+	}
+
+	log.Println("MangaHub Backend exited cleanly.")
 }
 
 func CORSMiddleware() gin.HandlerFunc {

@@ -7,6 +7,7 @@ import (
 )
 
 func SetupRouter(r *gin.Engine, chatHub *websocket.Hub) {
+	r.GET("/health", HealthHandler)
 	api := r.Group("/api")
 	{
 		api.POST("/register", RegisterHandler)
