@@ -16,8 +16,6 @@ type MangaServer struct {
 }
 
 func (s *MangaServer) GetMangaDetail(ctx context.Context, req *proto.MangaRequest) (*proto.MangaResponse, error) {
-	log.Printf("[gRPC] Nhận request Scan Manga %d", req.Id)
-
 	var title, author, desc string
 
 	err := database.DB.QueryRow("SELECT title, author, description FROM mangas WHERE id = ?", req.Id).

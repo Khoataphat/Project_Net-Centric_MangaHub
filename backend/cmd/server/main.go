@@ -1,58 +1,57 @@
 package main
 
 import (
-	"io"
-	"log"
 	"mangahub/internal/database"
-	"mangahub/internal/protocols/bridge"
 	"mangahub/internal/protocols/grpc"
 	"mangahub/internal/protocols/http"
 	"mangahub/internal/protocols/tcp"
 	"mangahub/internal/protocols/udp"
 	"mangahub/internal/protocols/websocket"
-	"os"
+	"mangahub/internal/protocols/bridge"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	multiWriter := io.MultiWriter(os.Stdout, websocket.WsLogWriter{})
-	log.SetOutput(multiWriter)
-	gin.DefaultWriter = multiWriter
-	gin.DefaultErrorWriter = multiWriter
-
+	// 1. Khởi tạo Database
 	database.InitDB("./data/mangahub.db")
 
-	go websocket.ServerLogs.Run()
-
+	// 2. Khởi tạo Gin
 	r := gin.Default()
+
+	// 3. Sử dụng Middleware (CORS...)
 	r.Use(CORSMiddleware())
 
+	// 4. Khởi tạo Hub cho WebSocket
 	chatHub := websocket.NewHub()
-	go chatHub.Run()
+	go chatHub.Run() // Chạy Hub ở một Goroutine riêng
 
+	// 5. Gọi Router đã tách
 	http.SetupRouter(r, chatHub)
 
+	// 6. Khởi tạo TCP Server (Chạy song song)
 	go tcp.StartTCPServer(":9090")
+
+	// 7. Khởi tạo gRPC Server
 	go grpc.StartGRPCServer(":50051")
 
+	// 8. Khởi tạo UDP Notifier Server (AC1)
 	if err := udp.InitUDPServer(9999); err != nil {
 		log.Printf("[UDP] Cảnh báo: %v", err)
 	}
 
+	// 9. Khởi tạo Bridge Service (Kết nối UDP Server -> WebSocket Hub)
 	udpBridge := bridge.NewUDPBridge(8888, chatHub)
 	if err := udpBridge.Start(); err != nil {
 		log.Printf("[Bridge] Cảnh báo: %v", err)
 	} else {
-		if err := udp.AddBridge("127.0.0.1:8888"); err != nil {
-			log.Printf("[UDP] Cảnh báo đăng ký bridge: %v", err)
-		}
+		// Đăng ký Bridge với UDP Server
+		udp.AddBridge("127.0.0.1:8888")
 	}
 
-	log.Println("[HTTP] Server đang chạy tại port :8080")
-	if err := r.Run(":8080"); err != nil {
-		log.Fatalf("[HTTP] Lỗi khi chạy server: %v", err)
-	}
+	// 10. Chạy server HTTP
+	r.Run(":8080")
 }
 
 func CORSMiddleware() gin.HandlerFunc {
