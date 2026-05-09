@@ -12,6 +12,7 @@ func SetupRouter(r *gin.Engine, chatHub *websocket.Hub) {
 		api.POST("/register", RegisterHandler)
 		api.POST("/login", LoginHandler)
 		api.GET("/mangas", GetMangas)
+		api.GET("/mangas/:id", GetMangaByID)
 		api.GET("/ws-tcp-bridge", TCPBridgeHandler)
 		api.GET("/admin/scan-manga", ScanMangaHandler)
 		api.GET("/ws/chat", func(c *gin.Context) {

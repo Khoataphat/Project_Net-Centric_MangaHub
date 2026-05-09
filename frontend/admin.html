@@ -9,9 +9,19 @@
 
 <body class="bg-slate-900 text-slate-300 min-h-screen p-8 font-mono">
     <div class="max-w-3xl mx-auto">
-        <div class="flex items-center gap-4 border-b border-slate-700 pb-4 mb-8">
-            <span class="bg-purple-600 text-white px-3 py-1 rounded font-bold text-sm">ADMIN PANEL</span>
-            <h1 class="text-2xl font-bold text-white">gRPC Data Scanner</h1>
+        <div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4">
+            <div class="flex items-center gap-4">
+                <span class="bg-purple-600 text-white px-3 py-1 rounded font-bold text-sm">ADMIN PANEL</span>
+                <h1 class="text-2xl font-bold text-white">gRPC Data Scanner</h1>
+            </div>
+            <div class="flex gap-4">
+                <a href="dashboard.html" class="text-slate-400 hover:text-white transition text-sm flex items-center gap-1">
+                    ← Dashboard
+                </a>
+                <button onclick="logout()" class="bg-red-900/30 text-red-400 px-3 py-1 rounded border border-red-900/50 hover:bg-red-900/50 transition text-sm">
+                    Đăng xuất
+                </button>
+            </div>
         </div>
 
         <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-xl mb-8 flex gap-4">
@@ -34,6 +44,17 @@
     </div>
 
     <script>
+        // Kiểm tra Token
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'auth.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'auth.html';
+        }
+
         async function scanManga() {
             const id = document.getElementById('mangaId').value;
             const resultBox = document.getElementById('result');
@@ -50,7 +71,9 @@
 
             try {
                 // Đảm bảo URL này khớp hoàn toàn với cấu hình trong router.go
-                const res = await fetch(`http://localhost:8080/api/admin/scan-manga?id=${id}`);
+                const res = await fetch(`http://localhost:8080/api/admin/scan-manga?id=${id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
                 const data = await res.json();
 
                 if (res.ok) {
