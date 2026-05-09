@@ -37,3 +37,22 @@ func GetMangas(c *gin.Context) {
 
 	c.JSON(http.StatusOK, mangas)
 }
+
+func GetMangaByID(c *gin.Context) {
+	id := c.Param("id")
+	var m models.Manga
+
+	query := "SELECT id, title, author, description, thumbnail FROM mangas WHERE id = ?"
+	err := database.DB.QueryRow(query, id).Scan(&m.ID, &m.Title, &m.Author, &m.Description, &m.Thumbnail)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Manga không tồn tại"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, m)
+}
