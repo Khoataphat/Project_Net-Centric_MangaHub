@@ -45,6 +45,8 @@
     <!-- Toast Notification Container [AC2] -->
     <div id="notification-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-4 pointer-events-none"></div>
 
+    <script src="notification.js"></script>
+    <script>
         // Kiểm tra Token ngay lập tức
         const token = localStorage.getItem('token');
         if (!token) {
@@ -56,6 +58,22 @@
             window.location.href = 'auth.html';
         }
         const terminalContent = document.getElementById('terminalContent');
+
+        // Connect to Log WebSocket (Week 4 Feature)
+        const logWs = new WebSocket('ws://localhost:8080/api/ws-logs');
+        logWs.onmessage = (event) => {
+            const time = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<span class="text-slate-500">[${time}]</span> <span class="text-green-400">${event.data}</span>`;
+            terminalContent.appendChild(logEntry);
+            terminalContent.parentElement.scrollTop = terminalContent.parentElement.scrollHeight;
+        };
+
+        logWs.onerror = () => {
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<span class="text-red-500">[SYS] Log WebSocket Error. Is server running?</span>`;
+            terminalContent.appendChild(logEntry);
+        };
 
         // Hàm giả lập log cho CLI Bridge (Bản chất mạng)
         function addLog(method, endpoint, status) {

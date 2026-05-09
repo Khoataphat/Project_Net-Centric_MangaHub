@@ -11,6 +11,7 @@ import (
 	"mangahub/internal/protocols/bridge"
 	"log"
 	"os"
+	"io"
 	"os/signal"
 	"syscall"
 	"time"
@@ -38,6 +39,13 @@ func main() {
 	dbPath := getEnv("DB_PATH", "./data/mangahub.db")
 
 	log.Printf("Starting MangaHub Backend on %s", host)
+
+	// 0.5. Setup Log Broadcaster (Week 4 Feature)
+	multiWriter := io.MultiWriter(os.Stdout, websocket.WsLogWriter{})
+	log.SetOutput(multiWriter)
+	gin.DefaultWriter = multiWriter
+	gin.DefaultErrorWriter = multiWriter
+	go websocket.ServerLogs.Run()
 
 	// 1. Khởi tạo Database
 	database.InitDB(dbPath)
