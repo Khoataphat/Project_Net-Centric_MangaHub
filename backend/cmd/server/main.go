@@ -5,7 +5,10 @@ import (
 	"mangahub/internal/protocols/grpc"
 	"mangahub/internal/protocols/http"
 	"mangahub/internal/protocols/tcp"
+	"mangahub/internal/protocols/udp"
 	"mangahub/internal/protocols/websocket"
+	"mangahub/internal/protocols/bridge"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -33,7 +36,21 @@ func main() {
 	// 7. Khởi tạo gRPC Server
 	go grpc.StartGRPCServer(":50051")
 
-	// 8. Chạy server HTTP
+	// 8. Khởi tạo UDP Notifier Server (AC1)
+	if err := udp.InitUDPServer(9999); err != nil {
+		log.Printf("[UDP] Cảnh báo: %v", err)
+	}
+
+	// 9. Khởi tạo Bridge Service (Kết nối UDP Server -> WebSocket Hub)
+	udpBridge := bridge.NewUDPBridge(8888, chatHub)
+	if err := udpBridge.Start(); err != nil {
+		log.Printf("[Bridge] Cảnh báo: %v", err)
+	} else {
+		// Đăng ký Bridge với UDP Server
+		udp.AddBridge("127.0.0.1:8888")
+	}
+
+	// 10. Chạy server HTTP
 	r.Run(":8080")
 }
 
