@@ -7,6 +7,7 @@ import (
 )
 
 func SetupRouter(r *gin.Engine, chatHub *websocket.Hub) {
+	r.GET("/health", HealthHandler)
 	api := r.Group("/api")
 	{
 		api.POST("/register", RegisterHandler)
@@ -14,7 +15,6 @@ func SetupRouter(r *gin.Engine, chatHub *websocket.Hub) {
 		api.GET("/mangas", GetMangas)
 		api.GET("/mangas/:id", GetMangaByID)
 		api.GET("/ws-tcp-bridge", TCPBridgeHandler)
-		api.GET("/ws-logs", websocket.ServeLogWS)
 		api.GET("/admin/scan-manga", ScanMangaHandler)
 		api.GET("/ws/chat", func(c *gin.Context) {
 			websocket.ServeWS(chatHub, c)

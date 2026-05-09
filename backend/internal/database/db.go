@@ -16,6 +16,9 @@ func InitDB(filepath string) {
 		log.Fatal("Không thể kết nối database:", err)
 	}
 
+	// Đảm bảo SQLite chỉ dùng 1 kết nối duy nhất để tránh lỗi "database is locked" khi ghi đồng thời (AC2)
+	DB.SetMaxOpenConns(1)
+
 	// 1. Tạo bảng users nếu chưa tồn tại
 	createTableSQL := `
 	CREATE TABLE IF NOT EXISTS users (

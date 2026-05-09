@@ -1,0 +1,26 @@
+services:
+  mangahub-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mangahub-backend
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+      - "9999:9999/udp"
+      - "8888:8888/udp"
+      - "50051:50051"
+    volumes:
+      - ./backend/data:/app/data
+    environment:
+      - HOST=0.0.0.0
+      - HTTP_PORT=8080
+      - TCP_PORT=9090
+      - UDP_PORT=9999
+      - BRIDGE_PORT=8888
+      - GRPC_PORT=50051
+      - DB_PATH=/app/data/mangahub.db
+    restart: unless-stopped
+
+volumes:
+  db-data:

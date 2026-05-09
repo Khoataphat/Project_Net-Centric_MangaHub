@@ -1,6 +1,8 @@
 package tcp
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"net"
 	"sync"
@@ -13,19 +15,36 @@ var (
 )
 
 // 2. LISTENER
-func StartTCPServer(port string) {
-	listener, err := net.Listen("tcp", port)
+// StartTCPServer khởi chạy TCP Server và hỗ trợ đóng an toàn qua Context (AC1, Defensive Rules)
+func StartTCPServer(ctx context.Context, addr string) error {
+	lc := net.ListenConfig{}
+	listener, err := lc.Listen(ctx, "tcp", addr)
 	if err != nil {
-		log.Fatalf("[TCP] Lỗi khởi tạo Server: %v", err)
+		return fmt.Errorf("[TCP] Lỗi khởi tạo Server: %v", err)
 	}
+
+	// Đảm bảo listener đóng khi hàm thoát
 	defer listener.Close()
-	log.Printf("[TCP] Sync Server đang chạy tại port %s", port)
+
+	log.Printf("[TCP] Sync Server đang chạy tại %s", addr)
+
+	// Goroutine để đóng listener khi Context bị hủy (Graceful Shutdown)
+	go func() {
+		<-ctx.Done()
+		log.Println("[TCP] Đang dừng TCP Server...")
+		listener.Close()
+	}()
 
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			log.Printf("[TCP] Lỗi kết nối: %v", err)
-			continue
+			select {
+			case <-ctx.Done():
+				return nil // Thoát bình thường khi Shutdown
+			default:
+				log.Printf("[TCP] Lỗi kết nối: %v", err)
+				continue
+			}
 		}
 		go handleConnection(conn)
 	}
@@ -56,14 +75,24 @@ func removeConnection(userID int, connToRemove net.Conn) {
 // broadcast gửi gói tin đến tất cả thiết bị của một User (TRỪ thiết bị vừa gửi)
 func broadcast(userID int, message []byte, senderConn net.Conn) {
 	mu.Lock()
-	defer mu.Unlock()
+	conns, ok := clientsMap[userID]
+	if !ok || len(conns) == 0 {
+		mu.Unlock()
+		return
+	}
+	// Copy connections to avoid holding lock during Write (I/O)
+	localConns := make([]net.Conn, len(conns))
+	copy(localConns, conns)
+	mu.Unlock()
 
-	for _, conn := range clientsMap[userID] {
+	for _, conn := range localConns {
 		// Không gửi ngược lại cho chính người vừa lật trang
 		if conn != senderConn {
 			_, err := conn.Write(message)
 			if err != nil {
 				log.Printf("[TCP] Lỗi gửi dữ liệu tới Client: %v", err)
+				// Note: We don't remove here because handleConnection's defer will handle it
+				// or the next heartbeat/read will fail.
 			}
 		}
 	}
