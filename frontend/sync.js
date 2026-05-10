@@ -57,9 +57,26 @@
     const terminal = document.getElementById('terminalContent');
     const connStatus = document.getElementById('connStatus');
 
-    // 4. Hàm cập nhật UI
+    // 4. Hàm cập nhật UI chương
     function updateUI() {
         chapterDisplays.forEach(el => { if (el) el.innerText = currentChapter; });
+    }
+
+    // 4b. Hàm cập nhật Live Presence Badge
+    function updatePresenceBadge(count) {
+        const badge = document.getElementById('liveReadersBadge');
+        const text  = document.getElementById('liveReadersText');
+        if (!badge || !text) return;
+
+        if (count > 1) {
+            text.textContent = `👁 ${count} người đang đọc`;
+            // Dùng flex để hiện badge (thay thế hidden)
+            badge.classList.remove('hidden');
+            badge.classList.add('flex');
+        } else {
+            badge.classList.add('hidden');
+            badge.classList.remove('flex');
+        }
     }
 
     // 5. Hàm in Log xuống Terminal
@@ -123,41 +140,52 @@
         };
 
         ws.onmessage = (event) => {
-            const rawData = event.data.trim();
-            logTerminal('RECV', rawData);
-            try {
-                const payload = JSON.parse(rawData);
-
-                if (payload.type === "UPDATE_PROGRESS" && payload.manga_id === MANGA_ID) {
-                    // Nhận cập nhật chương từ thiết bị khác
-                    currentChapter = payload.chapter;
-                    updateUI();
-                    logTerminal('SYS', `[Sync] Thiết bị khác đang đọc Chương ${currentChapter}`);
-
-                } else if (payload.type === "SYNC_RESUME" && payload.manga_id === MANGA_ID) {
-                    // Server tìm thấy tiến độ cũ → hỏi user có muốn tiếp tục không
-                    const resumeModal = document.getElementById('resumeModal');
-                    const resumeChapterNum = document.getElementById('resumeChapterNum');
-                    if (resumeModal && resumeChapterNum) {
-                        resumeChapterNum.innerText = `Chương ${payload.chapter}`;
-                        resumeModal.classList.remove('hidden');
-
-                        document.getElementById('btnAcceptResume').onclick = () => {
-                            currentChapter = payload.chapter;
-                            updateUI();
-                            resumeModal.classList.add('hidden');
-                            logTerminal('SYS', `[Resume] Đã nhảy đến Chương ${currentChapter}`);
-                        };
-                        document.getElementById('btnIgnoreResume').onclick = () => {
-                            resumeModal.classList.add('hidden');
-                            logTerminal('SYS', `[Resume] Bỏ qua tiến độ cũ`);
-                        };
-                    }
+            // Defensive: tách từng dòng JSON riêng (phòng trường hợp nhiều message ghép chung 1 frame)
+            const lines = event.data.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            for (const rawData of lines) {
+                logTerminal('RECV', rawData);
+                try {
+                    const payload = JSON.parse(rawData);
+                    handlePayload(payload);
+                } catch (e) {
+                    console.error("[Sync] Parse error:", e, "| Raw:", rawData);
                 }
-            } catch (e) {
-                console.error("[Sync] Parse error:", e, "| Raw:", rawData);
             }
         };
+
+        function handlePayload(payload) {
+            if (payload.type === "UPDATE_PROGRESS" && payload.manga_id === MANGA_ID) {
+                // Nhận cập nhật chương từ thiết bị khác của cùng user
+                currentChapter = payload.chapter;
+                updateUI();
+                logTerminal('SYS', `[Sync] Thiết bị khác đang đọc Chương ${currentChapter}`);
+
+            } else if (payload.type === "SYNC_RESUME" && payload.manga_id === MANGA_ID) {
+                // Server tìm thấy tiến độ cũ → hỏi user có muốn tiếp tục không
+                const resumeModal = document.getElementById('resumeModal');
+                const resumeChapterNum = document.getElementById('resumeChapterNum');
+                if (resumeModal && resumeChapterNum) {
+                    resumeChapterNum.innerText = `Chương ${payload.chapter}`;
+                    resumeModal.classList.remove('hidden');
+
+                    document.getElementById('btnAcceptResume').onclick = () => {
+                        currentChapter = payload.chapter;
+                        updateUI();
+                        resumeModal.classList.add('hidden');
+                        logTerminal('SYS', `[Resume] Đã nhảy đến Chương ${currentChapter}`);
+                    };
+                    document.getElementById('btnIgnoreResume').onclick = () => {
+                        resumeModal.classList.add('hidden');
+                        logTerminal('SYS', `[Resume] Bỏ qua tiến độ cũ`);
+                    };
+                }
+
+            } else if (payload.type === "PRESENCE_UPDATE" && payload.manga_id === MANGA_ID) {
+                // Cập nhật badge Live Presence
+                updatePresenceBadge(payload.count);
+                logTerminal('SYS', `[Presence] ${payload.count} người đang đọc manga này`);
+            }
+        }
 
         ws.onclose = () => {
             if (connStatus) {
