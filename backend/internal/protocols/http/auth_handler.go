@@ -27,7 +27,10 @@ func RegisterHandler(c *gin.Context) {
 	}
 
 	// 3. Lưu vào SQLite
-	_, err = database.DB.Exec("INSERT INTO users (username, password) VALUES (?, ?)", user.Username, hashedPassword)
+	if user.Role == "" {
+		user.Role = "user"
+	}
+	_, err = database.DB.Exec("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", user.Username, hashedPassword, user.Role)
 	if err != nil {
 		// Thường lỗi ở bước này là do username đã bị trùng (ràng buộc UNIQUE trong SQL)
 		c.JSON(http.StatusConflict, gin.H{"error": "Tên đăng nhập đã tồn tại"})
@@ -49,7 +52,8 @@ func LoginHandler(c *gin.Context) {
 	// 1. Tìm user trong database
 	var userID int
 	var hashedPassword string
-	err := database.DB.QueryRow("SELECT id, password FROM users WHERE username = ?", req.Username).Scan(&userID, &hashedPassword)
+	var role string
+	err := database.DB.QueryRow("SELECT id, password, role FROM users WHERE username = ?", req.Username).Scan(&userID, &hashedPassword, &role)
 
 	// Nếu không tìm thấy username hoặc quét dữ liệu lỗi
 	if err != nil {
@@ -64,7 +68,7 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// 3. Mật khẩu đúng -> Tạo Token thông hành
-	token, err := auth.GenerateJWT(userID, req.Username)
+	token, err := auth.GenerateJWT(userID, req.Username, role)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Không thể tạo phiên đăng nhập"})
 		return

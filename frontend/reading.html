@@ -194,11 +194,23 @@
 
     <!-- Chat message JS -->
     <script>
-        // 1. Auth check
+        // 1. Auth check + decode username từ JWT
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.href = 'auth.html';
         }
+
+        let _myUsername = 'Ẩn danh';
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const payload = JSON.parse(decodeURIComponent(
+                window.atob(base64).split('').map(c =>
+                    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+                ).join('')
+            ));
+            _myUsername = payload.username || 'Ẩn danh';
+        } catch (e) { console.error("Token decode error", e); }
 
         // 2. Load Manga Data
         const urlParams = new URLSearchParams(window.location.search);
@@ -209,7 +221,6 @@
                 document.getElementById('mangaTitle').innerText = 'Không tìm thấy ID';
                 return;
             }
-
             try {
                 const res = await fetch(`http://localhost:8080/api/mangas/${mangaId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
@@ -218,8 +229,6 @@
                     const manga = await res.json();
                     document.getElementById('mangaTitle').innerText = manga.title;
                     document.title = `Đang đọc: ${manga.title} - MangaHub`;
-
-                    // Giả lập load ảnh
                     const mangaContent = document.getElementById('mangaContent');
                     mangaContent.innerHTML = `
                         <img src="${manga.thumbnail}" class="w-full max-w-md rounded-xl shadow-lg border border-outline-variant/10" alt="${manga.title}"
@@ -237,25 +246,43 @@
 
         loadMangaInfo();
 
-        // 3. Chat logic (WebSocket)
+        // 3. Chat logic (WebSocket) - gửi JSON {username, text}
         const socket = new WebSocket('ws://localhost:8080/api/ws/chat');
         const chatBox = document.getElementById('chatBox');
         const chatInput = document.getElementById('chatInput');
         const sendBtn = document.getElementById('sendBtn');
 
-        socket.onmessage = function(event) {
-            const msg = event.data;
+        function appendChatMessage(username, text, isSelf) {
             const msgElement = document.createElement('div');
-            msgElement.className = "msg-anim p-2.5 bg-surface-container-low/50 rounded-xl text-sm border border-outline-variant/10";
-            msgElement.innerHTML = `<span class="font-bold text-primary block mb-0.5 text-xs">User:</span> <span class="text-on-surface">${msg}</span>`;
+            const alignClass = isSelf ? 'items-end' : 'items-start';
+            const bubbleClass = isSelf
+                ? 'bg-primary/10 border-primary/20 text-on-surface'
+                : 'bg-surface-container-low/50 border-outline-variant/10 text-on-surface';
+            msgElement.className = `msg-anim flex flex-col ${alignClass} gap-0.5`;
+            msgElement.innerHTML = `
+                <span class="text-[10px] font-bold ${isSelf ? 'text-primary' : 'text-secondary'} px-1">${username}</span>
+                <div class="p-2.5 rounded-xl text-sm border ${bubbleClass} max-w-[90%]">${text}</div>
+            `;
             chatBox.appendChild(msgElement);
             chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        socket.onmessage = function(event) {
+            // Thử parse JSON {username, text}, fallback về plain text
+            try {
+                const data = JSON.parse(event.data);
+                const isSelf = (data.username === _myUsername);
+                appendChatMessage(data.username || 'Ẩn danh', data.text || event.data, isSelf);
+            } catch (e) {
+                appendChatMessage('User', event.data, false);
+            }
         };
 
         sendBtn.onclick = function() {
             const text = chatInput.value.trim();
-            if (text) {
-                socket.send(text);
+            if (text && socket.readyState === WebSocket.OPEN) {
+                const msg = JSON.stringify({ username: _myUsername, text: text });
+                socket.send(msg);
                 chatInput.value = '';
             }
         };

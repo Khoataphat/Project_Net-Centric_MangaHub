@@ -5,9 +5,10 @@
 
     console.log("[Sync] Script loading...");
 
-    // 1. Lấy Token và USER_ID (Dùng biến cục bộ trong hàm để tránh trùng tên)
+    // 1. Lấy Token và USER_ID từ JWT
     const _localToken = localStorage.getItem('token');
-    let _userId = 1;
+    let _userId = 0;
+    let _username = 'User';
 
     if (_localToken) {
         try {
@@ -18,22 +19,35 @@
                     '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
                 ).join('')
             );
-            _userId = JSON.parse(jsonPayload).id || 1;
+            const parsed = JSON.parse(jsonPayload);
+            _userId = parsed.id || 0;
+            _username = parsed.username || 'User';
         } catch (e) {
             console.error("[Sync] Lỗi giải mã token:", e);
         }
     }
 
-    // 2. Lấy MANGA_ID từ URL
+    // 2. Lấy MANGA_ID từ URL (số nguyên, phải > 0)
     function getQueryParam(name) {
-        const results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-        return results ? parseInt(results[1]) : 0;
+        const results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href);
+        return results ? parseInt(results[1], 10) : 0;
     }
 
     const MANGA_ID = getQueryParam('id');
     let currentChapter = 1;
 
-    console.log("[Sync] Khởi tạo: USER_ID=" + _userId + " | MANGA_ID=" + MANGA_ID);
+    console.log("[Sync] Khởi tạo: USER_ID=" + _userId + " | MANGA_ID=" + MANGA_ID + " | USER=" + _username);
+
+    // Không kết nối nếu thiếu thông tin cần thiết
+    if (_userId <= 0 || MANGA_ID <= 0) {
+        console.error("[Sync] Thiếu USER_ID hoặc MANGA_ID, hủy kết nối TCP Sync.");
+        const connStatus = document.getElementById('connStatus');
+        if (connStatus) {
+            connStatus.innerText = "Sync bị vô hiệu hóa (thiếu user/manga ID)";
+            connStatus.className = "text-red-500";
+        }
+        return;
+    }
 
     // 3. Phần tử UI
     const chapterDisplays = [
@@ -55,11 +69,11 @@
         const logEntry = document.createElement('div');
         const dirColor = direction === 'SENT' ? 'text-blue-400' : 'text-purple-400';
         const icon = direction === 'SENT' ? '►' : '◄';
-        const formattedPayload = String(payloadStr).replace('\n', '<span class="text-red-500">\\n</span>');
+        const safePayload = String(payloadStr).replace(/\n/g, '<span class="text-red-500">\\n</span>');
         logEntry.innerHTML = `
             <span class="text-slate-500">[${time}]</span>
             <span class="${dirColor} font-bold">${icon} ${direction}</span>
-            <span class="text-yellow-300 ml-2">${formattedPayload}</span>
+            <span class="text-yellow-300 ml-2">${safePayload}</span>
         `;
         terminal.appendChild(logEntry);
         if (terminal.parentElement) {
@@ -67,17 +81,18 @@
         }
     }
 
-    // 6. Khởi tạo WebSocket
+    // 6. Khởi tạo WebSocket → TCP Bridge
     function connectTCP() {
         const ws = new WebSocket('ws://localhost:8080/api/ws-tcp-bridge');
 
         ws.onopen = () => {
             console.log("[Sync] Kết nối thành công!");
             if (connStatus) {
-                connStatus.innerText = "Đã kết nối TCP Sync Server (:9090)";
+                connStatus.innerText = `[User:${_username}] Đã kết nối TCP Sync Server (:9090)`;
                 connStatus.className = "text-green-500";
             }
 
+            // Gửi AUTH với đầy đủ user_id và manga_id
             const authPayload = JSON.stringify({
                 type: "AUTH",
                 user_id: _userId,
@@ -85,7 +100,7 @@
             }) + "\n";
 
             ws.send(authPayload);
-            logTerminal('SENT', authPayload);
+            logTerminal('SENT', authPayload.trim());
 
             // Gắn sự kiện nút bấm
             const btnNext = document.getElementById('btnNext');
@@ -108,30 +123,40 @@
         };
 
         ws.onmessage = (event) => {
-            const rawData = event.data;
+            const rawData = event.data.trim();
             logTerminal('RECV', rawData);
             try {
-                const payload = JSON.parse(rawData.trim());
+                const payload = JSON.parse(rawData);
+
                 if (payload.type === "UPDATE_PROGRESS" && payload.manga_id === MANGA_ID) {
+                    // Nhận cập nhật chương từ thiết bị khác
                     currentChapter = payload.chapter;
                     updateUI();
+                    logTerminal('SYS', `[Sync] Thiết bị khác đang đọc Chương ${currentChapter}`);
+
                 } else if (payload.type === "SYNC_RESUME" && payload.manga_id === MANGA_ID) {
+                    // Server tìm thấy tiến độ cũ → hỏi user có muốn tiếp tục không
                     const resumeModal = document.getElementById('resumeModal');
                     const resumeChapterNum = document.getElementById('resumeChapterNum');
                     if (resumeModal && resumeChapterNum) {
                         resumeChapterNum.innerText = `Chương ${payload.chapter}`;
                         resumeModal.classList.remove('hidden');
+
                         document.getElementById('btnAcceptResume').onclick = () => {
                             currentChapter = payload.chapter;
                             updateUI();
                             resumeModal.classList.add('hidden');
+                            logTerminal('SYS', `[Resume] Đã nhảy đến Chương ${currentChapter}`);
                         };
                         document.getElementById('btnIgnoreResume').onclick = () => {
                             resumeModal.classList.add('hidden');
+                            logTerminal('SYS', `[Resume] Bỏ qua tiến độ cũ`);
                         };
                     }
                 }
-            } catch (e) { console.error("[Sync] Parse error:", e); }
+            } catch (e) {
+                console.error("[Sync] Parse error:", e, "| Raw:", rawData);
+            }
         };
 
         ws.onclose = () => {
@@ -139,11 +164,20 @@
                 connStatus.innerText = "Mất kết nối TCP";
                 connStatus.className = "text-red-500";
             }
+            // Tự kết nối lại sau 3 giây
+            setTimeout(connectTCP, 3000);
+        };
+
+        ws.onerror = (err) => {
+            console.error("[Sync] WebSocket error:", err);
         };
     }
 
     function sendUpdate(ws) {
-        if (!ws || ws.readyState !== WebSocket.OPEN) return;
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+            console.warn("[Sync] WebSocket chưa sẵn sàng để gửi.");
+            return;
+        }
         const payload = JSON.stringify({
             type: "UPDATE_PROGRESS",
             user_id: _userId,
@@ -151,7 +185,7 @@
             chapter: currentChapter
         }) + "\n";
         ws.send(payload);
-        logTerminal('SENT', payload);
+        logTerminal('SENT', payload.trim());
         updateUI();
     }
 

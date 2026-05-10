@@ -20,7 +20,7 @@ func SetupRouter(r *gin.Engine, chatHub *websocket.Hub) {
 		api.GET("/mangas", GetMangas)
 		api.GET("/mangas/:id", GetMangaByID)
 		api.GET("/ws-tcp-bridge", TCPBridgeHandler)
-		api.GET("/admin/scan-manga", ScanMangaHandler)
+		api.GET("/admin/scan-manga", RoleMiddleware("admin"), ScanMangaHandler)
 		api.GET("/ws-logs", websocket.ServeLogWS)
 		api.GET("/ws/chat", func(c *gin.Context) {
 			websocket.ServeWS(chatHub, c)

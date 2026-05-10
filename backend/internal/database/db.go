@@ -25,12 +25,20 @@ func InitDB(filepath string) {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		username TEXT UNIQUE NOT NULL,
 		password TEXT NOT NULL,
+		role TEXT DEFAULT 'user',
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 	);`
 
 	_, err = DB.Exec(createTableSQL)
 	if err != nil {
 		log.Fatal("Lỗi tạo bảng users:", err)
+	}
+
+	// Migration: Kiểm tra xem cột 'role' đã tồn tại chưa, nếu chưa thì thêm vào (Trường hợp bảng đã tồn tại từ trước)
+	var count int
+	err = DB.QueryRow("SELECT count(*) FROM pragma_table_info('users') WHERE name='role'").Scan(&count)
+	if err == nil && count == 0 {
+		_, _ = DB.Exec("ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'user'")
 	}
 
 	// 2. Tạo bảng mangas nếu chưa tồn tại

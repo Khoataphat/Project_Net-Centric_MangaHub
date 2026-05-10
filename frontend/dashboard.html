@@ -94,7 +94,7 @@
                     <a href="dashboard.html" class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-primary bg-primary/5">
                         <span class="material-symbols-outlined text-sm">home</span>Trang chủ
                     </a>
-                    <a href="admin.html" class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-secondary hover:text-primary hover:bg-surface-container transition-colors">
+                    <a href="admin.html" id="adminLink" class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-secondary hover:text-primary hover:bg-surface-container transition-colors">
                         <span class="material-symbols-outlined text-sm">admin_panel_settings</span>Admin Panel
                     </a>
                 </nav>
@@ -186,6 +186,22 @@
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.href = 'auth.html';
+        }
+
+        // Giải mã role từ JWT để ẩn/hiện tính năng (AC-Phân quyền)
+        let userRole = 'user';
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            userRole = payload.role || 'user';
+            document.getElementById('userInfo').textContent = `Chào, ${payload.username} (${userRole})`;
+        } catch (e) {
+            console.error("Token format error");
+        }
+
+        // Nếu không phải admin, ẩn nút Admin Panel
+        if (userRole !== 'admin') {
+            const adminLink = document.getElementById('adminLink');
+            if (adminLink) adminLink.style.display = 'none';
         }
 
         function logout() {

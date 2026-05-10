@@ -7,7 +7,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var jwtKey = []byte("mangahub_secret_key") // Trong thực tế nên dùng biến môi trường
+var JWTKey = []byte("mangahub_secret_key") // Trong thực tế nên dùng biến môi trường
 
 // HashPassword mã hóa mật khẩu người dùng
 func HashPassword(password string) (string, error) {
@@ -22,15 +22,16 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 // GenerateJWT tạo token cho người dùng sau khi đăng nhập thành công
-func GenerateJWT(userID int, username string) (string, error) {
+func GenerateJWT(userID int, username string, role string) (string, error) {
 	// Tạo các "claims" (thông tin đính kèm trong token)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":       userID,
 		"username": username,
+		"role":     role,
 		"exp":      time.Now().Add(24 * time.Hour).Unix(), // Token hết hạn sau 24 giờ
 	})
 
 	// Ký tên vào token bằng chìa khóa bí mật
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString(JWTKey)
 	return tokenString, err
 }
