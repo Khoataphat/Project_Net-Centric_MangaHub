@@ -220,9 +220,11 @@
             _myUsername = payload.username || 'Ẩn danh';
         } catch (e) { console.error("Token decode error", e); }
 
-        // 2. Load Manga Data
+        // 2. Load Manga Data & Content
         const urlParams = new URLSearchParams(window.location.search);
         const mangaId = urlParams.get('id');
+        let chapters = [];
+        let currentChapterIndex = 0;
 
         async function loadMangaInfo() {
             if (!mangaId) {
@@ -230,27 +232,84 @@
                 return;
             }
             try {
-                const res = await fetch(`http://localhost:8080/api/mangas/${mangaId}`, {
+                // Load manga basic info
+                const mangaRes = await fetch(`http://localhost:8080/api/mangas/${mangaId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                if (res.ok) {
-                    const manga = await res.json();
+                if (mangaRes.ok) {
+                    const manga = await mangaRes.json();
                     document.getElementById('mangaTitle').innerText = manga.title;
                     document.title = `Đang đọc: ${manga.title} - MangaHub`;
-                    const mangaContent = document.getElementById('mangaContent');
-                    mangaContent.innerHTML = `
-                        <img src="${manga.thumbnail}" class="w-full max-w-md rounded-xl shadow-lg border border-outline-variant/10" alt="${manga.title}"
-                             onerror="this.src='https://placehold.co/400x600/f3f4f5/757684?text=Chapter'" />
-                        <p class="text-secondary mt-4 italic text-sm text-center max-w-md">${manga.description}</p>
-                    `;
-                } else {
-                    document.getElementById('mangaTitle').innerText = 'Lỗi tải dữ liệu';
+                }
+
+                // Load chapters list
+                const chaptersRes = await fetch(`http://localhost:8080/api/mangas/${mangaId}/chapters`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (chaptersRes.ok) {
+                    chapters = await chaptersRes.json();
+                    if (chapters && chapters.length > 0) {
+                        // Mặc định load chương đầu tiên (hoặc theo currentChapter trong sync.js)
+                        // Tuy nhiên sync.js sẽ gọi loadContent sau khi kết nối TCP
+                        loadChapterContent(0);
+                    } else {
+                        document.getElementById('mangaContent').innerHTML = `
+                            <div class="py-20 text-center text-outline">
+                                <span class="material-symbols-outlined text-5xl mb-2">sentiment_dissatisfied</span>
+                                <p>Truyện này hiện chưa có chương nào.</p>
+                            </div>`;
+                    }
                 }
             } catch (err) {
                 console.error(err);
                 document.getElementById('mangaTitle').innerText = 'Lỗi kết nối';
             }
         }
+
+        async function loadChapterContent(index) {
+            if (!chapters[index]) return;
+            currentChapterIndex = index;
+            const chapter = chapters[index];
+            
+            // Cập nhật UI
+            document.getElementById('chapterNumberText').innerText = chapter.chapter_number;
+            document.getElementById('currentChapterDisplay').innerText = chapter.chapter_number;
+
+            const mangaContent = document.getElementById('mangaContent');
+            mangaContent.innerHTML = '<div class="py-10 animate-pulse text-secondary text-sm">Đang tải trang...</div>';
+
+            try {
+                const res = await fetch(`http://localhost:8080/api/chapters/${chapter.id}/pages`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const pages = await res.json();
+                    if (pages && pages.length > 0) {
+                        mangaContent.innerHTML = pages.map(p => `
+                            <img src="${p.image_url}" 
+                                 class="w-full max-w-2xl rounded-sm shadow-md mb-2 border border-outline-variant/10" 
+                                 alt="Page ${p.page_number}"
+                                 loading="lazy"
+                                 onerror="this.src='https://placehold.co/600x800/f3f4f5/757684?text=Lỗi+tải+ảnh'" />
+                        `).join('');
+                        // Scroll to top
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                        mangaContent.innerHTML = '<p class="py-10 text-secondary">Chương này chưa có ảnh.</p>';
+                    }
+                }
+            } catch (err) {
+                mangaContent.innerHTML = '<p class="py-10 text-red-500">Lỗi khi tải trang truyện.</p>';
+            }
+        }
+
+        // Xuất hàm ra global để sync.js có thể gọi
+        window.loadChapterByNumber = function(chapterNum) {
+            const index = chapters.findIndex(c => c.chapter_number == chapterNum);
+            if (index !== -1) {
+                loadChapterContent(index);
+            }
+        };
 
         loadMangaInfo();
 

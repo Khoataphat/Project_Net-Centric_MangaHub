@@ -19,6 +19,9 @@ func InitDB(filepath string) {
 	// Đảm bảo SQLite chỉ dùng 1 kết nối duy nhất để tránh lỗi "database is locked" khi ghi đồng thời (AC2)
 	DB.SetMaxOpenConns(1)
 
+	// Ép journal mode về DELETE để tương thích với Docker Volume trên Windows (tránh Disk I/O error)
+	_, _ = DB.Exec("PRAGMA journal_mode=DELETE;")
+
 	// 1. Tạo bảng users nếu chưa tồn tại
 	createTableSQL := `
 	CREATE TABLE IF NOT EXISTS users (
@@ -48,12 +51,19 @@ func InitDB(filepath string) {
 		title TEXT NOT NULL,
 		author TEXT,
 		description TEXT,
-		thumbnail TEXT
+		thumbnail TEXT,
+		mangadex_id TEXT UNIQUE
 	);`
 
 	_, err = DB.Exec(createMangaTableSQL)
 	if err != nil {
 		log.Fatal("Lỗi tạo bảng mangas:", err)
+	}
+
+	// Migration: Thêm mangadex_id nếu chưa có
+	err = DB.QueryRow("SELECT count(*) FROM pragma_table_info('mangas') WHERE name='mangadex_id'").Scan(&count)
+	if err == nil && count == 0 {
+		_, _ = DB.Exec("ALTER TABLE mangas ADD COLUMN mangadex_id TEXT UNIQUE")
 	}
 
 	// 3. Tạo bảng user_progress nếu chưa tồn tại (Mới - Tuần 4)
@@ -72,6 +82,28 @@ func InitDB(filepath string) {
 	if err != nil {
 		log.Fatal("Lỗi tạo bảng user_progress:", err)
 	}
+
+	// 4. Tạo bảng chapters và pages nếu chưa có
+	createChaptersTableSQL := `
+	CREATE TABLE IF NOT EXISTS chapters (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		manga_id INTEGER NOT NULL,
+		chapter_number REAL,
+		title TEXT,
+		mangadex_id TEXT UNIQUE,
+		FOREIGN KEY (manga_id) REFERENCES mangas(id)
+	);`
+	_, _ = DB.Exec(createChaptersTableSQL)
+
+	createPagesTableSQL := `
+	CREATE TABLE IF NOT EXISTS pages (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		chapter_id INTEGER NOT NULL,
+		page_number INTEGER NOT NULL,
+		image_url TEXT NOT NULL,
+		FOREIGN KEY (chapter_id) REFERENCES chapters(id)
+	);`
+	_, _ = DB.Exec(createPagesTableSQL)
 
 	log.Println("Database SQLite đã sẵn sàng tại:", filepath)
 }

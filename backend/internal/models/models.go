@@ -29,3 +29,17 @@ type Manga struct {
 	Description string `json:"description"`
 	Thumbnail   string `json:"thumbnail"`
 }
+
+type Chapter struct {
+	ID            int     `json:"id"`
+	MangaID       int     `json:"manga_id"`
+	ChapterNumber float64 `json:"chapter_number"`
+	Title         string  `json:"title"`
+}
+
+type Page struct {
+	ID         int    `json:"id"`
+	ChapterID  int    `json:"chapter_id"`
+	PageNumber int    `json:"page_number"`
+	ImageURL   string `json:"image_url"`
+}

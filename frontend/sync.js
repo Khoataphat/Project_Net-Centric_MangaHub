@@ -57,9 +57,12 @@
     const terminal = document.getElementById('terminalContent');
     const connStatus = document.getElementById('connStatus');
 
-    // 4. Hàm cập nhật UI chương
+    // 4. Hàm cập nhật UI chương và load nội dung
     function updateUI() {
         chapterDisplays.forEach(el => { if (el) el.innerText = currentChapter; });
+        if (window.loadChapterByNumber) {
+            window.loadChapterByNumber(currentChapter);
+        }
     }
 
     // 4b. Hàm cập nhật Live Presence Badge
