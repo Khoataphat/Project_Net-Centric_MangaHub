@@ -1,65 +1,198 @@
 <!DOCTYPE html>
-<html lang="vi">
-
+<html lang="vi" class="light">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>MangaHub - Đọc truyện</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="description" content="Đọc truyện manga với trải nghiệm tối giản và đồng bộ real-time." />
+    <!-- DEPENDENCIES -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <!-- TAILWIND CONFIG -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#24389c", "primary-container": "#3f51b5",
+                        "primary-fixed": "#dee0ff", "secondary": "#4a626d",
+                        "on-primary": "#ffffff", "on-surface": "#191c1d",
+                        "surface": "#f8f9fa", "surface-container-low": "#f3f4f5", 
+                        "surface-container-highest": "#e1e3e4",
+                        "surface-container-lowest": "#ffffff", "outline": "#757684",
+                        "outline-variant": "#c5c5d4", "inverse-surface": "#2e3132",
+                    },
+                    fontFamily: { "headline": ["Manrope"], "body": ["Inter"], "mono": ["JetBrains Mono"] },
+                },
+            },
+        }
+    </script>
+    <!-- CUSTOM STYLES -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #191c1d; }
+        .editorial-title { font-family: 'Manrope', sans-serif; letter-spacing: -0.02em; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24; }
+
+        /* Sticky floating header (Light Glass) */
+        .glass-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* Chapter nav buttons */
+        .btn-chapter {
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
+        }
+        .btn-chapter:hover { transform: translateY(-1px); }
+        .btn-chapter:active { transform: scale(0.97); }
+
+        /* Chat messages scrollbar */
+        .chat-scroll::-webkit-scrollbar { width: 4px; }
+        .chat-scroll::-webkit-scrollbar-track { background: transparent; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 4px; }
+
+        /* Terminal footer scrollbar */
+        .terminal-scroll::-webkit-scrollbar { width: 4px; }
+        .terminal-scroll::-webkit-scrollbar-track { background: transparent; }
+        .terminal-scroll::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+
+        /* Terminal font */
+        .terminal-font { font-family: 'JetBrains Mono', monospace; }
+
+        /* Animate chat message in */
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .msg-anim { animation: slide-up 0.2s ease; }
+    </style>
 </head>
 
-<body class="bg-slate-900 text-white min-h-screen flex flex-col">
-    <header class="bg-slate-800 border-b border-slate-700 p-4 flex justify-between items-center shadow-sm">
+<body class="min-h-screen flex flex-col">
+
+    <!-- ======================================================
+         HEADER: Minimal Light Glass bar
+         ====================================================== -->
+    <header class="glass-header border-b border-outline-variant/30 px-4 py-3 flex justify-between items-center shrink-0 z-40 sticky top-0">
         <div class="flex items-center gap-4">
-            <a href="dashboard.html" class="text-blue-400 hover:text-blue-300 font-bold">← Trở về</a>
-            <h1 class="text-xl font-bold">Đang đọc: <span id="mangaTitle" class="text-blue-400">Loading...</span></h1>
+            <a href="dashboard.html"
+               class="flex items-center gap-1.5 text-secondary hover:text-primary transition-colors text-sm font-medium">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                Trở về
+            </a>
+            <div class="w-px h-5 bg-outline-variant/50"></div>
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">auto_stories</span>
+                <h1 class="text-sm font-semibold text-on-surface editorial-title">
+                    Đang đọc: <span id="mangaTitle" class="text-primary">Loading...</span>
+                </h1>
+            </div>
         </div>
-        <div class="text-sm">Chương hiện tại: <span id="currentChapterDisplay" class="font-bold text-green-400">1</span>
+        <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 px-3 py-1 bg-surface-container-low rounded-full border border-outline-variant/30">
+                <span class="material-symbols-outlined text-emerald-600 text-sm" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">bookmark</span>
+                <span class="text-xs text-secondary">Chương&nbsp;</span>
+                <span id="currentChapterDisplay" class="text-sm font-bold text-emerald-600">1</span>
+            </div>
         </div>
     </header>
 
+    <!-- ======================================================
+         BODY: Main content + sidebar chat (Light Mode)
+         ====================================================== -->
     <div class="flex flex-col md:flex-row flex-grow overflow-hidden">
+
         <!-- Main Content -->
         <main class="flex-grow flex flex-col items-center p-6 gap-6 overflow-y-auto">
-            <div class="bg-slate-800 p-8 rounded-lg shadow-2xl w-full max-w-2xl text-center border border-slate-700">
-                <h2 class="text-3xl font-bold mb-8">Nội dung chương <span id="chapterNumberText">1</span></h2>
-                <div id="mangaContent" class="flex flex-col items-center gap-4 py-8">
-                    <div class="w-full aspect-[2/3] bg-slate-700 rounded flex items-center justify-center text-slate-500 animate-pulse">
-                        Đang tải nội dung...
+
+            <!-- Chapter display card -->
+            <div class="w-full max-w-2xl">
+                <div class="bg-surface-container-lowest rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-outline-variant/20 overflow-hidden">
+                    <!-- Card top bar -->
+                    <div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10 bg-surface-container-low/30">
+                        <h2 class="text-lg font-bold editorial-title text-on-surface">
+                            Nội dung chương <span id="chapterNumberText" class="text-primary">1</span>
+                        </h2>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/5 text-primary border border-primary/10 uppercase tracking-wider">
+                            Đang đọc
+                        </span>
+                    </div>
+                    <!-- Manga content area - ID preserved -->
+                    <div id="mangaContent" class="flex flex-col items-center gap-4 p-8 min-h-[400px]">
+                        <div class="w-full aspect-[2/3] max-w-sm bg-surface-container rounded-xl flex flex-col items-center justify-center text-outline border border-outline-variant/10">
+                            <span class="material-symbols-outlined text-4xl mb-3 animate-pulse">auto_stories</span>
+                            <p class="text-sm">Đang tải nội dung...</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="flex gap-4 mb-8">
-                <button id="btnPrev" class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded font-bold transition">← Chương trước</button>
-                <button id="btnNext" class="px-6 py-2 bg-blue-600 hover:bg-blue-500 rounded font-bold transition">Chương tiếp →</button>
+            <!-- Chapter Navigation - IDs preserved -->
+            <div class="flex gap-4 mb-4">
+                <button id="btnPrev"
+                    class="btn-chapter flex items-center gap-2 px-6 py-2.5 bg-surface-container-lowest hover:bg-surface-container-low border border-outline-variant/30 rounded-full font-bold text-sm transition-colors text-secondary">
+                    <span class="material-symbols-outlined text-sm">west</span>
+                    Chương trước
+                </button>
+                <button id="btnNext"
+                    class="btn-chapter flex items-center gap-2 px-6 py-2.5 font-bold text-sm rounded-full text-on-primary transition-colors shadow-lg"
+                    style="background:linear-gradient(135deg,#24389c,#3f51b5);">
+                    Chương tiếp
+                    <span class="material-symbols-outlined text-sm">east</span>
+                </button>
             </div>
         </main>
 
-        <!-- Sidebar / Chat -->
-        <aside class="w-full md:w-80 bg-slate-800 border-l border-slate-700 flex flex-col">
-            <div class="p-4 border-b border-slate-700 font-bold text-blue-400 flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">forum</span>
-                Phòng chat cộng đồng
+        <!-- Community Chat Sidebar (Light Mode) - IDs preserved -->
+        <aside class="w-full md:w-80 bg-surface-container-lowest border-l border-outline-variant/20 flex flex-col shrink-0">
+            <!-- Chat header -->
+            <div class="p-4 border-b border-outline-variant/20 flex items-center gap-2.5 bg-surface-container-low/30">
+                <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                <span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">forum</span>
+                <span class="font-bold text-sm text-primary">Phòng chat cộng đồng</span>
             </div>
-            <div id="chatBox" class="flex-grow overflow-y-auto p-4 space-y-3"></div>
-            <div class="p-4 border-t border-slate-700 bg-slate-900/50">
+            <!-- Chat messages - ID preserved -->
+            <div id="chatBox" class="flex-grow overflow-y-auto p-4 space-y-3 chat-scroll"></div>
+            <!-- Chat input -->
+            <div class="p-3 border-t border-outline-variant/10 bg-surface-container-low/20">
                 <div class="flex gap-2">
-                    <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." 
-                        class="flex-grow bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 transition">
-                    <button id="sendBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-sm font-bold transition">Gửi</button>
+                    <input type="text" id="chatInput" placeholder="Nhập tin nhắn..."
+                        class="flex-grow bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-3 py-2 text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary transition-colors" />
+                    <button id="sendBtn"
+                        class="bg-primary hover:opacity-90 text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1,'wght' 600,'GRAD' 0,'opsz' 24;">send</span>
+                    </button>
                 </div>
             </div>
         </aside>
     </div>
 
-    <footer class="bg-black text-green-400 p-4 h-40 overflow-y-auto font-mono text-xs border-t-4 border-blue-600">
-        <div class="flex items-center gap-2 mb-2 border-b border-slate-800 pb-1 sticky top-0 bg-black">
-            <span class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px]">TCP STREAM</span>
-            <span class="text-slate-500 italic" id="connStatus">Đang chờ kết nối...</span>
+    <!-- ======================================================
+         FOOTER: TCP Stream Terminal (Dark Console style - kept as requested)
+         ====================================================== -->
+    <footer class="bg-[#0a0c10] border-t-2 border-primary h-40 flex flex-col overflow-hidden shrink-0">
+        <!-- Terminal title bar -->
+        <div class="flex items-center gap-3 px-4 py-2 bg-[#0d1117] border-b border-slate-800/80 shrink-0">
+            <div class="flex gap-1.5">
+                <div class="w-3 h-3 rounded-full bg-red-500/70"></div>
+                <div class="w-3 h-3 rounded-full bg-amber-500/70"></div>
+                <div class="w-3 h-3 rounded-full bg-emerald-500/70"></div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider"
+                  style="background:rgba(36,56,156,0.5);color:#bac3ff;">TCP STREAM</span>
+            <span id="connStatus" class="text-slate-500 italic text-xs">Đang chờ kết nối...</span>
+            <div class="ml-auto text-slate-700 text-[10px] terminal-font">tcp://localhost:9090 → ws://localhost:8080</div>
         </div>
-        <div id="terminalContent" class="space-y-1"></div>
+        <!-- Terminal output - ID preserved -->
+        <div class="flex-1 overflow-y-auto terminal-scroll px-4 py-2 terminal-font text-xs">
+            <div id="terminalContent" class="space-y-0.5 text-green-400"></div>
+        </div>
     </footer>
 
+    <!-- Chat message JS -->
     <script>
         // 1. Auth check
         const token = localStorage.getItem('token');
@@ -85,12 +218,13 @@
                     const manga = await res.json();
                     document.getElementById('mangaTitle').innerText = manga.title;
                     document.title = `Đang đọc: ${manga.title} - MangaHub`;
-                    
+
                     // Giả lập load ảnh
                     const mangaContent = document.getElementById('mangaContent');
                     mangaContent.innerHTML = `
-                        <img src="${manga.thumbnail}" class="w-full max-w-md rounded shadow-lg">
-                        <p class="text-slate-400 mt-4 italic">${manga.description}</p>
+                        <img src="${manga.thumbnail}" class="w-full max-w-md rounded-xl shadow-lg border border-outline-variant/10" alt="${manga.title}"
+                             onerror="this.src='https://placehold.co/400x600/f3f4f5/757684?text=Chapter'" />
+                        <p class="text-secondary mt-4 italic text-sm text-center max-w-md">${manga.description}</p>
                     `;
                 } else {
                     document.getElementById('mangaTitle').innerText = 'Lỗi tải dữ liệu';
@@ -112,8 +246,8 @@
         socket.onmessage = function(event) {
             const msg = event.data;
             const msgElement = document.createElement('div');
-            msgElement.className = "p-2 bg-slate-700/50 rounded-lg text-sm border border-slate-600/50";
-            msgElement.innerHTML = `<span class="font-bold text-blue-400 block mb-1">User:</span> <span class="text-slate-200">${msg}</span>`;
+            msgElement.className = "msg-anim p-2.5 bg-surface-container-low/50 rounded-xl text-sm border border-outline-variant/10";
+            msgElement.innerHTML = `<span class="font-bold text-primary block mb-0.5 text-xs">User:</span> <span class="text-on-surface">${msg}</span>`;
             chatBox.appendChild(msgElement);
             chatBox.scrollTop = chatBox.scrollHeight;
         };
@@ -128,24 +262,36 @@
 
         chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendBtn.click(); });
     </script>
-    <!-- Resume Progress Modal -->
-    <div id="resumeModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-        <div class="bg-slate-800 border border-slate-700 p-6 rounded-xl shadow-2xl max-w-sm w-full mx-4 transform transition-all">
+
+    <!-- Resume Progress Modal - IDs preserved -->
+    <div id="resumeModal" class="fixed inset-0 bg-on-surface/40 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-surface-container-lowest border border-outline-variant/20 p-6 rounded-2xl shadow-2xl max-w-sm w-full mx-4 transform transition-all">
             <div class="flex items-center gap-3 mb-4">
-                <div class="bg-blue-500/20 p-2 rounded-lg">
-                    <span class="text-blue-400 font-bold">i</span>
+                <div class="bg-primary/5 p-2.5 rounded-xl">
+                    <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1,'wght' 600,'GRAD' 0,'opsz' 24;">history</span>
                 </div>
-                <h3 class="text-xl font-bold text-white">Tiếp tục đọc?</h3>
+                <h3 class="text-xl font-bold text-on-surface editorial-title">Tiếp tục đọc?</h3>
             </div>
-            <p class="text-slate-400 mb-6">Hệ thống ghi nhận bạn đã đọc đến <span id="resumeChapterNum" class="text-blue-400 font-bold"></span>. Bạn có muốn nhảy đến chương này không?</p>
+            <p class="text-secondary mb-6 text-sm leading-relaxed">
+                Hệ thống ghi nhận bạn đã đọc đến
+                <span id="resumeChapterNum" class="text-primary font-bold"></span>.
+                Bạn có muốn nhảy đến chương này không?
+            </p>
             <div class="flex gap-3">
-                <button id="btnIgnoreResume" class="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg font-bold transition">Bỏ qua</button>
-                <button id="btnAcceptResume" class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-bold transition">Đồng ý</button>
+                <button id="btnIgnoreResume"
+                    class="flex-1 px-4 py-2.5 bg-surface-container-low hover:bg-surface-container-highest rounded-xl font-bold text-sm transition-colors text-secondary">
+                    Bỏ qua
+                </button>
+                <button id="btnAcceptResume"
+                    class="flex-1 px-4 py-2.5 rounded-xl font-bold text-sm text-on-primary transition-colors shadow-md"
+                    style="background:linear-gradient(135deg,#24389c,#3f51b5);">
+                    Đồng ý
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- TCP Sync Script -->
     <script src="sync.js"></script>
 </body>
-
 </html>
