@@ -1,59 +1,66 @@
-# PROJECT_CONTEXT.md - MangaHub Source of Truth
+# PROJECT_CONTEXT.md - MangaHub Source of Truth (Week 4 Edition)
 
 ## 1. TỔNG QUAN DỰ ÁN VÀ TECH STACK
-- **Mục tiêu:** MangaHub là hệ thống quản lý và đồng bộ tiến độ đọc truyện đa giao thức, cho phép người dùng theo dõi và cập nhật trạng thái đọc mượt mà trên nhiều nền tảng và thiết bị khác nhau.
-- **Tech Stack:**
-    - **Language:** Go (Golang)
-    - **Framework:** Gin Gonic (HTTP Server)
-    - **Database:** SQLite (Dễ dàng triển khai, lưu trữ local)
-    - **Protocols:**
-        1. **HTTP (REST API):** Đăng ký, đăng nhập, CRUD Manga.
-        2. **TCP:** Đồng bộ tiến độ đọc thời gian thực (Progress Sync).
-        3. **gRPC:** Giao tiếp nội bộ hoặc dịch vụ dữ liệu hiệu năng cao.
-        4. **WebSocket:** Chat Hub & Hệ thống nhận thông báo thời gian thực.
-        5. **UDP:** Hệ thống thông báo (Notifier) gửi cập nhật chương mới nhanh chóng.
-        6. **Bridge Module:** Module trung gian chuyển tiếp thông báo từ UDP Server sang WebSocket Clients.
-- **Port Configuration:**
-    - **HTTP:** 8080
-    - **TCP:** 9090
-    - **UDP Notifier:** 9999
-    - **UDP Bridge Listener:** 8888
-    - **gRPC:** 50051
+MangaHub là hệ thống quản lý và đồng bộ tiến độ đọc truyện đa giao thức. Hệ thống sử dụng kiến trúc hướng sự kiện (Event-driven) để đảm bảo trải nghiệm người dùng liền mạch trên cả Web và CLI.
 
-## 2. TRẠNG THÁI HIỆN TẠI (GIAI ĐOẠN TÍCH HỢP & PHÁT HIỆN HẠN CHẾ)
-### Các Module Đã Triển Khai (Mức Độc Lập):
-- **Authentication JWT:** Xử lý tại `internal/auth`, hỗ trợ Register/Login.
-- **CRUD Manga:** API lấy danh sách và thông tin truyện (HTTP).
-- **TCP Progress Sync:** Quản lý kết nối và đồng bộ tiến độ qua Socket thô.
-- **gRPC Manga Service:** Cung cấp dữ liệu manga hiệu năng cao.
-- **UDP Notifier & Bridge:** Hệ thống thông báo chương mới đã chạy nhưng mới chỉ ở dạng thử nghiệm rời rạc.
-- **Frontend Templates:** Các file HTML (`dashboard`, `admin`, `notification`) đã có giao diện nhưng hoạt động độc lập, chưa có bộ điều hướng (Router) và quản lý trạng thái (State) tập trung.
+### Tech Stack Chi Tiết:
+- **Ngôn ngữ:** Go (Golang) 1.25+
+- **Framework & Thư viện:**
+    - `gin-gonic/gin`: HTTP Server & REST API.
+    - `gorilla/websocket`: Xử lý kết nối thời gian thực.
+    - `google.golang.org/grpc`: Giao thức nhị phân hiệu năng cao.
+    - `spf13/cobra` (Planned): Xây dựng CLI Client chuyên nghiệp.
+    - `glebarez/go-sqlite`: Database SQLite (Pure Go driver).
+- **Hệ thống Port (Network Map):**
 
-### Hạn Chế Hiện Tại (Technical Debt - Cần Giải Quyết Trong Tuần 4):
-> [!WARNING]
-> **Sự rời rạc của các Giao thức (Protocol Islands):**
-> - Các giao thức chưa kết nối thành một luồng dữ liệu thống nhất. Ví dụ: Khi thêm Manga qua HTTP, hệ thống không tự động kích hoạt thông báo qua UDP/WebSocket.
-> - Thiếu một **Event Bus** trung tâm để điều phối sự kiện giữa các module backend.
->
-> **Hạn chế của Frontend:**
-> - Các file HTML đang hoạt động như các trang tĩnh rời rạc, chưa tích hợp đầy đủ tính năng vào một giao diện duy nhất.
-> - Logic xử lý Auth (Lưu Token, tự động Re-login) và kết nối đa giao thức trên trình duyệt chưa được đồng bộ hóa.
+| Giao thức | Port | Vai trò |
+| :--- | :--- | :--- |
+| **HTTP** | 8080 | Auth, CRUD Manga, Admin Control |
+| **TCP** | 9090 | Sync tiến độ đọc (Raw Socket) |
+| **gRPC** | 50051 | Internal Service (Scan Manga Detail) |
+| **UDP** | 9999 | Notifier Server (Broadcast cập nhật) |
+| **Bridge** | 8888 | Cầu nối UDP-to-WebSocket |
 
+## 2. CẤU TRÚC DỮ LIỆU (DATABASE SCHEMA)
+Hệ thống sử dụng SQLite với các liên kết chặt chẽ để đảm bảo tính toàn vẹn dữ liệu.
 
-### Cấu Trúc Database (Schema):
-- **Bảng `users`:** `id`, `username`, `password`, `created_at`.
-- **Bảng `mangas`:** `id`, `title`, `author`, `description`, `thumbnail`.
+### Chi tiết các bảng:
+- **Bảng `users`:** Lưu trữ danh tính người dùng (PK: `id`).
+- **Bảng `mangas`:** Lưu trữ kho truyện (PK: `id`).
+- **Bảng `user_progress` (MỚI):**
+    - `user_id` (INT): Foreign Key -> `users(id)`
+    - `manga_id` (INT): Foreign Key -> `mangas(id)`
+    - `last_chapter` (INT): Chương truyện cuối cùng đang đọc.
+    - `updated_at` (DATETIME): Thời gian cập nhật gần nhất.
+    - *Constraint:* Primary Key (user_id, manga_id).
 
-### Các Struct Cốt Lõi (Go Models):
-- `User`, `Manga`, `LoginRequest`, `TokenResponse` (tại `models/models.go`).
-- `UDPPayload`: Chứa thông tin thông báo chương mới (MangaID, Chapter, Title, Timestamp).
+## 3. TRẠNG THÁI TRIỂN KHAI (CURRENT STATUS)
+Hệ thống đã hoàn thành các module cốt lõi và đang bước vào giai đoạn đóng gói.
 
-## 3. MỤC TIÊU TIẾP THEO (TUẦN 4)
-- **Hoàn thiện CLI Client:** Xây dựng ứng dụng Terminal (tại `cmd/cli`) để tương tác với các service TCP/gRPC/HTTP.
-- **Unit Testing & Stress Test:** Tăng cường độ bao phủ kiểm thử cho các module giao thức, đặc biệt là xử lý tranh chấp tài nguyên (Race-condition).
-- **Phát triển Dashboard Admin:** Giao diện quản lý gửi thông báo UDP trực tiếp từ Web.
+| Module | Trạng thái | Ghi chú |
+| :--- | :--- | :--- |
+| **Auth (JWT)** | ✅ Hoàn thành | Đã có Register/Login & Token Verification. |
+| **Manga CRUD** | ✅ Hoàn thành | Đã có API lấy danh sách và tìm kiếm. |
+| **TCP Sync** | ✅ Hoàn thành | Hỗ trợ Sync đa thiết bị, có bảo vệ Mutex. |
+| **gRPC Service** | ✅ Hoàn thành | Đã biên dịch `.proto` và có Server logic. |
+| **Bridge Service** | ✅ Hoàn thành | **UDP -> Bridge -> WebSocket**: Thông báo chương mới thời gian thực. |
 
-## 4. NGUYÊN TẮC BMAD (DEV GUIDELINES DÀNH CHO AI)
-1. **Defensive Programming:** Không tin tưởng Input. Mọi thao tác I/O, Network, DB phải có xử lý lỗi chi tiết (try-catch/error logging).
-2. **Layer-slicing:** Tôn trọng ranh giới file và kiến trúc. Không viết code Backend vào Frontend. 
-3. **No Guessing:** Nếu lỗi xảy ra, phân tích Root-Cause trước khi sửa code. Nếu thiếu file/ngữ cảnh, yêu cầu User cung cấp, tuyệt đối không tự bịa hàm hoặc thư viện không có sẵn.
+> [!IMPORTANT]
+> **Luồng tích hợp đặc biệt:** Khi Admin cập nhật truyện (HTTP/gRPC) -> UDP Server bắn tin (Port 9999) -> Bridge (Port 8888) nhận tin và chuyển đổi sang JSON -> WebSocket đẩy trực tiếp xuống trình duyệt để hiện Toast Notification.
+
+## 4. HẠN CHẾ VÀ LỘ TRÌNH TUẦN 4
+### Hạn chế hiện tại (Known Limitations):
+- **Frontend Decoupling:** Các file HTML (`auth.html`, `dashboard.html`, `reading.html`) hiện vẫn hoạt động rời rạc. Cần sử dụng `localStorage` để lưu JWT Token và điều hướng trạng thái người dùng.
+- **CLI Connection:** CLI Client đã có mã nguồn tại `cmd/client` nhưng cần được kiểm thử khả năng chịu tải và kết nối đồng thời 5 protocol.
+
+### Lộ trình Tuần 4 (Roadmap):
+1. **Hoàn thiện CLI Client:** Tinh chỉnh lệnh và xử lý lỗi kết nối mạng (Network Resilience).
+2. **Stress Test & Race Condition:** Sử dụng flag `-race` để rà soát xung đột Goroutines trong TCP Server và WebSocket Hub.
+3. **Đóng gói (Deployment):**
+    - Viết **Dockerfile** tối ưu cho Go.
+    - Cấu hình **docker-compose.yml** để chạy toàn bộ stack (Server + DB + Web) chỉ với một lệnh.
+
+## 5. NGUYÊN TẮC BMAD
+1. **Defensive Programming:** Xử lý lỗi tuyệt đối tại mọi điểm I/O.
+2. **Layer-slicing:** Tôn trọng ranh giới giữa Domain logic và Protocol layer.
+3. **No Guessing:** Chỉ sửa lỗi khi đã xác định được Root-Cause qua Log.

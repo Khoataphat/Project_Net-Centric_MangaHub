@@ -1,50 +1,185 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>MangaHub - Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="description" content="MangaHub Dashboard - Khám phá và quản lý thư viện truyện tranh của bạn." />
+    <!-- DEPENDENCIES -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <!-- TAILWIND CONFIG -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#24389c", "primary-container": "#3f51b5",
+                        "primary-fixed": "#dee0ff", "primary-fixed-dim": "#bac3ff",
+                        "secondary": "#4a626d", "on-primary": "#ffffff",
+                        "on-surface": "#191c1d", "on-surface-variant": "#454652",
+                        "surface": "#f8f9fa", "surface-container-low": "#f3f4f5",
+                        "surface-container": "#edeeef", "surface-container-high": "#e7e8e9",
+                        "surface-container-highest": "#e1e3e4", "surface-container-lowest": "#ffffff",
+                        "outline": "#757684", "outline-variant": "#c5c5d4",
+                        "inverse-surface": "#2e3132",
+                    },
+                    fontFamily: { "headline": ["Manrope"], "body": ["Inter"], "mono": ["JetBrains Mono"] },
+                },
+            },
+        }
+    </script>
+    <!-- CUSTOM STYLES -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .editorial-title { font-family: 'Manrope', sans-serif; letter-spacing: -0.02em; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24; }
+
+        /* Header glassmorphism */
+        .glass-header { background: rgba(248,249,250,0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+
+        /* Manga card hover effects */
+        .manga-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .manga-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(36,56,156,0.12); }
+        .manga-card:hover .card-cover { transform: scale(1.06); }
+        .card-cover { transition: transform 0.5s ease; }
+
+        /* Status badge */
+        .badge-ongoing  { background: rgba(36,56,156,0.08); color: #24389c; }
+        .badge-completed { background: rgba(74,98,109,0.08); color: #4a626d; }
+
+        /* Terminal / Network Log footer */
+        .terminal-footer { font-family: 'JetBrains Mono', monospace; }
+
+        /* Search input */
+        .search-input:focus { box-shadow: 0 0 0 3px rgba(36,56,156,0.12); }
+
+        /* Scrollbar for terminal */
+        .terminal-scroll::-webkit-scrollbar { width: 4px; }
+        .terminal-scroll::-webkit-scrollbar-track { background: transparent; }
+        .terminal-scroll::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+
+        /* Card placeholder animation */
+        @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: calc(200px + 100%) 0; }
+        }
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200px 100%;
+            animation: shimmer 1.2s infinite;
+        }
+    </style>
 </head>
 
-<body class="bg-slate-50 min-h-screen flex flex-col">
-    <header class="bg-white border-b p-4 flex justify-between items-center shadow-sm">
-        <div class="flex items-center gap-6">
-            <h1 class="text-xl font-bold text-blue-600">MangaHub Dashboard</h1>
-            <nav class="flex gap-4">
-                <a href="dashboard.html" class="text-sm font-semibold text-blue-600 border-b-2 border-blue-600">Trang chủ</a>
-                <a href="admin.html" class="text-sm font-semibold text-slate-500 hover:text-blue-600 transition">Admin Panel</a>
-            </nav>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+
+    <!-- ======================================================
+         HEADER: Glassmorphism navbar with search & user info
+         ====================================================== -->
+    <header class="glass-header fixed top-0 w-full z-50 border-b border-outline-variant/20 shadow-sm">
+        <div class="flex justify-between items-center px-6 py-3 max-w-screen-2xl mx-auto">
+            <!-- Logo + Nav -->
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                         style="background:linear-gradient(135deg,#24389c,#3f51b5);">
+                        <span class="material-symbols-outlined text-white text-sm" style="font-variation-settings:'FILL' 1,'wght' 700,'GRAD' 0,'opsz' 24;">menu_book</span>
+                    </div>
+                    <span class="editorial-title text-xl font-extrabold text-primary">MangaHub</span>
+                </div>
+                <nav class="hidden md:flex items-center gap-1">
+                    <a href="dashboard.html" class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-primary bg-primary/5">
+                        <span class="material-symbols-outlined text-sm">home</span>Trang chủ
+                    </a>
+                    <a href="admin.html" class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-secondary hover:text-primary hover:bg-surface-container transition-colors">
+                        <span class="material-symbols-outlined text-sm">admin_panel_settings</span>Admin Panel
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Search + User -->
+            <div class="flex items-center gap-4">
+                <!-- Search -->
+                <div class="relative hidden md:block">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+                    <input type="text" id="searchInput" placeholder="Tìm kiếm truyện..."
+                        class="search-input bg-surface-container-highest border-none rounded-full pl-10 pr-4 py-2 w-56 text-sm text-on-surface placeholder:text-outline outline-none transition-all" />
+                </div>
+                <!-- User info -->
+                <div id="userInfo" class="text-sm font-medium text-secondary"></div>
+                <button onclick="logout()"
+                    class="flex items-center gap-1.5 bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-red-100 transition-colors">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    Đăng xuất
+                </button>
+            </div>
         </div>
-        <div class="flex items-center gap-4">
-            <div id="userInfo" class="text-sm font-medium text-slate-600"></div>
-            <button onclick="logout()" class="bg-red-50 text-red-600 px-4 py-1.5 rounded-lg text-sm font-bold hover:bg-red-100 transition">Đăng xuất</button>
+        <!-- Mobile search -->
+        <div class="md:hidden px-4 pb-3">
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+                <input type="text" id="searchInputMobile" placeholder="Tìm kiếm truyện..."
+                    class="search-input w-full bg-surface-container-highest border-none rounded-full pl-10 pr-4 py-2 text-sm outline-none" />
+            </div>
         </div>
     </header>
 
-    <main class="flex-grow p-6">
-        <div class="mb-6">
-            <input type="text" id="searchInput" placeholder="Tìm kiếm truyện..."
-                class="w-full max-w-md p-2 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none">
-        </div>
+    <!-- ======================================================
+         MAIN: Manga grid with cards
+         ====================================================== -->
+    <main class="flex-grow pt-20 pb-4 px-6">
+        <div class="max-w-screen-2xl mx-auto">
+            <!-- Section title -->
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="editorial-title text-2xl font-bold text-on-surface">Thư viện truyện</h2>
+                    <p class="text-sm text-secondary mt-0.5">Khám phá bộ sưu tập của bạn</p>
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1 bg-surface-container-low rounded-full border border-outline-variant/30">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span class="text-[11px] font-semibold text-secondary uppercase tracking-wider">Đã kết nối</span>
+                </div>
+            </div>
 
-        <div id="mangaGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            <!-- Manga Grid - ID preserved -->
+            <div id="mangaGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5"></div>
         </div>
     </main>
 
-    <footer class="bg-slate-900 text-green-400 p-4 h-48 overflow-y-auto font-mono text-xs border-t-4 border-blue-600">
-        <div class="flex items-center gap-2 mb-2 border-b border-slate-700 pb-1">
-            <span class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px]">NETWORK LOG</span>
-            <span class="text-slate-500 italic">Listening for packets...</span>
+    <!-- ======================================================
+         FOOTER: Terminal / Network Log (Linux Console style)
+         ====================================================== -->
+    <footer class="bg-[#0d1117] border-t-2 border-primary h-44 flex flex-col overflow-hidden shrink-0">
+        <!-- Terminal header bar -->
+        <div class="flex items-center gap-3 px-4 py-2 bg-[#161b22] border-b border-slate-800 shrink-0">
+            <!-- macOS-style dots -->
+            <div class="flex gap-1.5">
+                <div class="w-3 h-3 rounded-full bg-red-500/70"></div>
+                <div class="w-3 h-3 rounded-full bg-amber-500/70"></div>
+                <div class="w-3 h-3 rounded-full bg-emerald-500/70"></div>
+            </div>
+            <div class="flex items-center gap-2 ml-1">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider"
+                      style="background:rgba(36,56,156,0.5);color:#bac3ff;">NETWORK LOG</span>
+                <span class="text-slate-500 italic text-xs">ws://localhost:8080/api/ws-logs</span>
+            </div>
+            <div class="ml-auto text-slate-600 text-[10px] font-mono">bash ~ mangahub-client</div>
         </div>
-        <div id="terminalContent">
-            [SYS] Terminal initialized. Waiting for CLI Bridge...
+        <!-- Terminal content - ID preserved -->
+        <div class="flex-1 overflow-y-auto terminal-scroll px-4 py-2 terminal-footer text-xs">
+            <div id="terminalContent" class="space-y-0.5">
+                <span class="text-emerald-500">[SYS]</span> <span class="text-slate-400">Terminal initialized. Waiting for CLI Bridge...</span>
+            </div>
         </div>
     </footer>
 
-    <!-- Toast Notification Container [AC2] -->
+    <!-- Toast Notification Container [AC2] - ID preserved -->
     <div id="notification-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-4 pointer-events-none"></div>
 
+    <!-- SCRIPTS -->
     <script src="notification.js"></script>
     <script>
         // Kiểm tra Token ngay lập tức
@@ -88,9 +223,7 @@
             addLog('GET', `/api/mangas?q=${query}`, 'PENDING');
             try {
                 const res = await fetch(`http://localhost:8080/api/mangas?q=${query}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
                 addLog('GET', `/api/mangas`, '200 OK');
@@ -102,18 +235,35 @@
 
         function displayMangas(mangas) {
             const grid = document.getElementById('mangaGrid');
-            grid.innerHTML = mangas?.map(m => `
-                <div onclick="window.location.href='reading.html?id=${m.id}'" class="bg-white rounded-lg shadow hover:shadow-md transition p-3 cursor-pointer group">
-                    <div class="overflow-hidden rounded mb-2">
-                        <img src="${m.thumbnail || 'https://via.placeholder.com/150'}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
+            if (!mangas || mangas.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full flex flex-col items-center justify-center py-20 text-secondary">
+                        <span class="material-symbols-outlined text-5xl mb-3 opacity-30">search_off</span>
+                        <p class="font-semibold">Không tìm thấy truyện</p>
+                    </div>`;
+                return;
+            }
+            grid.innerHTML = mangas.map(m => `
+                <div onclick="window.location.href='reading.html?id=${m.id}'"
+                     class="manga-card bg-surface-container-lowest rounded-xl shadow-sm cursor-pointer group overflow-hidden border border-outline-variant/10">
+                    <div class="overflow-hidden rounded-t-xl aspect-[3/4] relative">
+                        <img src="${m.thumbnail || 'https://placehold.co/150x200/dee0ff/24389c?text=Manga'}"
+                             class="card-cover w-full h-full object-cover"
+                             alt="${m.title}"
+                             onerror="this.src='https://placehold.co/150x200/dee0ff/24389c?text=Manga'" />
+                        <div class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase badge-ongoing">
+                            Ongoing
+                        </div>
                     </div>
-                    <h3 class="font-bold text-sm truncate group-hover:text-blue-600 transition">${m.title}</h3>
-                    <p class="text-xs text-gray-500">${m.author}</p>
+                    <div class="p-3">
+                        <h3 class="font-bold text-sm truncate group-hover:text-primary transition-colors font-headline">${m.title}</h3>
+                        <p class="text-xs text-secondary mt-0.5 truncate">${m.author || 'Unknown'}</p>
+                    </div>
                 </div>
-            `).join('') || '<p>Không tìm thấy truyện</p>';
+            `).join('');
         }
 
-        //Tính năng Debounce
+        // Tính năng Debounce
         let searchTimeout = null;
         const searchInput = document.getElementById('searchInput');
 
@@ -128,9 +278,19 @@
             }, 500);
         });
 
+        // Mobile search sync
+        const searchInputMobile = document.getElementById('searchInputMobile');
+        if (searchInputMobile) {
+            searchInputMobile.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    fetchMangas(e.target.value.trim());
+                }, 500);
+            });
+        }
+
         // Khởi tạo
         fetchMangas();
     </script>
 </body>
-
 </html>

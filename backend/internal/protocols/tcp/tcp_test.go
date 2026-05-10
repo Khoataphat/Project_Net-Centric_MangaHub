@@ -2,16 +2,27 @@ package tcp
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
+	"mangahub/internal/database"
 	"mangahub/internal/models"
 	"net"
+	"os"
 	"sync"
 	"testing"
 	"time"
-	"context"
 )
+
+func TestMain(m *testing.M) {
+	// Khởi tạo DB giả lập cho test
+	dbFile := "test_tcp.db"
+	database.InitDB(dbFile)
+	defer os.Remove(dbFile)
+
+	os.Exit(m.Run())
+}
 
 func TestTCPConcurrency(goTest *testing.T) {
 	port := ":9091"

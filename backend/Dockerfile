@@ -24,7 +24,7 @@ FROM alpine:latest
 WORKDIR /app
 
 # Install runtime dependencies
-RUN apk add --no-cache ca-certificates tzdata
+RUN apk add --no-cache ca-certificates tzdata sqlite
 
 # Copy binary from builder
 COPY --from=builder /app/mangahub-server .
