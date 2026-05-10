@@ -47,8 +47,9 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// 1. Tìm user trong database
+	var userID int
 	var hashedPassword string
-	err := database.DB.QueryRow("SELECT password FROM users WHERE username = ?", req.Username).Scan(&hashedPassword)
+	err := database.DB.QueryRow("SELECT id, password FROM users WHERE username = ?", req.Username).Scan(&userID, &hashedPassword)
 
 	// Nếu không tìm thấy username hoặc quét dữ liệu lỗi
 	if err != nil {
@@ -63,7 +64,7 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// 3. Mật khẩu đúng -> Tạo Token thông hành
-	token, err := auth.GenerateJWT(req.Username)
+	token, err := auth.GenerateJWT(userID, req.Username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Không thể tạo phiên đăng nhập"})
 		return

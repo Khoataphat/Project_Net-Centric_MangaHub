@@ -48,5 +48,22 @@ func InitDB(filepath string) {
 		log.Fatal("Lỗi tạo bảng mangas:", err)
 	}
 
+	// 3. Tạo bảng user_progress nếu chưa tồn tại (Mới - Tuần 4)
+	createProgressTableSQL := `
+	CREATE TABLE IF NOT EXISTS user_progress (
+		user_id INTEGER NOT NULL,
+		manga_id INTEGER NOT NULL,
+		last_chapter INTEGER DEFAULT 1,
+		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		PRIMARY KEY (user_id, manga_id),
+		FOREIGN KEY (user_id) REFERENCES users(id),
+		FOREIGN KEY (manga_id) REFERENCES mangas(id)
+	);`
+
+	_, err = DB.Exec(createProgressTableSQL)
+	if err != nil {
+		log.Fatal("Lỗi tạo bảng user_progress:", err)
+	}
+
 	log.Println("Database SQLite đã sẵn sàng tại:", filepath)
 }

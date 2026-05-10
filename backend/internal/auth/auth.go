@@ -22,9 +22,10 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 // GenerateJWT tạo token cho người dùng sau khi đăng nhập thành công
-func GenerateJWT(username string) (string, error) {
+func GenerateJWT(userID int, username string) (string, error) {
 	// Tạo các "claims" (thông tin đính kèm trong token)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":       userID,
 		"username": username,
 		"exp":      time.Now().Add(24 * time.Hour).Unix(), // Token hết hạn sau 24 giờ
 	})

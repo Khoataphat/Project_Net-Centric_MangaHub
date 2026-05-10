@@ -12,6 +12,7 @@ services:
       - "50051:50051"
     volumes:
       - ./backend/data:/app/data
+      - ./frontend:/app/web
     environment:
       - HOST=0.0.0.0
       - HTTP_PORT=8080
