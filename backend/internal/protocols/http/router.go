@@ -2,14 +2,23 @@ package http
 
 import (
 	"mangahub/internal/protocols/websocket"
+	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter(r *gin.Engine, chatHub *websocket.Hub) {
-	// 1. Khi vào trang chủ "/" -> Trả về auth.html
+	// 1. Khi vào trang chủ "/" -> Tìm auth.html
 	r.GET("/", func(c *gin.Context) {
-		c.File("./web/auth.html")
+		folders := []string{"./frontend", "../frontend", "./web", "../web"}
+		for _, folder := range folders {
+			target := filepath.Join(folder, "auth.html")
+			if _, err := os.Stat(target); err == nil {
+				c.File(target)
+				return
+			}
+		}
 	})
 
 	r.GET("/health", HealthHandler)
@@ -29,9 +38,18 @@ func SetupRouter(r *gin.Engine, chatHub *websocket.Hub) {
 		})
 	}
 
-	// 2. Với tất cả các đường dẫn khác (như /dashboard.html, /notification.js)
-	// Tự động tìm trong thư mục "./web"
+	// 2. Tự động tìm file trong thư mục "frontend"
 	r.NoRoute(func(c *gin.Context) {
-		c.File("./web" + c.Request.URL.Path)
+		path := c.Request.URL.Path
+		// Danh sách các folder có thể chứa frontend
+		folders := []string{"./frontend", "../frontend", "./web", "../web"}
+
+		for _, folder := range folders {
+			target := filepath.Join(folder, path)
+			if _, err := os.Stat(target); err == nil {
+				c.File(target)
+				return
+			}
+		}
 	})
 }

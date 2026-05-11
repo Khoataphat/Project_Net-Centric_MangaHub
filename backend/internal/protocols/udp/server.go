@@ -85,6 +85,9 @@ func BroadcastUpdate(data UDPPayload) {
 				log.Printf("[UDP] Lỗi gửi tới Bridge %s: %v", bridgeAddr, err)
 			}
 		}
+		if len(localBridges) > 0 {
+			log.Printf("[UDP Success] Broadcasted update to %d bridges", len(localBridges))
+		}
 	}()
 }
 

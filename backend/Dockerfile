@@ -17,6 +17,7 @@ COPY . .
 # Build the application
 # Use CGO_ENABLED=0 to ensure portability if using glebarez/go-sqlite
 RUN CGO_ENABLED=0 GOOS=linux go build -o mangahub-server ./cmd/server/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o mangahub-seeder ./cmd/seed/main.go
 
 # Stage 2: Runtime
 FROM alpine:latest
@@ -26,8 +27,13 @@ WORKDIR /app
 # Install runtime dependencies
 RUN apk add --no-cache ca-certificates tzdata sqlite
 
-# Copy binary from builder
+# Copy binaries from builder
 COPY --from=builder /app/mangahub-server .
+COPY --from=builder /app/mangahub-seeder .
+
+# Copy entrypoint script
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
 # Create data directory for SQLite persistent storage
 RUN mkdir -p /app/data
@@ -50,4 +56,4 @@ ENV GRPC_PORT=50051
 ENV DB_PATH=/app/data/mangahub.db
 
 # Command to run
-CMD ["./mangahub-server"]
+CMD ["./entrypoint.sh"]

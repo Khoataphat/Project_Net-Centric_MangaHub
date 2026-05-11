@@ -27,12 +27,15 @@ func (s *MangaServer) GetMangaDetail(ctx context.Context, req *proto.MangaReques
 		return nil, err
 	}
 
-	return &proto.MangaResponse{
+	res := &proto.MangaResponse{
 		Id:          req.Id,
 		Title:       title,
 		Author:      author,
 		Description: desc,
-	}, nil
+	}
+
+	log.Printf("[gRPC Success] Found Manga ID %d: %s by %s", req.Id, title, author)
+	return res, nil
 }
 
 // StartGRPCServer khởi chạy gRPC Server và hỗ trợ đóng an toàn (AC1, Defensive Rules)
