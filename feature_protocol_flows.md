@@ -235,5 +235,90 @@ Admin / Trigger
   └─[UDP]────────────► BroadcastUpdate :9999
                             └──► Bridge :8888 (UDPBridge.listen)
                                       └──► Hub.Broadcast
-                                                └──► ws/chat clients
 ```
+
+---
+
+## 9. Lấy danh sách chương truyện (Chapters)
+**Protocol:** `HTTP REST (GET)`
+
+```
+[reading.html] → fetch GET /api/mangas/:id/chapters
+  → GetMangaChapters(c)
+    → c.Param("id")
+    → DB.Query("SELECT ... FROM chapters WHERE manga_id = ? ORDER BY chapter_number ASC")
+    → rows.Scan(&ch)
+  ← JSON [ { id, manga_id, chapter_number, title }, ... ]
+```
+
+---
+
+## 10. Lấy danh sách trang truyện (Pages)
+**Protocol:** `HTTP REST (GET)`
+
+```
+[reading.html] → fetch GET /api/chapters/:chapter_id/pages
+  → GetChapterPages(c)
+    → c.Param("chapter_id")
+    → DB.Query("SELECT ... FROM pages WHERE chapter_id = ? ORDER BY page_number ASC")
+    → rows.Scan(&p)
+  ← JSON [ { id, chapter_id, page_number, image_url }, ... ]
+```
+
+---
+
+## 11. Phân quyền truy cập (RBAC Middleware)
+**Protocol:** `HTTP Middleware (JWT)`
+
+```
+[Request] → Authorization Header (Bearer <token>)
+  → RoleMiddleware(requiredRole)
+    → jwt.Parse(tokenString)
+    → Check claims["role"]
+    → IF role == requiredRole OR role == "admin":
+        → c.Set("userID", ...) → c.Next()
+      ELSE:
+        → c.AbortWithStatus(403)
+```
+
+---
+
+## Sơ đồ tổng quan kiến trúc (Cập nhật)
+
+```
+Browser
+  │
+  ├─[HTTP]──────────► Gin Router :8080
+  │                       ├── [Middleware] RoleMiddleware (JWT / RBAC)
+  │                       │
+  │                       ├── /api/register  → RegisterHandler
+  │                       ├── /api/login     → LoginHandler
+  │                       ├── /api/mangas    → GetMangas / GetMangaByID
+  │                       ├── /api/mangas/:id/chapters → GetMangaChapters (Mới)
+  │                       ├── /api/chapters/:id/pages  → GetChapterPages (Mới)
+  │                       │
+  │                       ├── /api/admin/scan-manga → ScanMangaHandler (Protected by RBAC)
+  │                       │       └──[gRPC]──► MangaServer :50051
+  │                       │
+  │                       ├── /api/ws-tcp-bridge → TCPBridgeHandler
+  │                       │       └──[TCP]───► TCP Sync Server :9090
+  │                       │
+  │                       ├── /api/ws/chat   → ServeWS → Hub
+  │                       └── /api/ws-logs  → ServeLogWS → LogBroadcaster
+  │
+  └─[WebSocket]──────► (3 endpoints above)
+```
+
+---
+
+## 12. Tối ưu hóa Bridge (JSON Framing)
+**Protocol:** `TCP ↔ WebSocket (Optimization)`
+
+```
+[TCP Stream] → bufio.NewScanner(tcpConn)
+  → scanner.Scan() (Đọc từng dòng kết thúc bằng \n)
+  → ws.WriteMessage(TextMessage, line)
+```
+> **Mục đích:** Đảm bảo các gói tin JSON không bị dính vào nhau khi truyền tải tốc độ cao, giúp Frontend parse JSON ổn định hơn.
+
+
