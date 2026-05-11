@@ -37,12 +37,12 @@ func TCPBridgeHandler(c *gin.Context) {
 
 	// ── Luồng A: TCP → WebSocket ──────────────────────────────────────────
 	// QUAN TRỌNG: Dùng bufio.Scanner để đọc TỪNG DÒNG JSON hoàn chỉnh.
-	// Nếu dùng tcpConn.Read(buf) thô, nhiều gói JSON liên tiếp có thể bị
-	// gộp vào cùng 1 read buffer → JSON.parse() phía JS thất bại.
 	go func() {
 		defer close(done)
+		// Đảm bảo khi TCP đứt, WebSocket cũng đóng để thoát Luồng B
+		defer ws.Close()
+
 		scanner := bufio.NewScanner(tcpConn)
-		// Tăng buffer để xử lý JSON lớn nếu cần
 		scanner.Buffer(make([]byte, 64*1024), 64*1024)
 
 		for scanner.Scan() {
@@ -64,9 +64,10 @@ func TCPBridgeHandler(c *gin.Context) {
 	for {
 		_, msg, err := ws.ReadMessage()
 		if err != nil {
+			// WebSocket đóng (người dùng tắt tab) -> break
 			break
 		}
-		// Đảm bảo message kết thúc bằng \n (TCP server đọc bằng ReadString('\n'))
+		// Đảm bảo message kết thúc bằng \n
 		if len(msg) == 0 || msg[len(msg)-1] != '\n' {
 			msg = append(msg, '\n')
 		}
@@ -76,6 +77,9 @@ func TCPBridgeHandler(c *gin.Context) {
 		}
 	}
 
-	// Chờ Luồng A kết thúc
+	// QUAN TRỌNG: Đóng TCP connection để giải phóng server và kết thúc Luồng A
+	tcpConn.Close()
+
+	// Chờ Luồng A kết thúc hoàn toàn
 	<-done
 }
