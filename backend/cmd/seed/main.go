@@ -4,9 +4,13 @@
 // Cào dữ liệu từ MangaDex API và nạp vào 3 bảng: mangas, chapters, pages.
 //
 // Chạy lệnh từ thư mục backend/:
-//   go run ./cmd/seed/main.go
+//
+//	go run ./cmd/seed/main.go
+//
 // hoặc chỉ định đường dẫn DB:
-//   DB_PATH=./data/mangahub.db go run ./cmd/seed/main.go
+//
+//	DB_PATH=./data/mangahub.db go run ./cmd/seed/main.go
+//
 // =============================================================================
 package main
 
@@ -32,7 +36,10 @@ const (
 	mangaLimit     = 30  // Số truyện tối đa lấy từ API
 	chapterLimit   = 10  // Số chương tối đa mỗi truyện
 	requestDelay   = 400 * time.Millisecond // Rate limiting: ~2-3 req/s (an toàn)
+	chapterDelay   = 500 * time.Millisecond // Delay giữa các request chapter (tránh rate limit)
 	httpTimeout    = 15 * time.Second
+	// URL placeholder khi không có cover art
+	placeholderCover = "https://via.placeholder.com/300x400?text=No+Cover"
 )
 
 // ─── Struct ánh xạ JSON từ MangaDex API ───────────────────────────────────────
@@ -96,9 +103,19 @@ var client = &http.Client{
 }
 
 // ─── Helper: thực hiện GET và decode JSON vào dst ────────────────────────────
+// ⚠️ QUAN TRỌNG: Thêm User-Agent header để tránh Cloudflare chặn request
 
 func getJSON(url string, dst interface{}) error {
-	resp, err := client.Get(url)
+	// Tạo request với User-Agent giả lập Chrome (tránh bị Cloudflare chặn)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return fmt.Errorf("tạo request thất bại [%s]: %w", url, err)
+	}
+
+	// Thêm User-Agent header
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return fmt.Errorf("request thất bại [%s]: %w", url, err)
 	}
@@ -388,31 +405,45 @@ func main() {
 
 		description := pickText(manga.Attributes.Description)
 		author := extractAuthorName(manga.Relations)
-		coverFilename := extractCoverFilename(manga.Relations)
 
-		thumbnail := ""
+		// ═══════════════════════════════════════════════════════════════════════════
+		// 🎨 XỬ LÝ COVER ART
+		// ═══════════════════════════════════════════════════════════════════════════
+		// Trích xuất fileName từ relationship có type "cover_art"
+		// Công thức tạo URL: https://uploads.mangadex.org/covers/{mangaID}/{fileName}
+		// Nếu không có cover, dùng placeholder image
+		thumbnail := placeholderCover
+		coverFilename := extractCoverFilename(manga.Relations)
 		if coverFilename != "" {
 			thumbnail = fmt.Sprintf("%s/covers/%s/%s", uploadsBase, manga.ID, coverFilename)
+			log.Printf("        [COVER] Tìm thấy: %s", coverFilename)
+		} else {
+			log.Printf("        [COVER] Không tìm thấy, dùng placeholder")
 		}
 
 		log.Printf("\n[%d/%d] Đang xử lý: %s", i+1, len(mangaList.Data), title)
-		log.Printf("        ID: %s | Tác giả: %s", manga.ID, author)
+		log.Printf("        MangaDex ID: %s | Tác giả: %s", manga.ID, author)
 
-		// Ghi manga vào DB
+		// Ghi manga vào DB (bảng mangas)
 		mangaLocalID := upsertManga(db, manga.ID, title, author, description, thumbnail)
 		if mangaLocalID < 0 {
 			log.Printf("  [SKIP] Bỏ qua truyện '%s' do lỗi DB.", title)
 			continue
 		}
 		totalMangas++
-		log.Printf("        → Đã lưu manga (local ID: %d)", mangaLocalID)
+		log.Printf("        → Đã lưu manga (local DB ID: %d)", mangaLocalID)
 
-		// Rate limit trước khi gọi tiếp
+		// Rate limit trước khi gọi API tiếp
 		time.Sleep(requestDelay)
 
-		// ── BƯỚC 2: Lấy danh sách Chapters ──────────────────────────────────
+		// ═══════════════════════════════════════════════════════════════════════════
+		// 📚 BƯỚC 2: LẤY DANH SÁCH CHAPTERS
+		// ═══════════════════════════════════════════════════════════════════════════
+		// Dùng MangaID từ API /manga để gọi endpoint /feed
+		// Lấy tối đa 10 chapter, ưu tiên các bản dịch tiếng Việt & tiếng Anh
+		// Sắp xếp theo thứ tự chapter tăng dần (asc)
 		feedURL := fmt.Sprintf(
-			"%s/manga/%s/feed?translatedLanguage[]=en&limit=%d&order[chapter]=asc&contentRating[]=safe",
+			"%s/manga/%s/feed?limit=%d&translatedLanguage[]=vi&translatedLanguage[]=en&order[chapter]=asc&contentRating[]=safe",
 			mangaDexBase, manga.ID, chapterLimit,
 		)
 
@@ -424,15 +455,19 @@ func main() {
 		}
 
 		if len(feed.Data) == 0 {
-			log.Printf("  [INFO] '%s' không có chương tiếng Anh, bỏ qua chapters.", title)
+			log.Printf("  [INFO] '%s' không có chương (VI/EN), bỏ qua chapters.", title)
 			continue
 		}
 
-		log.Printf("        → Tìm thấy %d chương tiếng Anh", len(feed.Data))
+		log.Printf("        → Tìm thấy %d chương (VI/EN)", len(feed.Data))
 		chaptersAdded := 0
 
-		for _, ch := range feed.Data {
-			// Parse chapter number (string → float64)
+		// ═══════════════════════════════════════════════════════════════════════════
+		// 🔄 Xử lý từng Chapter
+		// ═══════════════════════════════════════════════════════════════════════════
+		for j, ch := range feed.Data {
+			// Parse chapter number từ string sang float64
+			// Ví dụ: "1", "1.5", "10" → 1.0, 1.5, 10.0
 			chapterNum := 0.0
 			chapterNumStr := ""
 			if ch.Attributes.Chapter != nil {
@@ -447,17 +482,30 @@ func main() {
 				chTitle = *ch.Attributes.Title
 			}
 
-			// Ghi chapter vào DB
+			// Ghi chapter vào DB (bảng chapters)
 			chLocalID := upsertChapter(db, mangaLocalID, ch.ID, chapterNum, chTitle)
 			if chLocalID < 0 {
 				continue
 			}
 
-			log.Printf("        [Ch %s] ID: %s → local ID: %d", chapterNumStr, ch.ID, chLocalID)
+			log.Printf("        [Ch %s] MangaDex ID: %s → DB ID: %d | Title: %s", 
+				chapterNumStr, ch.ID, chLocalID, chTitle)
 
-			time.Sleep(requestDelay)
+			// ⚠️ QUAN TRỌNG: Delay giữa các request chapter
+			// MangaDex có rate limit, nếu request quá nhanh sẽ bị trả 429 Too Many Requests
+			// Dùng 500ms delay giữa các chapter (ngoài delay chung 400ms)
+			if j < len(feed.Data)-1 {
+				time.Sleep(chapterDelay)
+			}
 
-			// ── BƯỚC 3: Lấy URLs trang cho Chapter này ───────────────────────
+			// ═══════════════════════════════════════════════════════════════════════════
+			// 🖼️ BƯỚC 3: LẤY URLS TRANG ẢNH CHO CHAPTER
+			// ═══════════════════════════════════════════════════════════════════════════
+			// Endpoint /at-home/server/{chapter_id} trả về:
+			// - baseUrl: server URL gốc
+			// - chapter.hash: hash để tạo URL ảnh
+			// - chapter.data: danh sách filename của từng trang
+			// Công thức URL trang: {baseUrl}/data/{hash}/{filename}
 			atHomeURL := fmt.Sprintf("%s/at-home/server/%s", mangaDexBase, ch.ID)
 
 			var atHome AtHomeResponse
@@ -484,13 +532,14 @@ func main() {
 				imageURLs = append(imageURLs, imageURL)
 			}
 
-			// Ghi pages vào DB
+			// Ghi pages vào DB (bảng pages)
 			pagesAdded := insertPages(db, chLocalID, imageURLs)
 			log.Printf("          → Đã lưu %d trang cho chương %s", pagesAdded, chapterNumStr)
 
 			totalPages += pagesAdded
 			chaptersAdded++
 
+			// Rate limit sau mỗi chapter
 			time.Sleep(requestDelay)
 		}
 
