@@ -334,10 +334,20 @@
 
     <!-- JAVASCRIPT: Admin logic (preserved exactly) -->
     <script>
-        // Kiểm tra Token
+        // Kiểm tra Token & Phân quyền (AC-Phân quyền)
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.href = 'auth.html';
+        } else {
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                if (payload.role !== 'admin') {
+                    alert('Bạn không có quyền truy cập trang Admin!');
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (e) {
+                window.location.href = 'auth.html';
+            }
         }
 
         function logout() {

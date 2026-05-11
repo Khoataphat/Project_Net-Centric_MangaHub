@@ -92,6 +92,14 @@
             </div>
         </div>
         <div class="flex items-center gap-3">
+            <!-- Live Presence Badge: ẩn mặc định, hiện khi count > 1 -->
+            <div id="liveReadersBadge"
+                 class="hidden items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-white"
+                 style="background: linear-gradient(135deg, #10b981, #059669);">
+                <span class="inline-block w-1.5 h-1.5 rounded-full bg-white animate-ping opacity-75"></span>
+                <span id="liveReadersText">👁 1 người đang đọc</span>
+            </div>
+            <!-- Chapter indicator -->
             <div class="flex items-center gap-2 px-3 py-1 bg-surface-container-low rounded-full border border-outline-variant/30">
                 <span class="material-symbols-outlined text-emerald-600 text-sm" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">bookmark</span>
                 <span class="text-xs text-secondary">Chương&nbsp;</span>
@@ -194,40 +202,63 @@
 
     <!-- Chat message JS -->
     <script>
-        // 1. Auth check
+        // 1. Auth check + decode username từ JWT
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.href = 'auth.html';
         }
 
-        // 2. Load Manga Data
+        let _myUsername = 'Ẩn danh';
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const payload = JSON.parse(decodeURIComponent(
+                window.atob(base64).split('').map(c =>
+                    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+                ).join('')
+            ));
+            _myUsername = payload.username || 'Ẩn danh';
+        } catch (e) { console.error("Token decode error", e); }
+
+        // 2. Load Manga Data & Content
         const urlParams = new URLSearchParams(window.location.search);
         const mangaId = urlParams.get('id');
+        let chapters = [];
+        let currentChapterIndex = 0;
 
         async function loadMangaInfo() {
             if (!mangaId) {
                 document.getElementById('mangaTitle').innerText = 'Không tìm thấy ID';
                 return;
             }
-
             try {
-                const res = await fetch(`http://localhost:8080/api/mangas/${mangaId}`, {
+                // Load manga basic info
+                const mangaRes = await fetch(`http://localhost:8080/api/mangas/${mangaId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                if (res.ok) {
-                    const manga = await res.json();
+                if (mangaRes.ok) {
+                    const manga = await mangaRes.json();
                     document.getElementById('mangaTitle').innerText = manga.title;
                     document.title = `Đang đọc: ${manga.title} - MangaHub`;
+                }
 
-                    // Giả lập load ảnh
-                    const mangaContent = document.getElementById('mangaContent');
-                    mangaContent.innerHTML = `
-                        <img src="${manga.thumbnail}" class="w-full max-w-md rounded-xl shadow-lg border border-outline-variant/10" alt="${manga.title}"
-                             onerror="this.src='https://placehold.co/400x600/f3f4f5/757684?text=Chapter'" />
-                        <p class="text-secondary mt-4 italic text-sm text-center max-w-md">${manga.description}</p>
-                    `;
-                } else {
-                    document.getElementById('mangaTitle').innerText = 'Lỗi tải dữ liệu';
+                // Load chapters list
+                const chaptersRes = await fetch(`http://localhost:8080/api/mangas/${mangaId}/chapters`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (chaptersRes.ok) {
+                    chapters = await chaptersRes.json();
+                    if (chapters && chapters.length > 0) {
+                        // Mặc định load chương đầu tiên (hoặc theo currentChapter trong sync.js)
+                        // Tuy nhiên sync.js sẽ gọi loadContent sau khi kết nối TCP
+                        loadChapterContent(0);
+                    } else {
+                        document.getElementById('mangaContent').innerHTML = `
+                            <div class="py-20 text-center text-outline">
+                                <span class="material-symbols-outlined text-5xl mb-2">sentiment_dissatisfied</span>
+                                <p>Truyện này hiện chưa có chương nào.</p>
+                            </div>`;
+                    }
                 }
             } catch (err) {
                 console.error(err);
@@ -235,27 +266,90 @@
             }
         }
 
+        async function loadChapterContent(index) {
+            if (!chapters[index]) return;
+            currentChapterIndex = index;
+            const chapter = chapters[index];
+            
+            // Cập nhật UI
+            document.getElementById('chapterNumberText').innerText = chapter.chapter_number;
+            document.getElementById('currentChapterDisplay').innerText = chapter.chapter_number;
+
+            const mangaContent = document.getElementById('mangaContent');
+            mangaContent.innerHTML = '<div class="py-10 animate-pulse text-secondary text-sm">Đang tải trang...</div>';
+
+            try {
+                const res = await fetch(`http://localhost:8080/api/chapters/${chapter.id}/pages`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const pages = await res.json();
+                    if (pages && pages.length > 0) {
+                        mangaContent.innerHTML = pages.map(p => `
+                            <img src="${p.image_url}" 
+                                 class="w-full max-w-2xl rounded-sm shadow-md mb-2 border border-outline-variant/10" 
+                                 alt="Page ${p.page_number}"
+                                 loading="lazy"
+                                 onerror="this.src='https://placehold.co/600x800/f3f4f5/757684?text=Lỗi+tải+ảnh'" />
+                        `).join('');
+                        // Scroll to top
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                        mangaContent.innerHTML = '<p class="py-10 text-secondary">Chương này chưa có ảnh.</p>';
+                    }
+                }
+            } catch (err) {
+                mangaContent.innerHTML = '<p class="py-10 text-red-500">Lỗi khi tải trang truyện.</p>';
+            }
+        }
+
+        // Xuất hàm ra global để sync.js có thể gọi
+        window.loadChapterByNumber = function(chapterNum) {
+            const index = chapters.findIndex(c => c.chapter_number == chapterNum);
+            if (index !== -1) {
+                loadChapterContent(index);
+            }
+        };
+
         loadMangaInfo();
 
-        // 3. Chat logic (WebSocket)
+        // 3. Chat logic (WebSocket) - gửi JSON {username, text}
         const socket = new WebSocket('ws://localhost:8080/api/ws/chat');
         const chatBox = document.getElementById('chatBox');
         const chatInput = document.getElementById('chatInput');
         const sendBtn = document.getElementById('sendBtn');
 
-        socket.onmessage = function(event) {
-            const msg = event.data;
+        function appendChatMessage(username, text, isSelf) {
             const msgElement = document.createElement('div');
-            msgElement.className = "msg-anim p-2.5 bg-surface-container-low/50 rounded-xl text-sm border border-outline-variant/10";
-            msgElement.innerHTML = `<span class="font-bold text-primary block mb-0.5 text-xs">User:</span> <span class="text-on-surface">${msg}</span>`;
+            const alignClass = isSelf ? 'items-end' : 'items-start';
+            const bubbleClass = isSelf
+                ? 'bg-primary/10 border-primary/20 text-on-surface'
+                : 'bg-surface-container-low/50 border-outline-variant/10 text-on-surface';
+            msgElement.className = `msg-anim flex flex-col ${alignClass} gap-0.5`;
+            msgElement.innerHTML = `
+                <span class="text-[10px] font-bold ${isSelf ? 'text-primary' : 'text-secondary'} px-1">${username}</span>
+                <div class="p-2.5 rounded-xl text-sm border ${bubbleClass} max-w-[90%]">${text}</div>
+            `;
             chatBox.appendChild(msgElement);
             chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        socket.onmessage = function(event) {
+            // Thử parse JSON {username, text}, fallback về plain text
+            try {
+                const data = JSON.parse(event.data);
+                const isSelf = (data.username === _myUsername);
+                appendChatMessage(data.username || 'Ẩn danh', data.text || event.data, isSelf);
+            } catch (e) {
+                appendChatMessage('User', event.data, false);
+            }
         };
 
         sendBtn.onclick = function() {
             const text = chatInput.value.trim();
-            if (text) {
-                socket.send(text);
+            if (text && socket.readyState === WebSocket.OPEN) {
+                const msg = JSON.stringify({ username: _myUsername, text: text });
+                socket.send(msg);
                 chatInput.value = '';
             }
         };

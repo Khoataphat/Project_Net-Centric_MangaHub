@@ -1,0 +1,1089 @@
+
+<svg class="callgraph" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1276.18994140625 4867">
+  <style>:root{--background-color: #f5fffa;--selected-color: #4fe1f4;--edge-color: #548f9e;--edge-incoming-color: #698b69;--edge-outgoing-color: #008acd;--edge-incoming-outgoing-color: black;--cluster-label-bg-color: #e8eaed;--node-bg-color: #f4f5f1;--symbol-default-bg-color: var(--node-bg-color);--symbol-default-border-color: #889f4e;--symbol-default-text-color: #363636;--interface-bg-color: #fff8dc;--interface-border-color: #a69348;--module-bg-color: #ffebcd;--module-border-color: #a67e43;--constructor-bg-color: #ffdab9;--constructor-border-color: #a66e3c;--method-bg-color: #fff8c5;--method-border-color: #d4a72c;--function-bg-color: #bafbd0;--function-border-color: #4ac26b;--struct-bg-color: #ddf4ff;--struct-border-color: #54aeff;--type-icon-color: #8969da;--property-icon-color: #5f9348}.callgraph{--bold-border: 3.2;width:100%;height:100%;outline:none;cursor:default;-webkit-user-select:none;user-select:none}.callgraph>#graph0>polygon:first-of-type{fill:var(--background-color)}.callgraph>#graph0>#faded-group>:where(.node,.cluster){opacity:.2}.callgraph>#graph0>#faded-group>.edge{opacity:.05}.callgraph .edge>path:not(.hover-path){stroke:var(--edge-color);stroke-width:3}.callgraph .edge>polygon{stroke:var(--edge-color);fill:var(--edge-color)}.callgraph .edge>path.hover-path{stroke:transparent;stroke-width:15}.callgraph .edge.impl>path{stroke-dasharray:8,3}.callgraph .edge.impl>polygon{stroke-width:2;fill:none!important}.callgraph .edge:hover{--edge-color: var(--selected-color)}.callgraph .edge.incoming{--edge-color: var(--edge-incoming-color)}.callgraph .edge.outgoing{--edge-color: var(--edge-outgoing-color)}.callgraph .edge.incoming.outgoing{--edge-color: var(--edge-incoming-outgoing-color)}.callgraph .cluster polygon{stroke-width:1.6}.callgraph .cluster .cluster-label{cursor:pointer;fill:var(--cluster-label-bg-color);rx:18px}.callgraph .cluster text{pointer-events:none}.callgraph .cluster.selected{--cluster-label-bg-color: color-mix(in srgb, var(--selected-color) 30%, transparent)}.callgraph .cluster.selected polygon{stroke-width:var(--bold-border);stroke:var(--selected-color)}.callgraph .node>rect{rx:20px;fill:var(--node-bg-color);filter:url(#shadow)}.callgraph .node.selected>rect{stroke:var(--selected-color);stroke-width:var(--bold-border)}.callgraph .node>.title{cursor:pointer}.callgraph .node>.title>text{font-weight:700}.callgraph .cell{--bg-color: var(--symbol-default-bg-color);--border-color: var(--symbol-default-border-color);--border-width: 1.6}.callgraph .cell>rect{rx:10px;fill:var(--bg-color);stroke:var(--border-color);stroke-width:var(--border-width)}.callgraph .cell>text{fill:var(--symbold-default-text-color)}.callgraph .cell:where(.highlight,.selected,:not(:has(>.cell:hover)):hover){--border-width: var(--bold-border)}.callgraph .cell.highlight>rect{stroke:url(#highlightGradient)}.callgraph .cell.selected>rect{filter:drop-shadow(3px 3px 6px var(--border-color))}.callgraph .cell.interface{--bg-color: var(--interface-bg-color);--border-color: var(--interface-border-color)}.callgraph .cell.interface>rect{stroke-dasharray:7,5}.callgraph .cell.module{--bg-color: var(--module-bg-color);--border-color: var(--module-border-color)}.callgraph .cell.constructor{--bg-color: var(--constructor-bg-color);--border-color: var(--constructor-border-color)}.callgraph .cell.function{--bg-color: var(--function-bg-color);--border-color: var(--function-border-color)}.callgraph .cell.method{--bg-color: var(--method-bg-color);--border-color: var(--method-border-color)}.callgraph .cell:where(.class,.struct,.enum){--bg-color: var(--struct-bg-color);--border-color: var(--struct-border-color)}.callgraph .cell:where(.class,.struct,.enum)>rect{rx:unset}.callgraph .cell:where(.class,.struct,.enum)>text{transform:translateY(1.5px)}.callgraph .cell:where(.class,.struct,.enum)>text:first-of-type{fill:var(--type-icon-color)}.callgraph .cell:where(.field,.property)>rect{rx:unset}.callgraph .cell:where(.field,.property)>text:first-of-type{font-style:italic;fill:var(--property-icon-color)}
+</style>
+  
+<g id="graph0" class="graph" transform="translate(0 4867)">
+<polygon fill="white" stroke="none" points="-4,4 -4,-4863 1272.19,-4863 1272.19,4 -4,4"></polygon>
+<g id="clust1" class="cluster">
+
+<polygon fill="none" stroke="black" points="85.18,-8 85.18,-4851 1260.19,-4851 1260.19,-8 85.18,-8"></polygon>
+<rect x="518.8300170898438" y="-4847" width="307.7099609375" height="35.2001953125" class="cluster-label"></rect>
+<text text-anchor="start" x="526.83" y="-4824.6" font-family="Arial" font-size="16.00">Project_Net-Centric_MangaHub/backend</text>
+</g>
+<g id="clust2" class="cluster">
+
+<polygon fill="none" stroke="black" points="120.25,-16 120.25,-893 414.25,-893 414.25,-16 120.25,-16"></polygon>
+<rect x="244.1300048828125" y="-889" width="46.22998046875" height="35.20001220703125" class="cluster-label"></rect>
+<text text-anchor="start" x="252.13" y="-866.6" font-family="Arial" font-size="16.00">cmd</text>
+</g>
+<g id="clust3" class="cluster">
+
+<polygon fill="none" stroke="black" points="128.25,-24 128.25,-605 406.25,-605 406.25,-24 128.25,-24"></polygon>
+<rect x="240.57000732421875" y="-601" width="53.350006103515625" height="35.20001220703125" class="cluster-label"></rect>
+<text text-anchor="start" x="248.57" y="-578.6" font-family="Arial" font-size="16.00">client</text>
+</g>
+<g id="clust4" class="cluster">
+
+<polygon fill="none" stroke="black" points="128.25,-613 128.25,-842 406.25,-842 406.25,-613 128.25,-613"></polygon>
+<rect x="237.02000427246094" y="-838" width="60.44999694824219" height="35.20001220703125" class="cluster-label"></rect>
+<text text-anchor="start" x="245.02" y="-815.6" font-family="Arial" font-size="16.00">server</text>
+</g>
+<g id="clust5" class="cluster">
+
+<polygon fill="none" stroke="black" points="128.25,-901 128.25,-1130 406.25,-1130 406.25,-901 128.25,-901"></polygon>
+<rect x="215.2100067138672" y="-1126" width="104.06999206542969" height="35.199951171875" class="cluster-label"></rect>
+<text text-anchor="start" x="223.21" y="-1103.6" font-family="Arial" font-size="16.00">internal/auth</text>
+</g>
+<g id="clust6" class="cluster">
+
+<polygon fill="none" stroke="black" points="128.25,-1138 128.25,-1297 406.25,-1297 406.25,-1138 128.25,-1138"></polygon>
+<rect x="197.8699951171875" y="-1293" width="138.75" height="35.199951171875" class="cluster-label"></rect>
+<text text-anchor="start" x="205.87" y="-1270.6" font-family="Arial" font-size="16.00">internal/database</text>
+</g>
+<g id="clust7" class="cluster">
+
+<polygon fill="none" stroke="black" points="128.25,-1305 128.25,-1686 406.25,-1686 406.25,-1305 128.25,-1305"></polygon>
+<rect x="205" y="-1682" width="124.5" height="35.199951171875" class="cluster-label"></rect>
+<text text-anchor="start" x="213" y="-1659.6" font-family="Arial" font-size="16.00">internal/models</text>
+</g>
+<g id="clust8" class="cluster">
+
+<polygon fill="none" stroke="black" points="128.25,-1694 128.25,-1958 406.25,-1958 406.25,-1694 128.25,-1694"></polygon>
+<rect x="173.86000061035156" y="-1954" width="186.77000427246094" height="35.199951171875" class="cluster-label"></rect>
+<text text-anchor="start" x="181.86" y="-1931.6" font-family="Arial" font-size="16.00">internal/protocols/bridge</text>
+</g>
+<g id="clust9" class="cluster">
+
+<polygon fill="none" stroke="black" points="122.75,-1966 122.75,-2195 411.74,-2195 411.74,-1966 122.75,-1966"></polygon>
+<rect x="180.5399932861328" y="-2191" width="173.41001892089844" height="35.199951171875" class="cluster-label"></rect>
+<text text-anchor="start" x="188.54" y="-2168.6" font-family="Arial" font-size="16.00">internal/protocols/grpc</text>
+</g>
+<g id="clust10" class="cluster">
+
+<polygon fill="none" stroke="black" points="93.18,-2203 93.18,-3019 441.32,-3019 441.32,-2203 93.18,-2203"></polygon>
+<rect x="182.75999450683594" y="-3015" width="168.9700164794922" height="35.199951171875" class="cluster-label"></rect>
+<text text-anchor="start" x="190.76" y="-2992.6" font-family="Arial" font-size="16.00">internal/protocols/http</text>
+</g>
+<g id="clust11" class="cluster">
+
+<polygon fill="none" stroke="black" points="128.25,-3027 128.25,-3408 406.25,-3408 406.25,-3027 128.25,-3027"></polygon>
+<rect x="185.42999267578125" y="-3404" width="163.6300048828125" height="35.199951171875" class="cluster-label"></rect>
+<text text-anchor="start" x="193.43" y="-3381.6" font-family="Arial" font-size="16.00">internal/protocols/tcp</text>
+</g>
+<g id="clust12" class="cluster">
+
+<polygon fill="none" stroke="black" points="128.25,-3416 128.25,-3798 406.25,-3798 406.25,-3416 128.25,-3416"></polygon>
+<rect x="182.75" y="-3794" width="168.989990234375" height="35.199951171875" class="cluster-label"></rect>
+<text text-anchor="start" x="190.75" y="-3771.6" font-family="Arial" font-size="16.00">internal/protocols/udp</text>
+</g>
+<g id="clust13" class="cluster">
+
+<polygon fill="none" stroke="black" points="115.41,-3806 115.41,-4692 419.08,-4692 419.08,-3806 115.41,-3806"></polygon>
+<rect x="158.3000030517578" y="-4688" width="217.88999938964844" height="35.2001953125" class="cluster-label"></rect>
+<text text-anchor="start" x="166.3" y="-4665.6" font-family="Arial" font-size="16.00">internal/protocols/websocket</text>
+</g>
+<g id="clust14" class="cluster">
+
+<polygon fill="none" stroke="black" points="572.82,-1060 572.82,-2581 1252.19,-2581 1252.19,-1060 572.82,-1060"></polygon>
+<rect x="886.27001953125" y="-2577" width="52.469970703125" height="35.199951171875" class="cluster-label"></rect>
+<text text-anchor="start" x="894.27" y="-2554.6" font-family="Arial" font-size="16.00">proto</text>
+</g>
+<!-- 16 -->
+<g id="16" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/cmd/client/main.go">
+
+<rect x="136.25" y="-553.9000244140625" width="262" height="521.8000259399414"></rect>
+<g id="16_0" class="title">
+<text text-anchor="start" x="185.44" y="-521.5" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;main.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="16:33_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-502.70001220703125" width="230" height="27.20001220703125"></rect>
+<text text-anchor="start" x="249.91" y="-484.3" font-family="Arial" font-size="16.00">main</text>
+
+</g>
+<g id="16:86_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-467.5" width="230" height="27.20001220703125"></rect>
+<text text-anchor="start" x="235.23" y="-449.1" font-family="Arial" font-size="16.00">printHelp</text>
+
+</g>
+<g id="16:99_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-432.29998779296875" width="230" height="27.199981689453125"></rect>
+<text text-anchor="start" x="222.34" y="-413.9" font-family="Arial" font-size="16.00">handleHTTP</text>
+
+</g>
+<g id="16:146_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-397.1000061035156" width="230" height="27.20001220703125"></rect>
+<text text-anchor="start" x="227.22" y="-378.7" font-family="Arial" font-size="16.00">handleTCP</text>
+
+</g>
+<g id="16:209_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-361.8999938964844" width="230" height="27.199981689453125"></rect>
+<text text-anchor="start" x="220.11" y="-343.5" font-family="Arial" font-size="16.00">handleGRPC</text>
+
+</g>
+<g id="16:247_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-326.70001220703125" width="230" height="27.20001220703125"></rect>
+<text text-anchor="start" x="230.34" y="-308.3" font-family="Arial" font-size="16.00">handleWS</text>
+
+</g>
+<g id="16:280_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-291.5" width="230" height="27.20001220703125"></rect>
+<text text-anchor="start" x="226.33" y="-273.1" font-family="Arial" font-size="16.00">handleUDP</text>
+
+</g>
+<g id="16:339_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-256.29998779296875" width="230" height="27.199981689453125"></rect>
+<text text-anchor="start" x="207.68" y="-237.9" font-family="Arial" font-size="16.00">sendHTTPJSON</text>
+
+</g>
+<g id="16:363_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-221.10000610351562" width="230" height="27.20001220703125"></rect>
+<text text-anchor="start" x="216.12" y="-202.7" font-family="Arial" font-size="16.00">sendHTTPGet</text>
+
+</g>
+<g id="16:374_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-185.89999389648438" width="230" height="27.199996948242188"></rect>
+<text text-anchor="start" x="194.77" y="-167.5" font-family="Arial" font-size="16.00">printHTTPResponse</text>
+
+</g>
+<g id="16:392_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-150.6999969482422" width="230" height="27.199996948242188"></rect>
+<text text-anchor="start" x="213.89" y="-132.3" font-family="Arial" font-size="16.00">writeJSONLine</text>
+
+</g>
+<g id="16:402_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-115.5" width="230" height="27.199996948242188"></rect>
+<text text-anchor="start" x="209.45" y="-97.1" font-family="Arial" font-size="16.00">printPrettyJSON</text>
+
+</g>
+<g id="16:411_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-80.30000305175781" width="230" height="27.20000457763672"></rect>
+<text text-anchor="start" x="230.79" y="-61.9" font-family="Arial" font-size="16.00">parseArgs</text>
+
+</g>
+</g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:339_5-16:374_5" class="edge" data-from="16:339_5" data-to="16:374_5">
+
+<path fill="none" stroke="black" d="M152.4,-247.2C82.5,-245.61 16.34,-235.3 16.34,-207.5 16.34,-181.87 72.56,-171.11 136.12,-168.33"></path>
+<polygon fill="black" stroke="black" points="136.07,-173.59 150.89,-167.85 135.73,-163.09 136.07,-173.59"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-247.2C82.5,-245.61 16.34,-235.3 16.34,-207.5 16.34,-181.87 72.56,-171.11 136.12,-168.33" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:33_5-16:247_5" class="edge" data-from="16:33_5" data-to="16:247_5">
+
+<path fill="none" stroke="black" d="M152.4,-490.9C82.5,-484.74 16.34,-462.1 16.34,-401.1 16.34,-344.86 72.56,-321.23 136.12,-313.05"></path>
+<polygon fill="black" stroke="black" points="136.55,-318.29 150.9,-311.46 135.42,-307.85 136.55,-318.29"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-490.9C82.5,-484.74 16.34,-462.1 16.34,-401.1 16.34,-344.86 72.56,-321.23 136.12,-313.05" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:209_5-16:402_5" class="edge" data-from="16:209_5" data-to="16:402_5">
+
+<path fill="none" stroke="black" d="M152.4,-348.31C82.5,-339.09 16.34,-308.24 16.34,-225.1 16.34,-148.45 72.56,-116.25 136.12,-104.46"></path>
+<polygon fill="black" stroke="black" points="136.91,-109.65 150.91,-102.13 135.27,-99.28 136.91,-109.65"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-348.31C82.5,-339.09 16.34,-308.24 16.34,-225.1 16.34,-148.45 72.56,-116.25 136.12,-104.46" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:33_5-16:280_5" class="edge" data-from="16:33_5" data-to="16:280_5">
+
+<path fill="none" stroke="black" d="M152.4,-490C82.5,-482.32 16.34,-455.57 16.34,-383.5 16.34,-317.06 72.56,-289.14 136.12,-279.16"></path>
+<polygon fill="black" stroke="black" points="136.73,-284.37 150.9,-277.19 135.34,-273.97 136.73,-284.37"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-490C82.5,-482.32 16.34,-455.57 16.34,-383.5 16.34,-317.06 72.56,-289.14 136.12,-279.16" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:146_5-16:392_5" class="edge" data-from="16:146_5" data-to="16:392_5">
+
+<path fill="none" stroke="black" d="M152.4,-383.51C82.5,-374.29 16.34,-343.44 16.34,-260.3 16.34,-183.65 72.56,-151.45 136.12,-139.66"></path>
+<polygon fill="black" stroke="black" points="136.91,-144.85 150.91,-137.33 135.27,-134.48 136.91,-144.85"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-383.51C82.5,-374.29 16.34,-343.44 16.34,-260.3 16.34,-183.65 72.56,-151.45 136.12,-139.66" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:280_5-16:402_5" class="edge" data-from="16:280_5" data-to="16:402_5">
+
+<path fill="none" stroke="black" d="M152.4,-279.7C82.5,-273.54 16.34,-250.9 16.34,-189.9 16.34,-133.66 72.56,-110.03 136.12,-101.85"></path>
+<polygon fill="black" stroke="black" points="136.55,-107.09 150.9,-100.26 135.42,-96.65 136.55,-107.09"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-279.7C82.5,-273.54 16.34,-250.9 16.34,-189.9 16.34,-133.66 72.56,-110.03 136.12,-101.85" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:33_5-16:86_5" class="edge" data-from="16:33_5" data-to="16:86_5">
+
+<path fill="none" stroke="black" d="M152.4,-494.5C82.5,-494.44 16.34,-488.23 16.34,-471.5 16.34,-456.08 72.56,-449.6 136.12,-448.63"></path>
+<polygon fill="black" stroke="black" points="135.93,-453.88 150.89,-448.51 135.85,-443.38 135.93,-453.88"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-494.5C82.5,-494.44 16.34,-488.23 16.34,-471.5 16.34,-456.08 72.56,-449.6 136.12,-448.63" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:33_5-16:209_5" class="edge" data-from="16:33_5" data-to="16:209_5">
+
+<path fill="none" stroke="black" d="M152.4,-491.8C82.5,-487.17 16.34,-468.64 16.34,-418.7 16.34,-372.67 72.56,-353.32 136.12,-346.95"></path>
+<polygon fill="black" stroke="black" points="136.38,-352.19 150.9,-345.72 135.51,-341.73 136.38,-352.19"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-491.8C82.5,-487.17 16.34,-468.64 16.34,-418.7 16.34,-372.67 72.56,-353.32 136.12,-346.95" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:99_5-16:363_5" class="edge" data-from="16:99_5" data-to="16:363_5">
+
+<path fill="none" stroke="black" d="M152.4,-419.6C82.5,-411.92 16.34,-385.17 16.34,-313.1 16.34,-246.66 72.56,-218.74 136.12,-208.76"></path>
+<polygon fill="black" stroke="black" points="136.73,-213.97 150.9,-206.79 135.34,-203.57 136.73,-213.97"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-419.6C82.5,-411.92 16.34,-385.17 16.34,-313.1 16.34,-246.66 72.56,-218.74 136.12,-208.76" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:33_5-16:99_5" class="edge" data-from="16:33_5" data-to="16:99_5">
+
+<path fill="none" stroke="black" d="M152.4,-493.6C82.5,-492.01 16.34,-481.7 16.34,-453.9 16.34,-428.27 72.56,-417.51 136.12,-414.73"></path>
+<polygon fill="black" stroke="black" points="136.07,-419.99 150.89,-414.25 135.73,-409.49 136.07,-419.99"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-493.6C82.5,-492.01 16.34,-481.7 16.34,-453.9 16.34,-428.27 72.56,-417.51 136.12,-414.73" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:99_5-16:339_5" class="edge" data-from="16:99_5" data-to="16:339_5">
+
+<path fill="none" stroke="black" d="M152.4,-420.5C82.5,-414.34 16.34,-391.7 16.34,-330.7 16.34,-274.46 72.56,-250.83 136.12,-242.65"></path>
+<polygon fill="black" stroke="black" points="136.55,-247.89 150.9,-241.06 135.42,-237.45 136.55,-247.89"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-420.5C82.5,-414.34 16.34,-391.7 16.34,-330.7 16.34,-274.46 72.56,-250.83 136.12,-242.65" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:363_5-16:374_5" class="edge" data-from="16:363_5" data-to="16:374_5">
+
+<path fill="none" stroke="black" d="M152.4,-212.9C82.5,-212.84 16.34,-206.63 16.34,-189.9 16.34,-174.48 72.56,-168 136.12,-167.03"></path>
+<polygon fill="black" stroke="black" points="135.93,-172.28 150.89,-166.91 135.85,-161.78 135.93,-172.28"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-212.9C82.5,-212.84 16.34,-206.63 16.34,-189.9 16.34,-174.48 72.56,-168 136.12,-167.03" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:33_5-16:146_5" class="edge" data-from="16:33_5" data-to="16:146_5">
+
+<path fill="none" stroke="black" d="M152.4,-492.7C82.5,-489.59 16.34,-475.17 16.34,-436.3 16.34,-400.47 72.56,-385.41 136.12,-380.84"></path>
+<polygon fill="black" stroke="black" points="136.22,-386.09 150.89,-379.98 135.61,-375.61 136.22,-386.09"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-492.7C82.5,-489.59 16.34,-475.17 16.34,-436.3 16.34,-400.47 72.56,-385.41 136.12,-380.84" class="hover-path"></path></g>
+<!-- 16&#45;&gt;16 -->
+<g id="16:33_5-16:411_5" class="edge" data-from="16:33_5" data-to="16:411_5">
+
+<path fill="none" stroke="black" d="M152.4,-484.61C82.5,-467.78 16.34,-416.39 16.34,-277.9 16.34,-149.96 72.8,-96.36 136.52,-75.66"></path>
+<polygon fill="black" stroke="black" points="137.93,-80.72 150.95,-71.6 135.09,-70.61 137.93,-80.72"></polygon>
+<text text-anchor="middle" x="14.59" y="-288.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-484.61C82.5,-467.78 16.34,-416.39 16.34,-277.9 16.34,-149.96 72.8,-96.36 136.52,-75.66" class="hover-path"></path></g>
+<!-- 13 -->
+<g id="13" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/websocket/client.go">
+
+<rect x="136.25" y="-4018.5" width="262" height="205"></rect>
+<g id="13_1" class="title">
+<text text-anchor="start" x="184.11" y="-3986.1" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;client.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="13:16_5" data-kind="23" class="cell struct">
+<rect x="152.25" y="-3967.300048828125" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="237.01" y="-3949.9" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="247.68" y="-3949.9" font-family="Arial" font-size="16.00"> &#160;Client</text>
+
+</g>
+<g id="13:23_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-3932.10009765625" width="230" height="27.2001953125"></rect>
+<text text-anchor="start" x="233.46" y="-3913.7" font-family="Arial" font-size="16.00">ServeWS</text>
+
+</g>
+<g id="13:38_17" data-kind="6" class="cell method">
+<rect x="152.25" y="-3896.89990234375" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="199.22" y="-3878.5" font-family="Arial" font-size="16.00">(*Client).readPump</text>
+
+</g>
+<g id="13:53_17" data-kind="6" class="cell method">
+<rect x="152.25" y="-3861.699951171875" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="198.34" y="-3843.3" font-family="Arial" font-size="16.00">(*Client).writePump</text>
+
+</g>
+</g>
+<!-- 13&#45;&gt;13 -->
+<g id="13:23_5-13:53_17" class="edge" data-from="13:23_5" data-to="13:53_17">
+
+<path fill="none" stroke="black" d="M152.4,-3923C82.5,-3921.41 16.34,-3911.1 16.34,-3883.3 16.34,-3857.67 72.56,-3846.91 136.12,-3844.13"></path>
+<polygon fill="black" stroke="black" points="136.07,-3849.39 150.89,-3843.65 135.73,-3838.89 136.07,-3849.39"></polygon>
+<text text-anchor="middle" x="14.59" y="-3911.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-3923C82.5,-3921.41 16.34,-3911.1 16.34,-3883.3 16.34,-3857.67 72.56,-3846.91 136.12,-3844.13" class="hover-path"></path></g>
+<!-- 13&#45;&gt;13 -->
+<g id="13:23_5-13:38_17" class="edge" data-from="13:23_5" data-to="13:38_17">
+
+<path fill="none" stroke="black" d="M152.4,-3923.9C82.5,-3923.84 16.34,-3917.63 16.34,-3900.9 16.34,-3885.48 72.56,-3879 136.12,-3878.03"></path>
+<polygon fill="black" stroke="black" points="135.93,-3883.28 150.89,-3877.91 135.85,-3872.78 135.93,-3883.28"></polygon>
+<text text-anchor="middle" x="14.59" y="-3911.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-3923.9C82.5,-3923.84 16.34,-3917.63 16.34,-3900.9 16.34,-3885.48 72.56,-3879 136.12,-3878.03" class="hover-path"></path></g>
+<!-- 17 -->
+<g id="17" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/cmd/server/main.go">
+
+<rect x="136.25" y="-790.9000244140625" width="262" height="169.800048828125"></rect>
+<g id="17_2" class="title">
+<text text-anchor="start" x="185.44" y="-758.5" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;main.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="17:23_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-739.7000122070312" width="230" height="27.20001220703125"></rect>
+<text text-anchor="start" x="242.34" y="-721.3" font-family="Arial" font-size="16.00">getEnv</text>
+
+</g>
+<g id="17:30_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-704.5" width="230" height="27.20001220703125"></rect>
+<text text-anchor="start" x="249.91" y="-686.1" font-family="Arial" font-size="16.00">main</text>
+
+</g>
+<g id="17:130_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-669.2999877929688" width="230" height="27.20001220703125"></rect>
+<text text-anchor="start" x="203.23" y="-650.9" font-family="Arial" font-size="16.00">CORSMiddleware</text>
+
+</g>
+</g>
+<!-- 17&#45;&gt;17 -->
+<g id="17:30_5-17:23_5" class="edge" data-from="17:30_5" data-to="17:23_5">
+
+<path fill="none" stroke="black" d="M152.4,-685.5C82.5,-685.56 16.34,-691.77 16.34,-708.5 16.34,-723.92 72.56,-730.4 136.12,-731.37"></path>
+<polygon fill="black" stroke="black" points="135.85,-736.62 150.89,-731.49 135.93,-726.12 135.85,-736.62"></polygon>
+<text text-anchor="middle" x="14.59" y="-701.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-685.5C82.5,-685.56 16.34,-691.77 16.34,-708.5 16.34,-723.92 72.56,-730.4 136.12,-731.37" class="hover-path"></path></g>
+<!-- 17&#45;&gt;17 -->
+<g id="17:30_5-17:130_5" class="edge" data-from="17:30_5" data-to="17:130_5">
+
+<path fill="none" stroke="black" d="M152.4,-696.3C82.5,-696.24 16.34,-690.03 16.34,-673.3 16.34,-657.88 72.56,-651.4 136.12,-650.43"></path>
+<polygon fill="black" stroke="black" points="135.93,-655.68 150.89,-650.31 135.85,-645.18 135.93,-655.68"></polygon>
+<text text-anchor="middle" x="14.59" y="-701.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-696.3C82.5,-696.24 16.34,-690.03 16.34,-673.3 16.34,-657.88 72.56,-651.4 136.12,-650.43" class="hover-path"></path></g>
+<!-- 22 -->
+<g id="22" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/proto/manga.pb.go">
+
+<rect x="753.77001953125" y="-1836.0999755859375" width="317.469970703125" height="768.199951171875"></rect>
+<g id="22_3" class="title">
+<text text-anchor="start" x="812.46" y="-1803.7" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;manga.pb.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="22:23_5" data-kind="23" class="cell struct">
+<rect x="769.77001953125" y="-1784.9000244140625" width="285.469970703125" height="27.2000732421875"></rect>
+<text text-anchor="start" x="848.46" y="-1767.5" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="859.14" y="-1767.5" font-family="Arial" font-size="16.00"> &#160;MangaRequest</text>
+
+</g>
+<g id="22:30_23" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1749.699951171875" width="285.469970703125" height="27.199951171875"></rect>
+<text text-anchor="start" x="826.68" y="-1731.3" font-family="Arial" font-size="16.00">(*MangaRequest).Reset</text>
+
+</g>
+<g id="22:37_23" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1714.5" width="285.469970703125" height="27.199951171875"></rect>
+<text text-anchor="start" x="826.68" y="-1696.1" font-family="Arial" font-size="16.00">(*MangaRequest).String</text>
+
+</g>
+<g id="22:41_21" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1679.300048828125" width="285.469970703125" height="27.2000732421875"></rect>
+<text text-anchor="start" x="796" y="-1660.9" font-family="Arial" font-size="16.00">(*MangaRequest).ProtoMessage</text>
+
+</g>
+<g id="22:43_23" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1644.0999755859375" width="285.469970703125" height="27.199951171875"></rect>
+<text text-anchor="start" x="803.56" y="-1625.7" font-family="Arial" font-size="16.00">(*MangaRequest).ProtoReflect</text>
+
+</g>
+<g id="22:56_21" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1608.9000244140625" width="285.469970703125" height="27.2000732421875"></rect>
+<text text-anchor="start" x="811.13" y="-1590.5" font-family="Arial" font-size="16.00">(*MangaRequest).Descriptor</text>
+
+</g>
+<g id="22:60_23" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1573.699951171875" width="285.469970703125" height="27.199951171875"></rect>
+<text text-anchor="start" x="828.02" y="-1555.3" font-family="Arial" font-size="16.00">(*MangaRequest).GetId</text>
+
+</g>
+<g id="22:67_5" data-kind="23" class="cell struct">
+<rect x="769.77001953125" y="-1538.5" width="285.469970703125" height="27.199951171875"></rect>
+<text text-anchor="start" x="842.24" y="-1521.1" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="852.91" y="-1521.1" font-family="Arial" font-size="16.00"> &#160;MangaResponse</text>
+
+</g>
+<g id="22:77_24" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1503.300048828125" width="285.469970703125" height="27.2000732421875"></rect>
+<text text-anchor="start" x="820.46" y="-1484.9" font-family="Arial" font-size="16.00">(*MangaResponse).Reset</text>
+
+</g>
+<g id="22:84_24" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1468.0999755859375" width="285.469970703125" height="27.199951171875"></rect>
+<text text-anchor="start" x="820.46" y="-1449.7" font-family="Arial" font-size="16.00">(*MangaResponse).String</text>
+
+</g>
+<g id="22:88_22" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1432.9000244140625" width="285.469970703125" height="27.2000732421875"></rect>
+<text text-anchor="start" x="789.77" y="-1414.5" font-family="Arial" font-size="16.00">(*MangaResponse).ProtoMessage</text>
+
+</g>
+<g id="22:90_24" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1397.699951171875" width="285.469970703125" height="27.199951171875"></rect>
+<text text-anchor="start" x="797.34" y="-1379.3" font-family="Arial" font-size="16.00">(*MangaResponse).ProtoReflect</text>
+
+</g>
+<g id="22:103_22" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1362.5" width="285.469970703125" height="27.199951171875"></rect>
+<text text-anchor="start" x="804.9" y="-1344.1" font-family="Arial" font-size="16.00">(*MangaResponse).Descriptor</text>
+
+</g>
+<g id="22:107_24" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1327.300048828125" width="285.469970703125" height="27.2000732421875"></rect>
+<text text-anchor="start" x="821.79" y="-1308.9" font-family="Arial" font-size="16.00">(*MangaResponse).GetId</text>
+
+</g>
+<g id="22:114_24" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1292.0999755859375" width="285.469970703125" height="27.199951171875"></rect>
+<text text-anchor="start" x="813.35" y="-1273.7" font-family="Arial" font-size="16.00">(*MangaResponse).GetTitle</text>
+
+</g>
+<g id="22:121_24" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1256.9000244140625" width="285.469970703125" height="27.2000732421875"></rect>
+<text text-anchor="start" x="804.89" y="-1238.5" font-family="Arial" font-size="16.00">(*MangaResponse).GetAuthor</text>
+
+</g>
+<g id="22:128_24" data-kind="6" class="cell method">
+<rect x="769.77001953125" y="-1221.699951171875" width="285.469970703125" height="27.199951171875"></rect>
+<text text-anchor="start" x="788.45" y="-1203.3" font-family="Arial" font-size="16.00">(*MangaResponse).GetDescription</text>
+
+</g>
+<g id="22:155_5" data-kind="12" class="cell function">
+<rect x="769.77001953125" y="-1186.5" width="285.469970703125" height="27.199951171875"></rect>
+<text text-anchor="start" x="773.77" y="-1168.1" font-family="Arial" font-size="16.00">file_proto_manga_proto_rawDescGZIP</text>
+
+</g>
+<g id="22:177_5" data-kind="12" class="cell function">
+<rect x="769.77001953125" y="-1151.300048828125" width="285.469970703125" height="27.2000732421875"></rect>
+<text text-anchor="start" x="902.28" y="-1132.9" font-family="Arial" font-size="16.00">init</text>
+
+</g>
+<g id="22:178_5" data-kind="12" class="cell function">
+<rect x="769.77001953125" y="-1116.0999755859375" width="285.469970703125" height="27.199951171875"></rect>
+<text text-anchor="start" x="813.32" y="-1097.7" font-family="Arial" font-size="16.00">file_proto_manga_proto_init</text>
+
+</g>
+</g>
+<!-- 22&#45;&gt;22 -->
+<g id="22:177_5-22:178_5" class="edge" data-from="22:177_5" data-to="22:178_5">
+
+<path fill="none" stroke="black" d="M770.11,-1143.01C661.41,-1143.92 551.05,-1138.1 551.05,-1120.1 551.05,-1102.99 650.69,-1096.89 753.87,-1097.1"></path>
+<polygon fill="black" stroke="black" points="753.57,-1102.35 768.59,-1097.18 753.62,-1091.85 753.57,-1102.35"></polygon>
+<text text-anchor="middle" x="549.3" y="-1447.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M770.11,-1143.01C661.41,-1143.92 551.05,-1138.1 551.05,-1120.1 551.05,-1102.99 650.69,-1096.89 753.87,-1097.1" class="hover-path"></path></g>
+<!-- 22&#45;&gt;22 -->
+<g id="22:56_21-22:155_5" class="edge" data-from="22:56_21" data-to="22:155_5">
+
+<path fill="none" stroke="black" d="M770.11,-1594.07C661.41,-1581.29 551.05,-1533.12 551.05,-1384.1 551.05,-1242.5 650.69,-1191.96 753.87,-1176.31"></path>
+<polygon fill="black" stroke="black" points="754.44,-1181.53 768.61,-1174.33 753.04,-1171.12 754.44,-1181.53"></polygon>
+<text text-anchor="middle" x="549.3" y="-1447.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M770.11,-1594.07C661.41,-1581.29 551.05,-1533.12 551.05,-1384.1 551.05,-1242.5 650.69,-1191.96 753.87,-1176.31" class="hover-path"></path></g>
+<!-- 22&#45;&gt;22 -->
+<g id="22:103_22-22:155_5" class="edge" data-from="22:103_22" data-to="22:155_5">
+
+<path fill="none" stroke="black" d="M770.11,-1351.83C661.41,-1347.76 551.05,-1326.55 551.05,-1260.9 551.05,-1198.52 650.69,-1176.26 753.87,-1170.7"></path>
+<polygon fill="black" stroke="black" points="753.85,-1175.96 768.59,-1170.03 753.37,-1165.47 753.85,-1175.96"></polygon>
+<text text-anchor="middle" x="549.3" y="-1447.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M770.11,-1351.83C661.41,-1347.76 551.05,-1326.55 551.05,-1260.9 551.05,-1198.52 650.69,-1176.26 753.87,-1170.7" class="hover-path"></path></g>
+<!-- 23 -->
+<g id="23" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/proto/manga_grpc.pb.go">
+
+<rect x="580.8200073242188" y="-2529.699951171875" width="663.3699340820312" height="675.39990234375"></rect>
+<g id="23_4" class="title">
+<text text-anchor="start" x="792.45" y="-2497.3" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;manga_grpc.pb.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="23:29_5" data-kind="11" class="cell interface">
+<rect x="596.8200073242188" y="-2478.5" width="631.3699340820312" height="78.39990234375"></rect>
+<text text-anchor="start" x="840.91" y="-2452.1" font-family="Arial" font-size="16.00">MangaServiceClient</text>
+<g id="23:31_1" data-kind="6" class="cell method">
+<rect x="604.8200073242188" y="-2435.300048828125" width="615.3699340820312" height="27.199951171875"></rect>
+<text text-anchor="start" x="854.7" y="-2416.9" font-family="Arial" font-size="16.00">GetMangaDetail</text>
+
+</g>
+
+</g>
+<g id="23:34_5" data-kind="23" class="cell struct">
+<rect x="596.8200073242188" y="-2392.10009765625" width="631.3699340820312" height="27.2001953125"></rect>
+<text text-anchor="start" x="831.13" y="-2374.7" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="841.8" y="-2374.7" font-family="Arial" font-size="16.00"> &#160;mangaServiceClient</text>
+
+</g>
+<g id="23:38_5" data-kind="12" class="cell function">
+<rect x="596.8200073242188" y="-2356.89990234375" width="631.3699340820312" height="27.199951171875"></rect>
+<text text-anchor="start" x="824.91" y="-2338.5" font-family="Arial" font-size="16.00">NewMangaServiceClient</text>
+
+</g>
+<g id="23:42_29" data-kind="6" class="cell method">
+<rect x="596.8200073242188" y="-2321.699951171875" width="631.3699340820312" height="27.199951171875"></rect>
+<text text-anchor="start" x="772.44" y="-2303.3" font-family="Arial" font-size="16.00">(*mangaServiceClient).GetMangaDetail</text>
+
+</g>
+<g id="23:57_5" data-kind="11" class="cell interface">
+<rect x="596.8200073242188" y="-2286.5" width="631.3699340820312" height="113.60009765625"></rect>
+<text text-anchor="start" x="837.8" y="-2260.1" font-family="Arial" font-size="16.00">MangaServiceServer</text>
+<g id="23:59_1" data-kind="6" class="cell method">
+<rect x="604.8200073242188" y="-2243.300048828125" width="615.3699340820312" height="27.199951171875"></rect>
+<text text-anchor="start" x="854.7" y="-2224.9" font-family="Arial" font-size="16.00">GetMangaDetail</text>
+
+</g>
+<g id="23:60_1" data-kind="6" class="cell method">
+<rect x="604.8200073242188" y="-2208.10009765625" width="615.3699340820312" height="27.2001953125"></rect>
+<text text-anchor="start" x="739.09" y="-2189.7" font-family="Arial" font-size="16.00">mustEmbedUnimplementedMangaServiceServer</text>
+
+</g>
+
+</g>
+<g id="23:68_5" data-kind="23" class="cell struct">
+<rect x="596.8200073242188" y="-2164.89990234375" width="631.3699340820312" height="27.199951171875"></rect>
+<text text-anchor="start" x="772" y="-2147.5" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="782.67" y="-2147.5" font-family="Arial" font-size="16.00"> &#160;UnimplementedMangaServiceServer</text>
+
+</g>
+<g id="23:70_39" data-kind="6" class="cell method">
+<rect x="596.8200073242188" y="-2129.699951171875" width="631.3699340820312" height="27.199951171875"></rect>
+<text text-anchor="start" x="716.42" y="-2111.3" font-family="Arial" font-size="16.00">(UnimplementedMangaServiceServer).GetMangaDetail</text>
+
+</g>
+<g id="23:73_39" data-kind="6" class="cell method">
+<rect x="596.8200073242188" y="-2094.5" width="631.3699340820312" height="27.199951171875"></rect>
+<text text-anchor="start" x="600.82" y="-2076.1" font-family="Arial" font-size="16.00">(UnimplementedMangaServiceServer).mustEmbedUnimplementedMangaServiceServer</text>
+
+</g>
+<g id="23:74_39" data-kind="6" class="cell method">
+<rect x="596.8200073242188" y="-2059.300048828125" width="631.3699340820312" height="27.2000732421875"></rect>
+<text text-anchor="start" x="692.84" y="-2040.9" font-family="Arial" font-size="16.00">(UnimplementedMangaServiceServer).testEmbeddedByValue</text>
+
+</g>
+<g id="23:79_5" data-kind="11" class="cell interface">
+<rect x="596.8200073242188" y="-2024.0999755859375" width="631.3699340820312" height="78.4000244140625"></rect>
+<text text-anchor="start" x="812.46" y="-1997.7" font-family="Arial" font-size="16.00">UnsafeMangaServiceServer</text>
+<g id="23:80_1" data-kind="6" class="cell method">
+<rect x="604.8200073242188" y="-1980.9000244140625" width="615.3699340820312" height="27.2000732421875"></rect>
+<text text-anchor="start" x="739.09" y="-1962.5" font-family="Arial" font-size="16.00">mustEmbedUnimplementedMangaServiceServer</text>
+
+</g>
+
+</g>
+<g id="23:83_5" data-kind="12" class="cell function">
+<rect x="596.8200073242188" y="-1937.699951171875" width="631.3699340820312" height="27.199951171875"></rect>
+<text text-anchor="start" x="808.02" y="-1919.3" font-family="Arial" font-size="16.00">RegisterMangaServiceServer</text>
+
+</g>
+<g id="23:94_5" data-kind="12" class="cell function">
+<rect x="596.8200073242188" y="-1902.5" width="631.3699340820312" height="27.199951171875"></rect>
+<text text-anchor="start" x="762.2" y="-1884.1" font-family="Arial" font-size="16.00">_MangaService_GetMangaDetail_Handler</text>
+
+</g>
+</g>
+<!-- 23&#45;&gt;23 -->
+<g id="23:34_5-23:29_5" class="edge impl" data-from="23:34_5" data-to="23:29_5">
+
+<path fill="none" stroke="black" d="M596.95,-2375.91C477.17,-2380.27 378.1,-2392.28 378.1,-2417.7 378.1,-2442.52 472.53,-2454.55 588.47,-2459.17"></path>
+<polygon fill="black" stroke="black" points="588.28,-2464.41 603.46,-2459.71 588.66,-2453.92 588.28,-2464.41"></polygon>
+<text text-anchor="middle" x="376.35" y="-2187.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M596.95,-2375.91C477.17,-2380.27 378.1,-2392.28 378.1,-2417.7 378.1,-2442.52 472.53,-2454.55 588.47,-2459.17" class="hover-path"></path></g>
+<!-- 23&#45;&gt;23 -->
+<g id="23:68_5-23:57_5" class="edge impl" data-from="23:68_5" data-to="23:57_5">
+
+<path fill="none" stroke="black" d="M596.95,-2150.57C477.17,-2157 378.1,-2173.4 378.1,-2208.1 378.1,-2242.01 472.73,-2258.45 588.83,-2265.18"></path>
+<polygon fill="black" stroke="black" points="588.2,-2270.4 603.46,-2265.96 588.76,-2259.92 588.2,-2270.4"></polygon>
+<text text-anchor="middle" x="376.35" y="-2187.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M596.95,-2150.57C477.17,-2157 378.1,-2173.4 378.1,-2208.1 378.1,-2242.01 472.73,-2258.45 588.83,-2265.18" class="hover-path"></path></g>
+<!-- 23&#45;&gt;23 -->
+<g id="23:83_5-23:74_39" class="edge" data-from="23:83_5" data-to="23:74_39">
+
+<path fill="none" stroke="black" d="M596.95,-1923.79C477.17,-1930.69 378.1,-1948.09 378.1,-1984.9 378.1,-2020.02 468.29,-2037.47 580.6,-2044.99"></path>
+<polygon fill="black" stroke="black" points="580.15,-2050.22 595.44,-2045.92 580.8,-2039.74 580.15,-2050.22"></polygon>
+<text text-anchor="middle" x="376.35" y="-2187.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M596.95,-1923.79C477.17,-1930.69 378.1,-1948.09 378.1,-1984.9 378.1,-2020.02 468.29,-2037.47 580.6,-2044.99" class="hover-path"></path></g>
+<!-- 23&#45;&gt;23 -->
+<g id="23:57_5-23:79_5" class="edge impl" data-from="23:57_5" data-to="23:79_5">
+
+<path fill="none" stroke="black" d="M604.97,-2258.76C481.63,-2244.11 378.1,-2209.28 378.1,-2133.7 378.1,-2061.44 472.73,-2026.43 588.83,-2010.69"></path>
+<polygon fill="black" stroke="black" points="589.25,-2015.93 603.47,-2008.83 587.93,-2005.51 589.25,-2015.93"></polygon>
+<text text-anchor="middle" x="376.35" y="-2187.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M604.97,-2258.76C481.63,-2244.11 378.1,-2209.28 378.1,-2133.7 378.1,-2061.44 472.73,-2026.43 588.83,-2010.69" class="hover-path"></path></g>
+<!-- 23&#45;&gt;23 -->
+<g id="23:94_5-23:70_39" class="edge" data-from="23:94_5" data-to="23:70_39">
+
+<path fill="none" stroke="black" d="M596.95,-1894.17C477.17,-1907.29 378.1,-1937.85 378.1,-2002.5 378.1,-2064.18 468.29,-2094.83 580.6,-2108.92"></path>
+<polygon fill="black" stroke="black" points="579.94,-2114.12 595.45,-2110.66 581.17,-2103.7 579.94,-2114.12"></polygon>
+<text text-anchor="middle" x="376.35" y="-2187.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M596.95,-1894.17C477.17,-1907.29 378.1,-1937.85 378.1,-2002.5 378.1,-2064.18 468.29,-2094.83 580.6,-2108.92" class="hover-path"></path></g>
+<!-- 23&#45;&gt;23 -->
+<g id="23:94_5-23:59_1" class="edge" data-from="23:94_5" data-to="23:59_1">
+
+<path fill="none" stroke="black" d="M596.95,-1900.16C477.17,-1919.98 378.1,-1964.69 378.1,-2059.3 378.1,-2151.76 472.73,-2196.57 588.83,-2217.05"></path>
+<polygon fill="black" stroke="black" points="587.82,-2222.2 603.48,-2219.47 589.54,-2211.84 587.82,-2222.2"></polygon>
+<text text-anchor="middle" x="376.35" y="-2187.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M596.95,-1900.16C477.17,-1919.98 378.1,-1964.69 378.1,-2059.3 378.1,-2151.76 472.73,-2196.57 588.83,-2217.05" class="hover-path"></path></g>
+<!-- 23&#45;&gt;23 -->
+<g id="23:68_5-23:79_5" class="edge impl" data-from="23:68_5" data-to="23:79_5">
+
+<path fill="none" stroke="black" d="M596.95,-2150.17C477.17,-2141.67 378.1,-2120.88 378.1,-2076.9 378.1,-2033.92 472.73,-2013.09 588.83,-2004.22"></path>
+<polygon fill="black" stroke="black" points="588.87,-2009.49 603.46,-2003.18 588.13,-1999.01 588.87,-2009.49"></polygon>
+<text text-anchor="middle" x="376.35" y="-2187.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M596.95,-2150.17C477.17,-2141.67 378.1,-2120.88 378.1,-2076.9 378.1,-2033.92 472.73,-2013.09 588.83,-2004.22" class="hover-path"></path></g>
+<!-- 2 -->
+<g id="2" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/grpc/server.go">
+
+<rect x="130.75" y="-2143.89990234375" width="272.989990234375" height="169.7999267578125"></rect>
+<g id="2_5" class="title">
+<text text-anchor="start" x="180.55" y="-2111.5" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;server.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="2:14_5" data-kind="23" class="cell struct">
+<rect x="146.75" y="-2092.699951171875" width="240.989990234375" height="27.199951171875"></rect>
+<text text-anchor="start" x="209.44" y="-2075.3" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="220.11" y="-2075.3" font-family="Arial" font-size="16.00"> &#160;MangaServer</text>
+
+</g>
+<g id="2:18_22" data-kind="6" class="cell method">
+<rect x="146.75" y="-2057.5" width="240.989990234375" height="27.199951171875"></rect>
+<text text-anchor="start" x="150.75" y="-2039.1" font-family="Arial" font-size="16.00">(*MangaServer).GetMangaDetail</text>
+
+</g>
+<g id="2:38_5" data-kind="12" class="cell function">
+<rect x="146.75" y="-2022.300048828125" width="240.989990234375" height="27.2000732421875"></rect>
+<text text-anchor="start" x="203.68" y="-2003.9" font-family="Arial" font-size="16.00">StartGRPCServer</text>
+
+</g>
+</g>
+<!-- 2&#45;&gt;23 -->
+<g id="2:14_5-23:57_5" class="edge impl" data-from="2:14_5" data-to="23:57_5">
+
+<path fill="none" stroke="black" d="M388.74,-2079.1C509.26,-2079.1 480.6,-2248.24 587.43,-2263.76"></path>
+<polygon fill="black" stroke="black" points="586.98,-2268.99 602.31,-2264.8 587.71,-2258.52 586.98,-2268.99"></polygon>
+<text text-anchor="middle" x="507.07" y="-2198.31" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M388.74,-2079.1C509.26,-2079.1 480.6,-2248.24 587.43,-2263.76" class="hover-path"></path></g>
+<!-- 2&#45;&gt;23 -->
+<g id="2:14_5-23:79_5" class="edge impl" data-from="2:14_5" data-to="23:79_5">
+
+<path fill="none" stroke="black" d="M388.74,-2079.1C484.47,-2079.1 500.69,-2010.93 587.4,-2003.21"></path>
+<polygon fill="black" stroke="black" points="587.54,-2008.46 602.3,-2002.57 587.09,-1997.97 587.54,-2008.46"></polygon>
+<text text-anchor="middle" x="507.07" y="-2038.14" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M388.74,-2079.1C484.47,-2079.1 500.69,-2010.93 587.4,-2003.21" class="hover-path"></path></g>
+<!-- 1 -->
+<g id="1" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/bridge/bridge.go">
+
+<rect x="136.25" y="-1906.5" width="262" height="205"></rect>
+<g id="1_6" class="title">
+<text text-anchor="start" x="180.54" y="-1874.1" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;bridge.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="1:11_5" data-kind="23" class="cell struct">
+<rect x="152.25" y="-1855.300048828125" width="230" height="27.2000732421875"></rect>
+<text text-anchor="start" x="217.45" y="-1837.9" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="228.12" y="-1837.9" font-family="Arial" font-size="16.00"> &#160;UDPBridge</text>
+
+</g>
+<g id="1:18_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-1820.0999755859375" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="211.23" y="-1801.7" font-family="Arial" font-size="16.00">NewUDPBridge</text>
+
+</g>
+<g id="1:26_20" data-kind="6" class="cell method">
+<rect x="152.25" y="-1784.9000244140625" width="230" height="27.2000732421875"></rect>
+<text text-anchor="start" x="199.67" y="-1766.5" font-family="Arial" font-size="16.00">(*UDPBridge).Start</text>
+
+</g>
+<g id="1:47_20" data-kind="6" class="cell method">
+<rect x="152.25" y="-1749.699951171875" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="197.89" y="-1731.3" font-family="Arial" font-size="16.00">(*UDPBridge).listen</text>
+
+</g>
+</g>
+<!-- 1&#45;&gt;1 -->
+<g id="1:26_20-1:47_20" class="edge" data-from="1:26_20" data-to="1:47_20">
+
+<path fill="none" stroke="black" d="M152.4,-1776.7C82.5,-1776.64 16.34,-1770.43 16.34,-1753.7 16.34,-1738.28 72.56,-1731.8 136.12,-1730.83"></path>
+<polygon fill="black" stroke="black" points="135.93,-1736.08 150.89,-1730.71 135.85,-1725.58 135.93,-1736.08"></polygon>
+<text text-anchor="middle" x="14.59" y="-1799.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-1776.7C82.5,-1776.64 16.34,-1770.43 16.34,-1753.7 16.34,-1738.28 72.56,-1731.8 136.12,-1730.83" class="hover-path"></path></g>
+<!-- 15 -->
+<g id="15" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/websocket/log_broadcaster.go">
+
+<rect x="123.41000366210938" y="-4417.5" width="287.66998291015625" height="381"></rect>
+<g id="15_7" class="title">
+<text text-anchor="start" x="145.41" y="-4385.1" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;log_broadcaster.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="15:9_5" data-kind="23" class="cell struct">
+<rect x="139.41000366210938" y="-4366.2998046875" width="255.66998291015625" height="27.19970703125"></rect>
+<text text-anchor="start" x="200.98" y="-4348.9" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="211.66" y="-4348.9" font-family="Arial" font-size="16.00"> &#160;LogBroadcaster</text>
+
+</g>
+<g id="15:16_5" data-kind="23" class="cell struct">
+<rect x="139.41000366210938" y="-4331.10009765625" width="255.66998291015625" height="27.2001953125"></rect>
+<text text-anchor="start" x="223.66" y="-4313.7" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="234.34" y="-4313.7" font-family="Arial" font-size="16.00"> &#160;LogClient</text>
+
+</g>
+<g id="15:24_5" data-kind="12" class="cell function">
+<rect x="139.41000366210938" y="-4295.89990234375" width="255.66998291015625" height="27.19970703125"></rect>
+<text text-anchor="start" x="194.76" y="-4277.5" font-family="Arial" font-size="16.00">NewLogBroadcaster</text>
+
+</g>
+<g id="15:33_25" data-kind="6" class="cell method">
+<rect x="139.41000366210938" y="-4260.7001953125" width="255.66998291015625" height="27.2001953125"></rect>
+<text text-anchor="start" x="185.43" y="-4242.3" font-family="Arial" font-size="16.00">(*LogBroadcaster).Run</text>
+
+</g>
+<g id="15:56_5" data-kind="23" class="cell struct">
+<rect x="139.41000366210938" y="-4225.5" width="255.66998291015625" height="27.2001953125"></rect>
+<text text-anchor="start" x="211.24" y="-4208.1" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="221.91" y="-4208.1" font-family="Arial" font-size="16.00"> &#160;WsLogWriter</text>
+
+</g>
+<g id="15:58_21" data-kind="6" class="cell method">
+<rect x="139.41000366210938" y="-4190.2998046875" width="255.66998291015625" height="27.19970703125"></rect>
+<text text-anchor="start" x="194.8" y="-4171.9" font-family="Arial" font-size="16.00">(WsLogWriter).Write</text>
+
+</g>
+<g id="15:67_5" data-kind="12" class="cell function">
+<rect x="139.41000366210938" y="-4155.10009765625" width="255.66998291015625" height="27.2001953125"></rect>
+<text text-anchor="start" x="220.11" y="-4136.7" font-family="Arial" font-size="16.00">ServeLogWS</text>
+
+</g>
+<g id="15:85_20" data-kind="6" class="cell method">
+<rect x="139.41000366210938" y="-4119.89990234375" width="255.66998291015625" height="27.199951171875"></rect>
+<text text-anchor="start" x="185.87" y="-4101.5" font-family="Arial" font-size="16.00">(*LogClient).readPump</text>
+
+</g>
+<g id="15:98_20" data-kind="6" class="cell method">
+<rect x="139.41000366210938" y="-4084.699951171875" width="255.66998291015625" height="27.199951171875"></rect>
+<text text-anchor="start" x="184.99" y="-4066.3" font-family="Arial" font-size="16.00">(*LogClient).writePump</text>
+
+</g>
+</g>
+<!-- 15&#45;&gt;15 -->
+<g id="15:67_5-15:85_20" class="edge" data-from="15:67_5" data-to="15:85_20">
+
+<path fill="none" stroke="black" d="M139.7,-4146.88C68.79,-4146.44 3.5,-4140.11 3.5,-4123.9 3.5,-4108.96 58.99,-4102.41 123.21,-4101.13"></path>
+<polygon fill="black" stroke="black" points="123.25,-4106.38 138.18,-4100.94 123.12,-4095.89 123.25,-4106.38"></polygon>
+<text text-anchor="middle" x="1.75" y="-4222.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M139.7,-4146.88C68.79,-4146.44 3.5,-4140.11 3.5,-4123.9 3.5,-4108.96 58.99,-4102.41 123.21,-4101.13" class="hover-path"></path></g>
+<!-- 15&#45;&gt;15 -->
+<g id="15:67_5-15:98_20" class="edge" data-from="15:67_5" data-to="15:98_20">
+
+<path fill="none" stroke="black" d="M139.7,-4145.83C68.79,-4143.76 3.5,-4133.23 3.5,-4106.3 3.5,-4081.47 58.99,-4070.59 123.21,-4067.42"></path>
+<polygon fill="black" stroke="black" points="123.4,-4072.66 138.18,-4066.83 122.99,-4062.17 123.4,-4072.66"></polygon>
+<text text-anchor="middle" x="1.75" y="-4222.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M139.7,-4145.83C68.79,-4143.76 3.5,-4133.23 3.5,-4106.3 3.5,-4081.47 58.99,-4070.59 123.21,-4067.42" class="hover-path"></path></g>
+<!-- 14 -->
+<g id="14" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/websocket/hub.go">
+
+<rect x="136.25" y="-4640.5" width="262" height="205"></rect>
+<g id="14_8" class="title">
+<text text-anchor="start" x="189.43" y="-4608.1" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;hub.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="14:4_5" data-kind="23" class="cell struct">
+<rect x="152.25" y="-4589.2998046875" width="230" height="27.19970703125"></rect>
+<text text-anchor="start" x="242.79" y="-4571.9" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="253.46" y="-4571.9" font-family="Arial" font-size="16.00"> &#160;Hub</text>
+
+</g>
+<g id="14:18_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-4554.10009765625" width="230" height="27.2001953125"></rect>
+<text text-anchor="start" x="236.57" y="-4535.7" font-family="Arial" font-size="16.00">NewHub</text>
+
+</g>
+<g id="14:28_14" data-kind="6" class="cell method">
+<rect x="152.25" y="-4518.89990234375" width="230" height="27.19970703125"></rect>
+<text text-anchor="start" x="205.89" y="-4500.5" font-family="Arial" font-size="16.00">(*Hub).Broadcast</text>
+
+</g>
+<g id="14:32_14" data-kind="6" class="cell method">
+<rect x="152.25" y="-4483.7001953125" width="230" height="27.2001953125"></rect>
+<text text-anchor="start" x="227.23" y="-4465.3" font-family="Arial" font-size="16.00">(*Hub).Run</text>
+
+</g>
+</g>
+<!-- 14&#45;&gt;14 -->
+<g id="14:32_14-14:32_14" class="edge" data-from="14:32_14" data-to="14:32_14">
+
+<path fill="none" stroke="black" d="M152.4,-4476.4C82.5,-4477.86 16.34,-4475.76 16.34,-4470.1 16.34,-4464.88 72.56,-4462.69 136.12,-4463.52"></path>
+<polygon fill="black" stroke="black" points="135.8,-4468.77 150.89,-4463.77 135.98,-4458.27 135.8,-4468.77"></polygon>
+<text text-anchor="middle" x="14.59" y="-4533.8" font-family="Times,serif" font-size="14.00"> </text>
+<path fill="none" stroke="black" d="M152.4,-4476.4C82.5,-4477.86 16.34,-4475.76 16.34,-4470.1 16.34,-4464.88 72.56,-4462.69 136.12,-4463.52" class="hover-path"></path></g>
+<!-- 24 -->
+<g id="24" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/seed.go">
+
+<rect x="136.25" y="-4799.7001953125" width="262" height="99.400390625"></rect>
+<g id="24_9" class="title">
+<text text-anchor="start" x="185.43" y="-4767.3" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;seed.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="24:11_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-4748.5" width="230" height="27.2001953125"></rect>
+<text text-anchor="start" x="249.91" y="-4730.1" font-family="Arial" font-size="16.00">main</text>
+
+</g>
+</g>
+<!-- 18 -->
+<g id="18" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/auth/auth.go">
+
+<rect x="136.25" y="-1078.9000244140625" width="262" height="169.800048828125"></rect>
+<g id="18_10" class="title">
+<text text-anchor="start" x="187.21" y="-1046.5" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;auth.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="18:12_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-1027.699951171875" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="213.45" y="-1009.3" font-family="Arial" font-size="16.00">HashPassword</text>
+
+</g>
+<g id="18:18_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-992.5" width="230" height="27.20001220703125"></rect>
+<text text-anchor="start" x="190.77" y="-974.1" font-family="Arial" font-size="16.00">CheckPasswordHash</text>
+
+</g>
+<g id="18:24_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-957.2999877929688" width="230" height="27.20001220703125"></rect>
+<text text-anchor="start" x="217.45" y="-938.9" font-family="Arial" font-size="16.00">GenerateJWT</text>
+
+</g>
+</g>
+<!-- 19 -->
+<g id="19" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/database/db.go">
+
+<rect x="136.25" y="-1245.699951171875" width="262" height="99.39990234375"></rect>
+<g id="19_11" class="title">
+<text text-anchor="start" x="193.88" y="-1213.3" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;db.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="19:11_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-1194.5" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="245.46" y="-1176.1" font-family="Arial" font-size="16.00">InitDB</text>
+
+</g>
+</g>
+<!-- 20 -->
+<g id="20" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/models/models.go">
+
+<rect x="136.25" y="-1517.5" width="262" height="205"></rect>
+<g id="20_12" class="title">
+<text text-anchor="start" x="176.99" y="-1485.1" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;models.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="20:5_5" data-kind="23" class="cell struct">
+<rect x="152.25" y="-1466.300048828125" width="230" height="27.2000732421875"></rect>
+<text text-anchor="start" x="240.57" y="-1448.9" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="251.25" y="-1448.9" font-family="Arial" font-size="16.00"> &#160;User</text>
+
+</g>
+<g id="20:13_5" data-kind="23" class="cell struct">
+<rect x="152.25" y="-1431.0999755859375" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="208.09" y="-1413.7" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="218.77" y="-1413.7" font-family="Arial" font-size="16.00"> &#160;LoginRequest</text>
+
+</g>
+<g id="20:18_5" data-kind="23" class="cell struct">
+<rect x="152.25" y="-1395.9000244140625" width="230" height="27.2000732421875"></rect>
+<text text-anchor="start" x="199.21" y="-1378.5" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="209.88" y="-1378.5" font-family="Arial" font-size="16.00"> &#160;TokenResponse</text>
+
+</g>
+<g id="20:23_5" data-kind="23" class="cell struct">
+<rect x="152.25" y="-1360.699951171875" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="233" y="-1343.3" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="243.68" y="-1343.3" font-family="Arial" font-size="16.00"> &#160;Manga</text>
+
+</g>
+</g>
+<!-- 21 -->
+<g id="21" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/models/tcp_payload.go">
+
+<rect x="136.25" y="-1634.699951171875" width="262" height="99.39990234375"></rect>
+<g id="21_13" class="title">
+<text text-anchor="start" x="159.64" y="-1602.3" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;tcp_payload.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="21:3_5" data-kind="23" class="cell struct">
+<rect x="152.25" y="-1583.5" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="210.77" y="-1566.1" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="221.44" y="-1566.1" font-family="Arial" font-size="16.00"> &#160;SyncPayload</text>
+
+</g>
+</g>
+<!-- 3 -->
+<g id="3" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/http/admin_handler.go">
+
+<rect x="127.86000061035156" y="-2310.699951171875" width="278.78001403808594" height="99.39990234375"></rect>
+<g id="3_14" class="title">
+<text text-anchor="start" x="149.86" y="-2278.3" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;admin_handler.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="3:15_5" data-kind="12" class="cell function">
+<rect x="143.86000061035156" y="-2259.5" width="246.78001403808594" height="27.199951171875"></rect>
+<text text-anchor="start" x="196.54" y="-2241.1" font-family="Arial" font-size="16.00">ScanMangaHandler</text>
+
+</g>
+</g>
+<!-- 4 -->
+<g id="4" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/http/auth_handler.go">
+
+<rect x="134.07000732421875" y="-2463.300048828125" width="266.3500061035156" height="134.60009765625"></rect>
+<g id="4_15" class="title">
+<text text-anchor="start" x="156.07" y="-2430.9" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;auth_handler.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="4:12_5" data-kind="12" class="cell function">
+<rect x="150.07000732421875" y="-2412.10009765625" width="234.35000610351562" height="27.2001953125"></rect>
+<text text-anchor="start" x="209.44" y="-2393.7" font-family="Arial" font-size="16.00">RegisterHandler</text>
+
+</g>
+<g id="4:40_5" data-kind="12" class="cell function">
+<rect x="150.07000732421875" y="-2376.89990234375" width="234.35000610351562" height="27.199951171875"></rect>
+<text text-anchor="start" x="219.66" y="-2358.5" font-family="Arial" font-size="16.00">LoginHandler</text>
+
+</g>
+</g>
+<!-- 5 -->
+<g id="5" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/http/health_handler.go">
+
+<rect x="127.8499984741211" y="-2580.699951171875" width="278.7900161743164" height="99.39990234375"></rect>
+<g id="5_16" class="title">
+<text text-anchor="start" x="149.85" y="-2548.3" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;health_handler.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="5:9_5" data-kind="12" class="cell function">
+<rect x="143.85000610351562" y="-2529.5" width="246.79000854492188" height="27.199951171875"></rect>
+<text text-anchor="start" x="216.11" y="-2511.1" font-family="Arial" font-size="16.00">HealthHandler</text>
+
+</g>
+</g>
+<!-- 6 -->
+<g id="6" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/http/manga_handler.go">
+
+<rect x="125.18000030517578" y="-2733.300048828125" width="284.12999725341797" height="134.60009765625"></rect>
+<g id="6_17" class="title">
+<text text-anchor="start" x="147.18" y="-2700.9" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;manga_handler.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="6:10_5" data-kind="12" class="cell function">
+<rect x="141.17999267578125" y="-2682.10009765625" width="252.1300048828125" height="27.2001953125"></rect>
+<text text-anchor="start" x="225.89" y="-2663.7" font-family="Arial" font-size="16.00">GetMangas</text>
+
+</g>
+<g id="6:40_5" data-kind="12" class="cell function">
+<rect x="141.17999267578125" y="-2646.89990234375" width="252.1300048828125" height="27.199951171875"></rect>
+<text text-anchor="start" x="212.55" y="-2628.5" font-family="Arial" font-size="16.00">GetMangaByID</text>
+
+</g>
+</g>
+<!-- 7 -->
+<g id="7" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/http/router.go">
+
+<rect x="136.25" y="-2850.699951171875" width="262" height="99.39990234375"></rect>
+<g id="7_18" class="title">
+<text text-anchor="start" x="181.88" y="-2818.3" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;router.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="7:8_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-2799.5" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="222.33" y="-2781.1" font-family="Arial" font-size="16.00">SetupRouter</text>
+
+</g>
+</g>
+<!-- 8 -->
+<g id="8" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/http/websocket_bridge_tcp.go">
+
+<rect x="101.18000030517578" y="-2967.699951171875" width="332.14000701904297" height="99.39990234375"></rect>
+<g id="8_19" class="title">
+<text text-anchor="start" x="123.18" y="-2935.3" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;websocket_bridge_tcp.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="8:15_5" data-kind="12" class="cell function">
+<rect x="117.18000030517578" y="-2916.5" width="300.14000701904297" height="27.199951171875"></rect>
+<text text-anchor="start" x="200.11" y="-2898.1" font-family="Arial" font-size="16.00">TCPBridgeHandler</text>
+
+</g>
+</g>
+<!-- 9 -->
+<g id="9" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/tcp/server.go">
+
+<rect x="136.25" y="-3239.5" width="262" height="205"></rect>
+<g id="9_20" class="title">
+<text text-anchor="start" x="180.55" y="-3207.1" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;server.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="9:18_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-3188.300048828125" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="210.79" y="-3169.9" font-family="Arial" font-size="16.00">StartTCPServer</text>
+
+</g>
+<g id="9:55_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-3153.10009765625" width="230" height="27.2001953125"></rect>
+<text text-anchor="start" x="213.43" y="-3134.7" font-family="Arial" font-size="16.00">addConnection</text>
+
+</g>
+<g id="9:62_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-3117.89990234375" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="200.1" y="-3099.5" font-family="Arial" font-size="16.00">removeConnection</text>
+
+</g>
+<g id="9:75_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-3082.699951171875" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="232.11" y="-3064.3" font-family="Arial" font-size="16.00">broadcast</text>
+
+</g>
+</g>
+<!-- 10 -->
+<g id="10" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/tcp/tcp_handler.go">
+
+<rect x="136.25" y="-3356.699951171875" width="262" height="99.39990234375"></rect>
+<g id="10_21" class="title">
+<text text-anchor="start" x="160.97" y="-3324.3" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;tcp_handler.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="10:11_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-3305.5" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="202.75" y="-3287.1" font-family="Arial" font-size="16.00">handleConnection</text>
+
+</g>
+</g>
+<!-- 11 -->
+<g id="11" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/udp/payload.go">
+
+<rect x="136.25" y="-3523.699951171875" width="262" height="99.39990234375"></rect>
+<g id="11_22" class="title">
+<text text-anchor="start" x="174.76" y="-3491.3" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;payload.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="11:2_5" data-kind="23" class="cell struct">
+<rect x="152.25" y="-3472.5" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="211.66" y="-3455.1" font-family="Arial" font-weight="bold" font-size="16.00">S</text>
+<text text-anchor="start" x="222.34" y="-3455.1" font-family="Arial" font-size="16.00"> &#160;UDPPayload</text>
+
+</g>
+</g>
+<!-- 12 -->
+<g id="12" class="node" data-path="/D:/HK2 IT IU 2025-26/Net-centric Programing/Project 2026 MangaHub/Project_Net-Centric_MangaHub/backend/internal/protocols/udp/server.go">
+
+<rect x="136.25" y="-3746.5" width="262" height="205"></rect>
+<g id="12_23" class="title">
+<text text-anchor="start" x="180.55" y="-3714.1" font-family="Arial" font-size="16.00"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;server.go &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text>
+
+</g>
+<g id="12:18_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-3695.300048828125" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="216.12" y="-3676.9" font-family="Arial" font-size="16.00">InitUDPServer</text>
+
+</g>
+<g id="12:40_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-3660.10009765625" width="230" height="27.2001953125"></rect>
+<text text-anchor="start" x="229.89" y="-3641.7" font-family="Arial" font-size="16.00">AddBridge</text>
+
+</g>
+<g id="12:52_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-3624.89990234375" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="205.43" y="-3606.5" font-family="Arial" font-size="16.00">BroadcastUpdate</text>
+
+</g>
+<g id="12:91_5" data-kind="12" class="cell function">
+<rect x="152.25" y="-3589.699951171875" width="230" height="27.199951171875"></rect>
+<text text-anchor="start" x="198.32" y="-3571.3" font-family="Arial" font-size="16.00">GetInitializedStatus</text>
+
+</g>
+</g>
+<g id="faded-group"></g></g>
+<defs><filter id="shadow"><feDropShadow dx="0" dy="0" stdDeviation="4" flood-opacity="0.5"></feDropShadow></filter>
+    <linearGradient id="highlightGradient">
+      <stop offset="0%" stop-color="var(--edge-incoming-color)"></stop>
+      <stop offset="100%" stop-color="var(--edge-outgoing-color)"></stop>
+    </linearGradient></defs>
+</svg>
