@@ -164,7 +164,7 @@
             <div class="flex items-center gap-2 ml-1">
                 <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider"
                       style="background:rgba(36,56,156,0.5);color:#bac3ff;">NETWORK LOG</span>
-                <span class="text-slate-500 italic text-xs">ws://localhost:8080/api/ws-logs</span>
+                <span class="text-slate-500 italic text-xs">${CONFIG.WS_BASE_URL}/api/ws-logs</span>
             </div>
             <div class="ml-auto text-slate-600 text-[10px] font-mono">bash ~ mangahub-client</div>
         </div>
@@ -180,6 +180,7 @@
     <div id="notification-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-4 pointer-events-none"></div>
 
     <!-- SCRIPTS -->
+    <script src="config.js"></script>
     <script src="notification.js"></script>
     <script>
         // Kiểm tra Token ngay lập tức
@@ -211,7 +212,7 @@
         const terminalContent = document.getElementById('terminalContent');
 
         // Connect to Log WebSocket (Week 4 Feature)
-        const logWs = new WebSocket('ws://localhost:8080/api/ws-logs');
+        const logWs = new WebSocket(`${CONFIG.WS_BASE_URL}/api/ws-logs`);
         logWs.onmessage = (event) => {
             const time = new Date().toLocaleTimeString();
             const logEntry = document.createElement('div');
@@ -238,7 +239,7 @@
         async function fetchMangas(query = '') {
             addLog('GET', `/api/mangas?q=${query}`, 'PENDING');
             try {
-                const res = await fetch(`http://localhost:8080/api/mangas?q=${query}`, {
+                const res = await fetch(`${CONFIG.API_BASE_URL}/api/mangas?q=${query}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -263,7 +264,8 @@
                 <div onclick="window.location.href='reading.html?id=${m.id}'"
                      class="manga-card bg-surface-container-lowest rounded-xl shadow-sm cursor-pointer group overflow-hidden border border-outline-variant/10">
                     <div class="overflow-hidden rounded-t-xl aspect-[3/4] relative">
-                        <img src="${m.thumbnail || 'https://placehold.co/150x200/dee0ff/24389c?text=Manga'}"
+                        <img src="${CONFIG.fixUrl(m.thumbnail)}"
+                             referrerpolicy="no-referrer"
                              class="card-cover w-full h-full object-cover"
                              alt="${m.title}"
                              onerror="this.src='https://placehold.co/150x200/dee0ff/24389c?text=Manga'" />

@@ -103,7 +103,11 @@
 
     // 6. Khởi tạo WebSocket → TCP Bridge
     function connectTCP() {
-        const ws = new WebSocket('ws://localhost:8080/api/ws-tcp-bridge');
+        const wsUrl = (typeof CONFIG !== 'undefined') 
+            ? `${CONFIG.WS_BASE_URL}/api/ws-tcp-bridge` 
+            : 'ws://localhost:8080/api/ws-tcp-bridge';
+            
+        const ws = new WebSocket(wsUrl);
 
         ws.onopen = () => {
             console.log("[Sync] Kết nối thành công!");

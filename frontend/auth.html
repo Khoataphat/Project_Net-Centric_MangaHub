@@ -137,7 +137,7 @@
             </summary>
             <div class="font-mono text-[11px] bg-slate-950 text-slate-300 p-5 space-y-1.5">
                 <p class="text-slate-500">// AUTH PROTOCOL INSPECTOR</p>
-                <p><span class="text-blue-400">POST</span> <span class="text-yellow-300">http://localhost:8080/api/login</span></p>
+                <p><span class="text-blue-400">POST</span> <span class="text-yellow-300">${CONFIG.API_BASE_URL}/api/login</span></p>
                 <p><span class="text-emerald-400">Protocol:</span> HTTP/1.1 (JSON Body)</p>
                 <p><span class="text-purple-400">Auth:</span> JWT Bearer Token → localStorage</p>
             </div>
@@ -152,6 +152,7 @@
     </div>
 
     <!-- JAVASCRIPT: Auth logic (preserved exactly) -->
+    <script src="config.js"></script>
     <script>
         const loginForm = document.getElementById('loginForm');
         const messageDiv = document.getElementById('message');
@@ -168,7 +169,7 @@
             messageDiv.innerText = 'Đang xác thực...';
 
             try {
-                const response = await fetch('http://localhost:8080/api/login', {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password }),

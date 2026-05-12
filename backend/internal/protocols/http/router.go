@@ -9,6 +9,9 @@ import (
 )
 
 func SetupRouter(r *gin.Engine, chatHub *websocket.Hub) {
+	// Phục vụ các file tĩnh như hình ảnh truyện trong thư mục /data
+	r.Static("/data", "./data")
+
 	// 1. Khi vào trang chủ "/" -> Tìm auth.html
 	r.GET("/", func(c *gin.Context) {
 		folders := []string{"./frontend", "../frontend", "./web", "../web"}

@@ -192,7 +192,7 @@
             <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider"
                   style="background:rgba(36,56,156,0.5);color:#bac3ff;">TCP STREAM</span>
             <span id="connStatus" class="text-slate-500 italic text-xs">Đang chờ kết nối...</span>
-            <div class="ml-auto text-slate-700 text-[10px] terminal-font">tcp://localhost:9090 → ws://localhost:8080</div>
+            <div class="ml-auto text-slate-700 text-[10px] terminal-font">tcp://${window.location.hostname}:${CONFIG.TCP_PORT} → ${CONFIG.WS_BASE_URL}</div>
         </div>
         <!-- Terminal output - ID preserved -->
         <div class="flex-1 overflow-y-auto terminal-scroll px-4 py-2 terminal-font text-xs">
@@ -201,6 +201,7 @@
     </footer>
 
     <!-- Chat message JS -->
+    <script src="config.js"></script>
     <script>
         // 1. Auth check + decode username từ JWT
         const token = localStorage.getItem('token');
@@ -233,7 +234,7 @@
             }
             try {
                 // Load manga basic info
-                const mangaRes = await fetch(`http://localhost:8080/api/mangas/${mangaId}`, {
+                const mangaRes = await fetch(`${CONFIG.API_BASE_URL}/api/mangas/${mangaId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (mangaRes.ok) {
@@ -243,7 +244,7 @@
                 }
 
                 // Load chapters list
-                const chaptersRes = await fetch(`http://localhost:8080/api/mangas/${mangaId}/chapters`, {
+                const chaptersRes = await fetch(`${CONFIG.API_BASE_URL}/api/mangas/${mangaId}/chapters`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (chaptersRes.ok) {
@@ -279,14 +280,15 @@
             mangaContent.innerHTML = '<div class="py-10 animate-pulse text-secondary text-sm">Đang tải trang...</div>';
 
             try {
-                const res = await fetch(`http://localhost:8080/api/chapters/${chapter.id}/pages`, {
+                const res = await fetch(`${CONFIG.API_BASE_URL}/api/chapters/${chapter.id}/pages`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {
                     const pages = await res.json();
                     if (pages && pages.length > 0) {
                         mangaContent.innerHTML = pages.map(p => `
-                            <img src="${p.image_url}" 
+                            <img src="${CONFIG.fixUrl(p.image_url)}" 
+                                 referrerpolicy="no-referrer"
                                  class="w-full max-w-2xl rounded-sm shadow-md mb-2 border border-outline-variant/10" 
                                  alt="Page ${p.page_number}"
                                  loading="lazy"
@@ -314,7 +316,7 @@
         loadMangaInfo();
 
         // 3. Chat logic (WebSocket) - gửi JSON {username, text}
-        const socket = new WebSocket('ws://localhost:8080/api/ws/chat');
+        const socket = new WebSocket(`${CONFIG.WS_BASE_URL}/api/ws/chat`);
         const chatBox = document.getElementById('chatBox');
         const chatInput = document.getElementById('chatInput');
         const sendBtn = document.getElementById('sendBtn');

@@ -99,6 +99,26 @@ ws.onopen
 ws.onmessage (type="SYNC_RESUME")
   → resumeModal.classList.remove('hidden')
   → [btnAcceptResume].onclick → currentChapter = payload.chapter → updateUI()
+
+### 5c. Live Presence (Đếm số người đang đọc)
+**Protocol:** `WebSocket ↔ TCP`
+
+```
+[reading.html] kết nối thành công (AUTH)
+  → [TCP Server] addConnection()
+    → presenceMap[mangaID][conn] = struct{}{}
+    → broadcastPresence(mangaID)
+      → payload: { type: "PRESENCE_UPDATE", count: N }
+      → Gửi tới TẤT CẢ client đang đọc manga đó
+
+ws.onmessage (type="PRESENCE_UPDATE")
+  → document.getElementById('readerCount').innerText = payload.count
+
+[User đóng tab / Disconnect]
+  → [TCP Server] defer removeConnection()
+    → delete presenceMap[mangaID][conn]
+    → broadcastPresence(mangaID) (Cập nhật lại số lượng mới)
+```
 ```
 
 ### 5b. Cập nhật tiến độ & Broadcast đa thiết bị
@@ -320,5 +340,70 @@ Browser
   → ws.WriteMessage(TextMessage, line)
 ```
 > **Mục đích:** Đảm bảo các gói tin JSON không bị dính vào nhau khi truyền tải tốc độ cao, giúp Frontend parse JSON ổn định hơn.
+
+---
+
+## 13. Tự động Seeding dữ liệu (MangaDex Integration)
+**Protocol:** `HTTP GET (MangaDex API) → SQLite (Local)`
+
+```
+[cmd/seed/main.go]
+  → getJSON("https://api.mangadex.org/manga?...")
+    → Extract Title, Author, Description, Cover
+    → upsertManga(db, ...)
+  → Loop Chapters (limit 10):
+    → getJSON("https://api.mangadex.org/manga/{id}/feed?...")
+    → upsertChapter(db, ...)
+    → getJSON("https://api.mangadex.org/at-home/server/{chapter_id}")
+      → Build Full Image URLs
+      → insertPages(db, chapterID, imageURLs)  // Transactional insert
+```
+
+---
+
+## 14. Cơ chế Xử lý đồng thời (Concurrency)
+**Protocol:** `Go Primitives (Goroutines + Channels + Mutex)`
+
+| Component | Cơ chế | Mục đích |
+|---|---|---|
+| **TCP Sync** | `sync.Mutex` | Bảo vệ `clientsMap` và `presenceMap` khi nhiều thiết bị connect/disconnect cùng lúc. |
+| **WS Hub** | `chan []byte` | Dùng channel `broadcast` để đẩy tin nhắn đến client mà không làm block luồng logic chính. |
+| **Log Stream** | `io.MultiWriter` | Ghi log đồng thời ra cả Console và WebSocket channel. |
+| **UDP Bridge** | `go listen()` | Goroutine chạy ngầm liên tục đợi gói tin UDP mà không chặn server HTTP chính. |
+| **gRPC Server** | `Worker Pool` | gRPC mặc định xử lý mỗi request trên một goroutine riêng để tối ưu performance. |
+
+---
+
+## Sơ đồ tổng quan kiến trúc (Cập nhật cuối)
+
+```
+Browser
+  │
+  ├─[HTTP]──────────► Gin Router :8080
+  │                       ├── [Middleware] RoleMiddleware (JWT / RBAC)
+  │                       │
+  │                       ├── /api/register  → RegisterHandler
+  │                       ├── /api/login     → LoginHandler
+  │                       ├── /api/mangas    → GetMangas / GetMangaByID
+  │                       ├── /api/mangas/:id/chapters → GetMangaChapters
+  │                       ├── /api/chapters/:id/pages  → GetChapterPages
+  │                       │
+  │                       ├── /api/admin/scan-manga → ScanMangaHandler (Protected)
+  │                       │       └──[gRPC]──► MangaServer :50051
+  │                       │
+  │                       ├── /api/ws-tcp-bridge → TCPBridgeHandler
+  │                       │       └──[TCP]───► TCP Sync Server :9090
+  │                       │                       ├── Progress Sync (Peer-to-Peer)
+  │                       │                       └── Live Presence (Broadcast)
+  │                       │
+  │                       ├── /api/ws/chat   → ServeWS → Hub (Notifications)
+  │                       └── /api/ws-logs  → ServeLogWS → LogBroadcaster
+  │
+  └─[WebSocket]──────► (3 endpoints above)
+
+Seeder (External)
+  └─[HTTP]──────────► MangaDex API
+           └────────► SQLite DB (Initial Data)
+```
 
 

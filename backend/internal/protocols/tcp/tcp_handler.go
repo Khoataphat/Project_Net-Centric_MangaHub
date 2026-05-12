@@ -44,7 +44,6 @@ func handleConnection(conn net.Conn) {
 
 		case "AUTH":
 			if currentUserID != 0 {
-				// Đã auth rồi, bỏ qua
 				break
 			}
 
@@ -106,7 +105,7 @@ func handleConnection(conn net.Conn) {
 					payload.UserID, payload.MangaID, payload.Chapter, rows)
 			}
 
-			// 2. Broadcast progress tới thiết bị khác của cùng user + manga
+			// 2. Broadcast
 			broadcast(payload.UserID, payload.MangaID, []byte(message), conn)
 		}
 	}

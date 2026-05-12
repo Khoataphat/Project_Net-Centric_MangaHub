@@ -32,14 +32,11 @@ func TCPBridgeHandler(c *gin.Context) {
 	}
 	defer tcpConn.Close()
 
-	// Channel để đóng cả 2 goroutine khi một bên ngắt
 	done := make(chan struct{})
 
 	// ── Luồng A: TCP → WebSocket ──────────────────────────────────────────
-	// QUAN TRỌNG: Dùng bufio.Scanner để đọc TỪNG DÒNG JSON hoàn chỉnh.
 	go func() {
 		defer close(done)
-		// Đảm bảo khi TCP đứt, WebSocket cũng đóng để thoát Luồng B
 		defer ws.Close()
 
 		scanner := bufio.NewScanner(tcpConn)
@@ -64,7 +61,7 @@ func TCPBridgeHandler(c *gin.Context) {
 	for {
 		_, msg, err := ws.ReadMessage()
 		if err != nil {
-			// WebSocket đóng (người dùng tắt tab) -> break
+
 			break
 		}
 		// Đảm bảo message kết thúc bằng \n
@@ -77,7 +74,6 @@ func TCPBridgeHandler(c *gin.Context) {
 		}
 	}
 
-	// QUAN TRỌNG: Đóng TCP connection để giải phóng server và kết thúc Luồng A
 	tcpConn.Close()
 
 	// Chờ Luồng A kết thúc hoàn toàn
