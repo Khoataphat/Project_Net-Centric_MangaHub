@@ -1,100 +1,228 @@
-// 1. Cấu hình cơ bản
-// Giả lập ID người dùng và truyện. Thực tế sẽ lấy từ LocalStorage và URL.
-const USER_ID = 1;
-const MANGA_ID = 101;
-let currentChapter = 1;
+(function() {
+    // =================================================================
+    // sync.js - MangaHub TCP Sync Module (Scoped Version)
+    // =================================================================
 
-// Các phần tử UI
-const chapterDisplays = [document.getElementById('currentChapterDisplay'), document.getElementById('chapterNumberText')];
-const terminal = document.getElementById('terminalContent');
-const connStatus = document.getElementById('connStatus');
+    console.log("[Sync] Script loading...");
 
-// 2. Hàm in Log xuống Terminal
-function logTerminal(direction, payloadStr) {
-    const time = new Date().toLocaleTimeString();
-    const logEntry = document.createElement('div');
+    // 1. Lấy Token và USER_ID từ JWT
+    const _localToken = localStorage.getItem('token');
+    let _userId = 0;
+    let _username = 'User';
 
-    let dirColor = direction === 'SENT' ? 'text-blue-400' : 'text-purple-400';
-    let icon = direction === 'SENT' ? '►' : '◄';
-
-    // Highlight ký tự \n (bản chất của TCP Delimiter)
-    const formattedPayload = payloadStr.replace('\n', '<span class="text-red-500">\\n</span>');
-
-    logEntry.innerHTML = `
-        <span class="text-slate-500">[${time}]</span> 
-        <span class="${dirColor} font-bold">${icon} ${direction}</span> 
-        <span class="text-yellow-300 ml-2">${formattedPayload}</span>
-    `;
-    terminal.appendChild(logEntry);
-    terminal.parentElement.scrollTop = terminal.parentElement.scrollHeight;
-}
-
-// 3. Khởi tạo cầu nối TCP qua WebSocket
-const ws = new WebSocket('ws://localhost:8080/api/ws-tcp-bridge');
-
-ws.onopen = () => {
-    connStatus.innerText = "Đã kết nối TCP Sync Server (:9090)";
-    connStatus.classList.replace('text-slate-500', 'text-green-500');
-
-    // Ngay khi kết nối, gửi gói tin AUTH để "xưng danh" với Server TCP
-    const authPayload = JSON.stringify({
-        type: "AUTH",
-        user_id: USER_ID
-    }) + "\n"; // QUAN TRỌNG: Bắt buộc có \n ở cuối cho giao thức TCP
-
-    ws.send(authPayload);
-    logTerminal('SENT', authPayload);
-};
-
-// 4. Lắng nghe gói tin Broadcast từ Server
-ws.onmessage = (event) => {
-    const rawData = event.data;
-    logTerminal('RECV', rawData);
-
-    try {
-        // Dữ liệu nhận được từ TCP vẫn còn dấu \n, cần parse cẩn thận
-        const payload = JSON.parse(rawData.trim());
-
-        if (payload.type === "UPDATE_PROGRESS" && payload.manga_id === MANGA_ID) {
-            currentChapter = payload.chapter;
-            updateUI();
+    if (_localToken) {
+        try {
+            const base64Url = _localToken.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(
+                window.atob(base64).split('').map(c =>
+                    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+                ).join('')
+            );
+            const parsed = JSON.parse(jsonPayload);
+            _userId = parsed.id || 0;
+            _username = parsed.username || 'User';
+        } catch (e) {
+            console.error("[Sync] Lỗi giải mã token:", e);
         }
-    } catch (e) {
-        console.error("Lỗi parse gói tin TCP:", e);
     }
-};
 
-ws.onclose = () => {
-    connStatus.innerText = "Mất kết nối TCP";
-    connStatus.classList.replace('text-green-500', 'text-red-500');
-};
-
-// 5. Xử lý nút bấm Lật chương
-function sendSyncUpdate() {
-    const payload = JSON.stringify({
-        type: "UPDATE_PROGRESS",
-        user_id: USER_ID,
-        manga_id: MANGA_ID,
-        chapter: currentChapter
-    }) + "\n";
-
-    ws.send(payload);
-    logTerminal('SENT', payload);
-    updateUI();
-}
-
-document.getElementById('btnPrev').addEventListener('click', () => {
-    if (currentChapter > 1) {
-        currentChapter--;
-        sendSyncUpdate();
+    // 2. Lấy MANGA_ID từ URL (số nguyên, phải > 0)
+    function getQueryParam(name) {
+        const results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href);
+        return results ? parseInt(results[1], 10) : 0;
     }
-});
 
-document.getElementById('btnNext').addEventListener('click', () => {
-    currentChapter++;
-    sendSyncUpdate();
-});
+    const MANGA_ID = getQueryParam('id');
+    let currentChapter = 1;
 
-function updateUI() {
-    chapterDisplays.forEach(el => el.innerText = currentChapter);
-}
+    console.log("[Sync] Khởi tạo: USER_ID=" + _userId + " | MANGA_ID=" + MANGA_ID + " | USER=" + _username);
+
+    // Không kết nối nếu thiếu thông tin cần thiết
+    if (_userId <= 0 || MANGA_ID <= 0) {
+        console.error("[Sync] Thiếu USER_ID hoặc MANGA_ID, hủy kết nối TCP Sync.");
+        const connStatus = document.getElementById('connStatus');
+        if (connStatus) {
+            connStatus.innerText = "Sync bị vô hiệu hóa (thiếu user/manga ID)";
+            connStatus.className = "text-red-500";
+        }
+        return;
+    }
+
+    // 3. Phần tử UI
+    const chapterDisplays = [
+        document.getElementById('currentChapterDisplay'),
+        document.getElementById('chapterNumberText')
+    ];
+    const terminal = document.getElementById('terminalContent');
+    const connStatus = document.getElementById('connStatus');
+
+    // 4. Hàm cập nhật UI chương và load nội dung
+    function updateUI() {
+        chapterDisplays.forEach(el => { if (el) el.innerText = currentChapter; });
+        if (window.loadChapterByNumber) {
+            window.loadChapterByNumber(currentChapter);
+        }
+    }
+
+    // 4b. Hàm cập nhật Live Presence Badge
+    function updatePresenceBadge(count) {
+        const badge = document.getElementById('liveReadersBadge');
+        const text  = document.getElementById('liveReadersText');
+        if (!badge || !text) return;
+
+        if (count > 1) {
+            text.textContent = `👁 ${count} người đang đọc`;
+            // Dùng flex để hiện badge (thay thế hidden)
+            badge.classList.remove('hidden');
+            badge.classList.add('flex');
+        } else {
+            badge.classList.add('hidden');
+            badge.classList.remove('flex');
+        }
+    }
+
+    // 5. Hàm in Log xuống Terminal
+    function logTerminal(direction, payloadStr) {
+        if (!terminal) return;
+        const time = new Date().toLocaleTimeString();
+        const logEntry = document.createElement('div');
+        const dirColor = direction === 'SENT' ? 'text-blue-400' : 'text-purple-400';
+        const icon = direction === 'SENT' ? '►' : '◄';
+        const safePayload = String(payloadStr).replace(/\n/g, '<span class="text-red-500">\\n</span>');
+        logEntry.innerHTML = `
+            <span class="text-slate-500">[${time}]</span>
+            <span class="${dirColor} font-bold">${icon} ${direction}</span>
+            <span class="text-yellow-300 ml-2">${safePayload}</span>
+        `;
+        terminal.appendChild(logEntry);
+        if (terminal.parentElement) {
+            terminal.parentElement.scrollTop = terminal.parentElement.scrollHeight;
+        }
+    }
+
+    // 6. Khởi tạo WebSocket → TCP Bridge
+    function connectTCP() {
+        const wsUrl = (typeof CONFIG !== 'undefined') 
+            ? `${CONFIG.WS_BASE_URL}/api/ws-tcp-bridge` 
+            : 'ws://localhost:8080/api/ws-tcp-bridge';
+            
+        const ws = new WebSocket(wsUrl);
+
+        ws.onopen = () => {
+            console.log("[Sync] Kết nối thành công!");
+            if (connStatus) {
+                connStatus.innerText = `[User:${_username}] Đã kết nối TCP Sync Server (:9090)`;
+                connStatus.className = "text-green-500";
+            }
+
+            // Gửi AUTH với đầy đủ user_id và manga_id
+            const authPayload = JSON.stringify({
+                type: "AUTH",
+                user_id: _userId,
+                manga_id: MANGA_ID
+            }) + "\n";
+
+            ws.send(authPayload);
+            logTerminal('SENT', authPayload.trim());
+
+            // Gắn sự kiện nút bấm
+            const btnNext = document.getElementById('btnNext');
+            const btnPrev = document.getElementById('btnPrev');
+
+            if (btnNext) {
+                btnNext.onclick = () => {
+                    currentChapter++;
+                    sendUpdate(ws);
+                };
+            }
+            if (btnPrev) {
+                btnPrev.onclick = () => {
+                    if (currentChapter > 1) {
+                        currentChapter--;
+                        sendUpdate(ws);
+                    }
+                };
+            }
+        };
+
+        ws.onmessage = (event) => {
+            // Defensive: tách từng dòng JSON riêng (phòng trường hợp nhiều message ghép chung 1 frame)
+            const lines = event.data.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            for (const rawData of lines) {
+                logTerminal('RECV', rawData);
+                try {
+                    const payload = JSON.parse(rawData);
+                    handlePayload(payload);
+                } catch (e) {
+                    console.error("[Sync] Parse error:", e, "| Raw:", rawData);
+                }
+            }
+        };
+
+        function handlePayload(payload) {
+            if (payload.type === "UPDATE_PROGRESS" && payload.manga_id === MANGA_ID) {
+                // Nhận cập nhật chương từ thiết bị khác của cùng user
+                currentChapter = payload.chapter;
+                updateUI();
+                logTerminal('SYS', `[Sync] Thiết bị khác đang đọc Chương ${currentChapter}`);
+
+            } else if (payload.type === "SYNC_RESUME" && payload.manga_id === MANGA_ID) {
+                // Server tìm thấy tiến độ cũ → hỏi user có muốn tiếp tục không
+                const resumeModal = document.getElementById('resumeModal');
+                const resumeChapterNum = document.getElementById('resumeChapterNum');
+                if (resumeModal && resumeChapterNum) {
+                    resumeChapterNum.innerText = `Chương ${payload.chapter}`;
+                    resumeModal.classList.remove('hidden');
+
+                    document.getElementById('btnAcceptResume').onclick = () => {
+                        currentChapter = payload.chapter;
+                        updateUI();
+                        resumeModal.classList.add('hidden');
+                        logTerminal('SYS', `[Resume] Đã nhảy đến Chương ${currentChapter}`);
+                    };
+                    document.getElementById('btnIgnoreResume').onclick = () => {
+                        resumeModal.classList.add('hidden');
+                        logTerminal('SYS', `[Resume] Bỏ qua tiến độ cũ`);
+                    };
+                }
+
+            } else if (payload.type === "PRESENCE_UPDATE" && payload.manga_id === MANGA_ID) {
+                // Cập nhật badge Live Presence
+                updatePresenceBadge(payload.count);
+                logTerminal('SYS', `[Presence] ${payload.count} người đang đọc manga này`);
+            }
+        }
+
+        ws.onclose = () => {
+            if (connStatus) {
+                connStatus.innerText = "Mất kết nối TCP";
+                connStatus.className = "text-red-500";
+            }
+            // Tự kết nối lại sau 3 giây
+            setTimeout(connectTCP, 3000);
+        };
+
+        ws.onerror = (err) => {
+            console.error("[Sync] WebSocket error:", err);
+        };
+    }
+
+    function sendUpdate(ws) {
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+            console.warn("[Sync] WebSocket chưa sẵn sàng để gửi.");
+            return;
+        }
+        const payload = JSON.stringify({
+            type: "UPDATE_PROGRESS",
+            user_id: _userId,
+            manga_id: MANGA_ID,
+            chapter: currentChapter
+        }) + "\n";
+        ws.send(payload);
+        logTerminal('SENT', payload.trim());
+        updateUI();
+    }
+
+    connectTCP();
+})();

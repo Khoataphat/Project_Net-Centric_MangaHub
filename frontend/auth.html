@@ -1,100 +1,158 @@
 <!DOCTYPE html>
-<html class="light" lang="en">
+<html class="light" lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>MangaHub - Login</title>
+    <title>MangaHub - Đăng nhập</title>
+    <meta name="description" content="Đăng nhập vào MangaHub - Hệ thống đọc truyện tranh với đồng bộ hóa real-time." />
+    <!-- DEPENDENCIES -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <!-- TAILWIND CONFIG -->
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#24389c",
-                        "primary-container": "#3f51b5",
-                        "secondary": "#4a626d",
-                        "on-primary": "#ffffff",
-                        "on-background": "#191c1d",
-                        "surface-container-highest": "#e1e3e4",
-                        "surface-container-lowest": "#ffffff",
-                        "outline-variant": "#c5c5d4"
+                        "primary": "#24389c", "primary-container": "#3f51b5",
+                        "secondary": "#4a626d", "on-primary": "#ffffff",
+                        "on-background": "#191c1d", "on-surface": "#191c1d",
+                        "on-surface-variant": "#454652", "surface": "#f8f9fa",
+                        "surface-container-low": "#f3f4f5", "surface-container-lowest": "#ffffff",
+                        "outline": "#757684", "outline-variant": "#c5c5d4",
                     },
-                    fontFamily: {
-                        "headline": ["Manrope"],
-                        "body": ["Inter"]
-                    }
-                }
-            }
+                    fontFamily: { "headline": ["Manrope"], "body": ["Inter"], "mono": ["JetBrains Mono"] },
+                },
+            },
         }
     </script>
+    <!-- CUSTOM STYLES -->
     <style>
+        body { font-family: 'Inter', sans-serif; }
         .editorial-title { font-family: 'Manrope', sans-serif; letter-spacing: -0.02em; }
+        .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+        .btn-neon {
+            background: linear-gradient(135deg, #24389c, #3f51b5);
+            box-shadow: 0 0 0px rgba(36,56,156,0);
+            transition: box-shadow 0.3s ease, transform 0.15s ease;
+        }
+        .btn-neon:hover { box-shadow: 0 0 24px rgba(36,56,156,0.5), 0 0 48px rgba(63,81,181,0.25); transform: translateY(-1px); }
+        .btn-neon:active { transform: scale(0.98); }
+        @keyframes blob-drift {
+            0%,100% { transform: translate(0,0) scale(1); }
+            33%      { transform: translate(30px,-20px) scale(1.05); }
+            66%      { transform: translate(-20px,30px) scale(0.95); }
+        }
+        .blob { animation: blob-drift 8s ease-in-out infinite; }
+        .blob2 { animation: blob-drift 8s ease-in-out infinite; animation-delay: -4s; }
+        .input-field:focus { box-shadow: 0 0 0 3px rgba(36,56,156,0.12); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
     </style>
 </head>
 
-<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6">
-    <div class="max-w-[420px] w-full flex flex-col gap-8">
-        <div class="flex justify-center mb-2">
-            <h1 class="editorial-title text-3xl font-extrabold text-primary">MangaHub</h1>
+<body class="min-h-screen flex items-center justify-center p-6 overflow-hidden relative"
+      style="background: linear-gradient(135deg,#f0f2ff 0%,#f8f9fa 50%,#edf0ff 100%);">
+
+    <!-- Decorative blobs -->
+    <div class="absolute top-[-10%] left-[-5%] w-96 h-96 rounded-full opacity-30 blob"
+         style="background:radial-gradient(circle,rgba(36,56,156,0.15) 0%,transparent 70%);filter:blur(40px);"></div>
+    <div class="absolute bottom-[-5%] right-[-5%] w-80 h-80 rounded-full opacity-20 blob2"
+         style="background:radial-gradient(circle,rgba(63,81,181,0.2) 0%,transparent 70%);filter:blur(50px);"></div>
+
+    <div class="max-w-[420px] w-full flex flex-col gap-6 relative z-10">
+
+        <!-- Logo -->
+        <div class="flex flex-col items-center gap-2 mb-2">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"
+                     style="background:linear-gradient(135deg,#24389c,#3f51b5);">
+                    <span class="material-symbols-outlined text-white text-lg" style="font-variation-settings:'FILL' 1,'wght' 700,'GRAD' 0,'opsz' 24;">menu_book</span>
+                </div>
+                <h1 class="editorial-title text-3xl font-extrabold text-primary">MangaHub</h1>
+            </div>
+            <p class="text-xs text-secondary font-medium tracking-widest uppercase">Real-time Sync System</p>
         </div>
 
-        <div class="bg-surface-container-lowest rounded-xl p-10 shadow-[0_20px_40px_rgba(0,0,0,0.05)] ring-1 ring-outline-variant/10">
-            <div class="mb-8">
-                <h2 class="editorial-title text-2xl font-bold text-on-background mb-2">Welcome Back</h2>
+        <!-- Login Card (glassmorphism) -->
+        <div class="glass-card rounded-2xl p-8 shadow-[0_20px_60px_rgba(25,28,29,0.08)] ring-1 ring-outline-variant/20">
+            <div class="mb-7">
+                <h2 class="editorial-title text-2xl font-bold text-on-background mb-1">Chào mừng trở lại</h2>
                 <p class="text-secondary text-sm">Nhập thông tin để truy cập hệ thống đồng bộ.</p>
             </div>
 
-            <form id="loginForm" class="space-y-6">
-                <div class="space-y-2">
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1">Tên đăng nhập</label>
-                    <input id="username" required
-                        class="w-full bg-slate-100 border-none rounded-xl px-5 py-4 text-on-surface focus:ring-2 focus:ring-primary/20 transition-all outline-none"
-                        placeholder="khoa_admin" type="text" />
+            <form id="loginForm" class="space-y-5">
+                <!-- Username -->
+                <div class="space-y-1.5">
+                    <label class="block text-[11px] font-bold text-outline uppercase tracking-widest" for="username">Tên đăng nhập</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-sm">person</span>
+                        <input id="username" required
+                            class="input-field w-full bg-surface-container-low border border-outline-variant/30 rounded-xl pl-11 pr-4 py-3.5 text-on-surface text-sm outline-none transition-all focus:border-primary/50"
+                            placeholder="khoa_admin" type="text" />
+                    </div>
                 </div>
 
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center px-1">
-                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest">Mật khẩu</label>
+                <!-- Password -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-[11px] font-bold text-outline uppercase tracking-widest" for="password">Mật khẩu</label>
                         <a class="text-xs text-primary font-semibold hover:underline" href="#">Quên mật khẩu?</a>
                     </div>
-                    <input id="password" required
-                        class="w-full bg-slate-100 border-none rounded-xl px-5 py-4 text-on-surface focus:ring-2 focus:ring-primary/20 transition-all outline-none"
-                        placeholder="••••••••" type="password" />
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-sm">lock</span>
+                        <input id="password" required
+                            class="input-field w-full bg-surface-container-low border border-outline-variant/30 rounded-xl pl-11 pr-4 py-3.5 text-on-surface text-sm outline-none transition-all focus:border-primary/50"
+                            placeholder="••••••••" type="password" />
+                    </div>
                 </div>
 
-                <div id="message" class="hidden text-sm text-center font-medium py-2 rounded-lg"></div>
+                <!-- Message -->
+                <div id="message" class="hidden text-sm text-center font-medium py-2.5 rounded-xl px-4"></div>
 
-                <button class="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold py-4 rounded-xl shadow-lg hover:opacity-90 active:scale-[0.98] transition-all editorial-title text-lg"
-                    type="submit">
-                    Đăng nhập
+                <!-- Submit with neon effect -->
+                <button class="btn-neon w-full text-on-primary font-bold py-3.5 rounded-xl editorial-title text-base" type="submit">
+                    <span class="flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1,'wght' 700,'GRAD' 0,'opsz' 24;">login</span>
+                        Đăng nhập
+                    </span>
                 </button>
             </form>
 
-            <div class="mt-8 pt-8 border-t border-slate-100 text-center">
-                <p class="text-slate-500 text-sm">
-                    Chưa có tài khoản?
-                    <a class="text-primary font-bold ml-1" href="#">Yêu cầu cấp quyền</a>
-                </p>
+            <div class="mt-6 pt-6 border-t border-outline-variant/20 text-center">
+                <p class="text-secondary text-sm">Chưa có tài khoản? <a class="text-primary font-bold ml-1 hover:underline" href="#">Yêu cầu cấp quyền</a></p>
             </div>
         </div>
 
-        <details class="group bg-white/50 rounded-xl overflow-hidden ring-1 ring-slate-200 transition-all duration-300">
-            <summary class="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-slate-50 list-none">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-slate-400 text-sm">terminal</span>
-                    <span class="text-sm font-semibold text-slate-600 font-headline">Network Debug</span>
+        <!-- Network Debug accordion -->
+        <details class="group rounded-xl overflow-hidden ring-1 ring-outline-variant/20 shadow-sm transition-all duration-300"
+                 style="background:rgba(255,255,255,0.7);backdrop-filter:blur(12px);">
+            <summary class="flex items-center justify-between px-5 py-3.5 cursor-pointer hover:bg-surface-container-low/50 list-none transition-colors">
+                <div class="flex items-center gap-2.5">
+                    <span class="material-symbols-outlined text-secondary text-sm">terminal</span>
+                    <span class="text-sm font-semibold text-on-surface-variant font-headline">Network Debug</span>
                 </div>
-                <span class="material-symbols-outlined text-slate-400 group-open:rotate-180 transition-transform">expand_more</span>
+                <span class="material-symbols-outlined text-secondary text-sm group-open:rotate-180 transition-transform duration-300">expand_more</span>
             </summary>
-            <div class="px-6 pb-6 pt-2 text-[11px] font-mono bg-slate-900 text-slate-300 p-4 rounded-b-xl">
-                <p class="text-blue-400">// API Endpoint: http://localhost:8080/api/login</p>
-                <p class="text-emerald-400">// Protocol: HTTP/1.1 (JSON)</p>
+            <div class="font-mono text-[11px] bg-slate-950 text-slate-300 p-5 space-y-1.5">
+                <p class="text-slate-500">// AUTH PROTOCOL INSPECTOR</p>
+                <p><span class="text-blue-400">POST</span> <span class="text-yellow-300">${CONFIG.API_BASE_URL}/api/login</span></p>
+                <p><span class="text-emerald-400">Protocol:</span> HTTP/1.1 (JSON Body)</p>
+                <p><span class="text-purple-400">Auth:</span> JWT Bearer Token → localStorage</p>
             </div>
         </details>
+
+        <!-- Security badges -->
+        <div class="flex items-center justify-center gap-5 opacity-40 hover:opacity-80 transition-opacity">
+            <span class="material-symbols-outlined text-secondary text-lg">shield</span>
+            <span class="material-symbols-outlined text-secondary text-lg">verified_user</span>
+            <span class="material-symbols-outlined text-secondary text-lg">encrypted</span>
+        </div>
     </div>
 
+    <!-- JAVASCRIPT: Auth logic (preserved exactly) -->
+    <script src="config.js"></script>
     <script>
         const loginForm = document.getElementById('loginForm');
         const messageDiv = document.getElementById('message');
@@ -111,7 +169,7 @@
             messageDiv.innerText = 'Đang xác thực...';
 
             try {
-                const response = await fetch('http://localhost:8080/api/login', {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password }),
@@ -122,7 +180,7 @@
                 if (response.ok) {
                     // Lưu JWT vào Local Storage
                     localStorage.setItem('token', data.token);
-                    
+
                     messageDiv.classList.replace('text-blue-600', 'text-green-600');
                     messageDiv.classList.replace('bg-blue-50', 'bg-green-50');
                     messageDiv.innerText = 'Đăng nhập thành công! Đang chuyển hướng...';

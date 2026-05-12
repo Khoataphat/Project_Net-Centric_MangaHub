@@ -5,7 +5,11 @@
 
 const NOTIFICATION_CONTAINER_ID = 'notification-container';
 const AUTO_HIDE_MS = 5000;
-const WS_URL = 'ws://localhost:8080/api/ws/chat';
+
+// Sử dụng CONFIG từ config.js nếu có, nếu không fallback về localhost
+const WS_URL = (typeof CONFIG !== 'undefined') 
+    ? `${CONFIG.WS_BASE_URL}/api/ws/chat` 
+    : 'ws://localhost:8080/api/ws/chat';
 
 /**
  * [AC1] Khởi tạo kết nối WebSocket khi tải trang Dashboard

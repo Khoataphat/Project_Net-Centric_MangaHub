@@ -11,7 +11,7 @@ import (
 var (
 	conn        *net.UDPConn
 	bridges     = make([]*net.UDPAddr, 0)
-	bridgesMu   sync.RWMutex
+	bridgesMu   sync.RWMutex // Bảo vệ cả bridges, conn và initialized
 	initialized bool
 )
 
@@ -27,8 +27,11 @@ func InitUDPServer(port int) error {
 		return fmt.Errorf("lỗi khởi tạo UDP Server (port %d có thể bị chiếm dụng): %v", port, err)
 	}
 
+	bridgesMu.Lock()
 	conn = c
 	initialized = true
+	bridgesMu.Unlock()
+
 	log.Printf("[UDP] Notifier Server đang lắng nghe tại port %d", port)
 	
 	return nil
@@ -48,7 +51,11 @@ func AddBridge(address string) error {
 
 // BroadcastUpdate phát đi thông báo về chương truyện mới (AC2, AC3)
 func BroadcastUpdate(data UDPPayload) {
-	if !initialized {
+	bridgesMu.RLock()
+	isInit := initialized
+	bridgesMu.RUnlock()
+
+	if !isInit {
 		log.Println("[UDP] Lỗi: Cố gắng Broadcast khi Server chưa được khởi tạo")
 		return
 	}
@@ -63,18 +70,30 @@ func BroadcastUpdate(data UDPPayload) {
 		}
 
 		bridgesMu.RLock()
-		defer bridgesMu.RUnlock()
+		localBridges := make([]*net.UDPAddr, len(bridges))
+		copy(localBridges, bridges)
+		localConn := conn
+		bridgesMu.RUnlock()
 
-		for _, bridgeAddr := range bridges {
-			_, err := conn.WriteToUDP(payload, bridgeAddr)
+		if localConn == nil {
+			return
+		}
+
+		for _, bridgeAddr := range localBridges {
+			_, err := localConn.WriteToUDP(payload, bridgeAddr)
 			if err != nil {
 				log.Printf("[UDP] Lỗi gửi tới Bridge %s: %v", bridgeAddr, err)
 			}
+		}
+		if len(localBridges) > 0 {
+			log.Printf("[UDP Success] Broadcasted update to %d bridges", len(localBridges))
 		}
 	}()
 }
 
 // GetInitializedStatus trả về trạng thái khởi tạo (cho unit test)
 func GetInitializedStatus() bool {
+	bridgesMu.RLock()
+	defer bridgesMu.RUnlock()
 	return initialized
 }
